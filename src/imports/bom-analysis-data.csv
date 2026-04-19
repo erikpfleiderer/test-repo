@@ -1,0 +1,176 @@
+Populate the BOM Analysis table in the Engineering Cost Intelligence dashboard with structured engineering data.
+
+Assembly:
+
+845-000112
+
+Total parts:
+
+57
+
+Use the following fields in the table:
+
+Part Number
+Subsystem
+Material
+Manufacturing Process
+Design Intent
+Cost Driver Flags
+Cost Down Priority
+Confidence Level
+
+Populate the first entries using this data.
+
+Part
+430-002808
+
+Subsystem
+Housing / Structure
+
+Material
+Aluminum 6061-T6
+
+Manufacturing Process
+CNC billet machining
+
+Design Intent
+Structural housing aligning bearings and maintaining gear center distance.
+
+Cost Drivers
+Deep pocket machining
+Multiple CNC setups
+High material removal
+
+Cost Down Priority
+High
+
+Confidence
+High
+
+Part
+430-002810
+
+Subsystem
+Housing / Structure
+
+Material
+Aluminum 7075-T6
+
+Manufacturing Process
+CNC machining
+
+Design Intent
+Planet carrier transmitting torque between gears.
+
+Cost Drivers
+Pocket milling
+Precision hole pattern
+Multi-axis setup
+
+Cost Down Priority
+Medium
+
+Confidence
+High
+
+Part
+430-002811
+
+Subsystem
+Housing / Structure
+
+Material
+Aluminum 7075-T6
+
+Manufacturing Process
+CNC machining
+
+Design Intent
+Output hub transmitting torque to external shaft.
+
+Cost Drivers
+Complex geometry
+Material cost
+Machining time
+
+Cost Down Priority
+Medium
+
+Confidence
+High
+
+Part
+430-002839
+
+Subsystem
+Geartrain
+
+Material
+Steel 4340
+
+Manufacturing Process
+Gear cutting and heat treatment
+
+Design Intent
+Internal ring gear transmitting torque in planetary gearbox.
+
+Cost Drivers
+Internal gear cutting
+Inspection
+Heat treatment
+
+Cost Down Priority
+High
+
+Confidence
+High
+
+Part
+430-002837
+
+Subsystem
+Geartrain
+
+Material
+Steel 4340
+
+Manufacturing Process
+Gear cutting
+
+Design Intent
+Planet gear transmitting torque between sun and ring gear.
+
+Cost Drivers
+Gear machining
+Heat treatment
+
+Cost Down Priority
+Medium
+
+Confidence
+High
+
+Part
+430-002836
+
+Subsystem
+Geartrain
+
+Material
+Steel 4340
+
+Manufacturing Process
+Gear cutting
+
+Design Intent
+Sun gear driving planetary gear system.
+
+Cost Drivers
+Gear machining
+Inspection
+
+Cost Down Priority
+Medium
+
+Confidence
+High

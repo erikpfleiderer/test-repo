@@ -1,0 +1,91 @@
+Populate the geometry analysis section using STEP topology metrics.
+
+Part
+430-002839
+
+Faces
+752
+
+Edges
+2232
+
+Complexity score
+95
+
+Interpretation
+Very complex internal gear geometry requiring expensive machining.
+
+Part
+430-002808
+
+Faces
+427
+
+Edges
+929
+
+Complexity score
+78
+
+Interpretation
+Complex housing with many cylindrical bores.
+
+Part
+430-002811
+
+Faces
+406
+
+Edges
+939
+
+Complexity score
+73
+
+Interpretation
+Complex machined hub.
+
+Part
+430-002837
+
+Faces
+503
+
+Edges
+1461
+
+Complexity score
+70
+
+Interpretation
+Planet gear.
+
+Part
+430-002836
+
+Faces
+306
+
+Edges
+912
+
+Complexity score
+52
+
+Interpretation
+Sun gear.
+
+Part
+430-002810
+
+Faces
+114
+
+Edges
+300
+
+Complexity score
+34
+
+Interpretation
+Moderate machining complexity.

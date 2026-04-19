@@ -1,0 +1,42 @@
+OTS COST MODEL — Assembly 845-000112
+Goal: Populate reasonable engineering estimate prices for all Purchased/OTS parts so the BOM cost model works.
+
+Rules:
+- These are distributor-based engineering estimates (not quotes).
+- Add a field unitCostCurrent to the BOM dataset.
+- Add costConfidence field: High / Medium / Low.
+- Allow inline editing of unitCostCurrent by the user.
+- All prices are per-unit costs at moderate production volumes (~1000 units).
+
+Update CANONICAL_BOM_845_000112 rows 35–53 with the following unit cost estimates.
+
+[
+{"itemId":35,"partNumber":"443-000021","unitCostCurrent":18.00,"costConfidence":"Medium","notes":"Dual track magnetic ring encoder component"},
+{"itemId":36,"partNumber":"443-000022","unitCostCurrent":15.00,"costConfidence":"Medium","notes":"Dual track magnetic ring encoder component smaller OD"},
+{"itemId":37,"partNumber":"445-000499","unitCostCurrent":0.80,"costConfidence":"High","notes":"Simple aluminum spacer"},
+{"itemId":38,"partNumber":"447-000120","unitCostCurrent":12.00,"costConfidence":"Low","notes":"Likely encoder sensor IC or interface component"},
+{"itemId":39,"partNumber":"460-000001","unitCostCurrent":0.45,"costConfidence":"High","notes":"Standard polycarbonate light pipe"},
+{"itemId":40,"partNumber":"470-000084","unitCostCurrent":0.55,"costConfidence":"High","notes":"External retaining ring"},
+{"itemId":41,"partNumber":"470-000085","unitCostCurrent":0.50,"costConfidence":"High","notes":"External retaining ring"},
+{"itemId":42,"partNumber":"470-000086","unitCostCurrent":0.45,"costConfidence":"High","notes":"Internal retaining ring"},
+{"itemId":43,"partNumber":"472-000059","unitCostCurrent":0.09,"costConfidence":"High","notes":"M2 FH Torx fastener"},
+{"itemId":44,"partNumber":"472-000089","unitCostCurrent":0.10,"costConfidence":"High","notes":"M3 FH Torx fastener"},
+{"itemId":45,"partNumber":"472-000121","unitCostCurrent":0.08,"costConfidence":"High","notes":"M2 BH Torx fastener"},
+{"itemId":46,"partNumber":"472-000131","unitCostCurrent":0.07,"costConfidence":"High","notes":"M2.5 BH Torx fastener"},
+{"itemId":47,"partNumber":"472-000132","unitCostCurrent":0.08,"costConfidence":"High","notes":"M2.5 BH Torx fastener"},
+{"itemId":48,"partNumber":"472-001813","unitCostCurrent":0.12,"costConfidence":"High","notes":"Longer M2.5 Torx screw"},
+{"itemId":49,"partNumber":"481-000005","unitCostCurrent":6.00,"costConfidence":"Medium","notes":"Thermal gap filler compound cost per assembly usage"},
+{"itemId":50,"partNumber":"481-000008","unitCostCurrent":8.00,"costConfidence":"Medium","notes":"Thermal epoxy per assembly usage"},
+{"itemId":51,"partNumber":"482-000005","unitCostCurrent":0.45,"costConfidence":"High","notes":"Heat-set threaded insert"},
+{"itemId":53,"partNumber":"820-000122","unitCostCurrent":120.00,"costConfidence":"Low","notes":"Axon motor assembly major purchased component"}
+]
+
+Notes:
+- Item 52 (600-000019 MFG RESOURCE PACKAGE) should NOT be counted in BOM cost totals because it is documentation/manufacturing package, not a physical part.
+
+After inserting these prices:
+
+1) Update BOMAnalysis totals
+2) Recalculate Current BOM Cost
+3) Allow user override of all unitCostCurrent fields
+4) Mark costConfidence visually (badge: High / Medium / Low)

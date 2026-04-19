@@ -1,0 +1,129 @@
+Populate the ranked cost intervention table with engineering insights.
+
+Columns:
+
+Rank
+Part
+Subsystem
+Intervention
+Savings
+Engineering Difficulty
+Risk
+Confidence
+
+Populate with:
+
+Rank 1
+
+Part
+430-002839
+
+Subsystem
+Geartrain
+
+Intervention
+Powder metal gear
+
+Savings
+70–80%
+
+Engineering Difficulty
+Medium
+
+Risk
+Medium
+
+Confidence
+High
+
+Rank 2
+
+Part
+430-002808
+
+Subsystem
+Housing / Structure
+
+Intervention
+Investment casting
+
+Savings
+45%
+
+Engineering Difficulty
+Medium
+
+Risk
+Low
+
+Confidence
+High
+
+Rank 3
+
+Part
+430-002811
+
+Subsystem
+Housing / Structure
+
+Intervention
+Material substitution (7075 → 6061)
+
+Savings
+25%
+
+Engineering Difficulty
+Low
+
+Risk
+Low
+
+Confidence
+Medium
+
+Rank 4
+
+Part
+432-001540
+
+Subsystem
+Cable Management
+
+Intervention
+Injection molded plastic
+
+Savings
+90%
+
+Engineering Difficulty
+Low
+
+Risk
+Low
+
+Confidence
+High
+
+Rank 5
+
+Part
+430-002810
+
+Subsystem
+Housing / Structure
+
+Intervention
+Forged blank
+
+Savings
+35%
+
+Engineering Difficulty
+Medium
+
+Risk
+Medium
+
+Confidence
+Medium
