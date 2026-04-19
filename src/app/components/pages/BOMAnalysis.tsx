@@ -510,6 +510,10 @@ function GroupRows({
   onSelect,
   protoMode = false,
   headerless = false,
+  buildTargetDate,
+  estimatedBuildDays,
+  criticalPathSet,
+  onToggleCriticalPath,
 }: {
   subsystem: string;
   parts: CanonicalBomRow[];
@@ -519,6 +523,10 @@ function GroupRows({
   onSelect: (id: number | null) => void;
   protoMode?: boolean;
   headerless?: boolean;
+  buildTargetDate?: string;
+  estimatedBuildDays?: number;
+  criticalPathSet?: ReadonlySet<string>;
+  onToggleCriticalPath?: (partNumber: string) => void;
 }) {
   const groupExtCost = (() => {
     let sum = 0;
@@ -547,7 +555,7 @@ function GroupRows({
         const leadTimeDays = protoMode ? getPartLeadTime(part.partNumber) : null;
         const orderBy = protoMode ? getPartOrderBy(part.partNumber, buildTargetDate, estimatedBuildDays) : null;
         const isOverdue = orderBy?.isOverdue ?? false;
-        const isCriticalPath = protoMode && isOnCriticalPath(part.partNumber);
+        const isCriticalPath = protoMode && (criticalPathSet?.has(part.partNumber) ?? isOnCriticalPath(part.partNumber));
 
         return (
           <motion.tr
@@ -708,14 +716,22 @@ function GroupRows({
             )}
             {/* Critical Path — prototype mode only */}
             {protoMode && (
-              <td className="px-3 py-2.5">
-                {isCriticalPath ? (
+              <td className="px-2 py-2.5">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    onToggleCriticalPath?.(part.partNumber);
+                  }}
+                  title={isCriticalPath ? "Remove from critical path" : "Add to critical path"}
+                  className="flex items-center justify-center w-full transition-opacity"
+                  style={{ opacity: isCriticalPath ? 1 : 0.25 }}
+                >
                   <span
                     className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded border text-[10px]"
                     style={{
-                      background: "#FFF1F2",
-                      color: "#E11D48",
-                      borderColor: "#FECDD3",
+                      background: isCriticalPath ? "#FFF1F2" : "#F8FAFC",
+                      color: isCriticalPath ? "#E11D48" : "#94A3B8",
+                      borderColor: isCriticalPath ? "#FECDD3" : "#E2E8F0",
                       fontWeight: 600,
                       fontFamily: "'IBM Plex Sans', sans-serif",
                       whiteSpace: "nowrap",
@@ -724,9 +740,7 @@ function GroupRows({
                     <Flag size={9} />
                     CP
                   </span>
-                ) : (
-                  <span className="text-[12px] text-[#E2E8F0]">—</span>
-                )}
+                </button>
               </td>
             )}
             {/* Unit Cost */}
@@ -785,8 +799,14 @@ export function BOMAnalysis() {
   const [filterOverdue,      setFilterOverdue]      = useState(false);
 
   const { mode } = useAppMode();
-  const { buildTargetDate, estimatedBuildDays } = useBuildTarget();
+  const { buildTargetDate, estimatedBuildDays, criticalPathParts, toggleCriticalPath } = useBuildTarget();
   const protoMode = mode === "prototype";
+
+  // Build a Set once per render for O(1) lookups throughout this component
+  const activeCriticalPathSet = useMemo(
+    () => new Set(criticalPathParts),
+    [criticalPathParts]
+  );
 
   const {
     hasMissingCosts,
@@ -807,11 +827,11 @@ export function BOMAnalysis() {
         p.itemCategory.toLowerCase().includes(q);
       const matchSub  = subsystemFilter === "All" || p.subsystem === subsystemFilter;
       const matchMake = makeBuyFilter   === "All" || p.makeBuy   === makeBuyFilter;
-      const matchCP   = !filterCriticalPath || isOnCriticalPath(p.partNumber);
+      const matchCP   = !filterCriticalPath || activeCriticalPathSet.has(p.partNumber);
       const matchOD   = !filterOverdue || isPartOverdue(p.partNumber, buildTargetDate, estimatedBuildDays);
       return matchSearch && matchSub && matchMake && matchCP && matchOD;
     });
-  }, [searchQuery, subsystemFilter, makeBuyFilter, filterCriticalPath, filterOverdue, buildTargetDate, estimatedBuildDays]);
+  }, [searchQuery, subsystemFilter, makeBuyFilter, filterCriticalPath, filterOverdue, buildTargetDate, estimatedBuildDays, activeCriticalPathSet]);
 
   const groupedRows = useMemo(() => {
     const groups: Record<string, CanonicalBomRow[]> = {};
@@ -841,7 +861,7 @@ export function BOMAnalysis() {
   }, [filtered, protoMode, sortBy, buildTargetDate, estimatedBuildDays]);
 
   // Prototype summary stats (computed once over the full BOM, not the filtered view)
-  const criticalPathCount = protoMode ? CRITICAL_PATH_SET.size : 0;
+  const criticalPathCount = protoMode ? activeCriticalPathSet.size : 0;
   const overdueCount = protoMode
     ? CANONICAL_BOM_845_000112.filter((p) => isPartOverdue(p.partNumber, buildTargetDate, estimatedBuildDays)).length
     : 0;
@@ -1117,6 +1137,10 @@ export function BOMAnalysis() {
                         onSelect={setSelectedLineId}
                         protoMode={protoMode}
                         headerless
+                        buildTargetDate={buildTargetDate}
+                        estimatedBuildDays={estimatedBuildDays}
+                        criticalPathSet={activeCriticalPathSet}
+                        onToggleCriticalPath={toggleCriticalPath}
                       />
                     )
                   ) : Object.keys(groupedRows).length === 0 ? (
@@ -1139,6 +1163,10 @@ export function BOMAnalysis() {
                         getEffectiveUnitCost={getEffectiveUnitCost}
                         onSelect={setSelectedLineId}
                         protoMode={protoMode}
+                        buildTargetDate={buildTargetDate}
+                        estimatedBuildDays={estimatedBuildDays}
+                        criticalPathSet={activeCriticalPathSet}
+                        onToggleCriticalPath={toggleCriticalPath}
                       />
                     ))
                   )}

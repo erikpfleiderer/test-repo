@@ -534,7 +534,7 @@ function StatCell({
 
 export function BuildTimingSection() {
   const data = useDashboardData();
-  const { buildTargetDate, estimatedBuildDays } = useBuildTarget();
+  const { buildTargetDate, estimatedBuildDays, criticalPathParts } = useBuildTarget();
   const mode = data.mode;
 
   // ── Prototype ──────────────────────────────────────────────────────────────
@@ -557,7 +557,7 @@ export function BuildTimingSection() {
       : "TBD";
 
     // Longest-lead critical path parts with PROTOTYPE_PART_DATA lead times
-    const criticalPartsRanked = [...br.criticalPathParts]
+    const criticalPartsRanked = [...criticalPathParts]
       .map((pn) => ({
         pn,
         lead: PROTOTYPE_PART_DATA[pn]?.iterationProfile.leadTimeDays ?? 0,
@@ -609,7 +609,7 @@ export function BuildTimingSection() {
                   : daysToTarget === 0
                   ? "today"
                   : `${Math.abs(daysToTarget)}d overdue`
-                : `${br.criticalPathParts.length} critical path parts`
+                : `${criticalPathParts.length} critical path parts`
             }
           />
           <StatCell

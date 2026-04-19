@@ -23,6 +23,7 @@ import {
 } from "lucide-react";
 import { useCostModel } from "../../context/CostModelContext";
 import { useAppMode } from "../../context/AppModeContext";
+import { useBuildTarget } from "../../context/BuildTargetContext";
 import {
   PART_COST_DATA,
   INTERVENTION_COST_DATA,
@@ -76,6 +77,7 @@ interface DisplayRow {
 
 function buildDisplayList(
   data: ReturnType<typeof useDashboardData>,
+  criticalPathSet: ReadonlySet<string> = CRITICAL_PATH_SET,
 ): DisplayRow[] {
   if (data.mode === "production") {
     return (data.interventions as ProductionIntervention[]).map((i) => ({
@@ -118,7 +120,7 @@ function buildDisplayList(
     confidenceLevel:    s.confidenceLevel,
     leadTimeSavingsDays: s.leadTimeSavingsDays,
     isHardBlocker:       hardBlockerSet.has(s.partNumber),
-    isCriticalPath:      CRITICAL_PATH_SET.has(s.partNumber),
+    isCriticalPath:      criticalPathSet.has(s.partNumber),
     _raw:               s,
   }));
 }
@@ -546,6 +548,8 @@ export function CostInterventions() {
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const data = useDashboardData();
   const mode = data.mode;
+  const { criticalPathParts } = useBuildTarget();
+  const activeCriticalPathSet = new Set(criticalPathParts);
   const {
     isInterventionSelected,
     toggleIntervention,
@@ -555,7 +559,7 @@ export function CostInterventions() {
     expectedAnnualVolume,
   } = useCostModel();
 
-  const rawList = buildDisplayList(data);
+  const rawList = buildDisplayList(data, activeCriticalPathSet);
   const INTERVENTIONS = mode === "prototype" ? sortForPrototype(rawList) : rawList;
   const cfg = MODE_CONFIG[mode];
 
