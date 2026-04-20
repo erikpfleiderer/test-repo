@@ -27,6 +27,7 @@ import {
   ArrowLeftRight,
   Box,
   Upload,
+  ShieldAlert,
   type LucideIcon,
 } from "lucide-react";
 
@@ -44,11 +45,11 @@ export const MODE_NAV_ITEMS: Record<AppMode, NavItem[]> = {
   prototype: [
     { label: "Upload Files",       icon: Upload,          path: "/upload" },
     { label: "Overview",           icon: LayoutDashboard, path: "/overview" },
-    { label: "Iteration Planning", icon: Zap,             path: "/cost-interventions" },
-    { label: "BOM Analysis",       icon: List,            path: "/bom-analysis" },
-    { label: "Geometry Analysis",  icon: Box,             path: "/geometry-analysis" },
-    { label: "Subsystem Analysis", icon: Layers,          path: "/subsystem-analysis" },
-    { label: "DFM Opportunities",  icon: Wrench,          path: "/dfm-opportunities" },
+    { label: "Iteration Planning",     icon: Zap,          path: "/cost-interventions" },
+    { label: "BOM Analysis",            icon: List,         path: "/bom-analysis" },
+    { label: "Prod. Readiness",         icon: ShieldAlert,  path: "/production-readiness" },
+    { label: "Subsystem Analysis",      icon: Layers,       path: "/subsystem-analysis" },
+    { label: "DFM Opportunities",       icon: Wrench,       path: "/dfm-opportunities" },
   ],
   production: [
     { label: "Upload Files",            icon: Upload,          path: "/upload" },

@@ -11,6 +11,7 @@ import { MaterialOptimization } from "./components/pages/MaterialOptimization";
 import { ManufacturingTransition } from "./components/pages/ManufacturingTransition";
 import { BOMAnalysis } from "./components/pages/BOMAnalysis";
 import { GeometryAnalysis } from "./components/pages/GeometryAnalysis";
+import { ProductionReadiness } from "./components/pages/ProductionReadiness";
 import { FileText, Download } from "lucide-react";
 
 export const router = createHashRouter([
@@ -29,7 +30,8 @@ export const router = createHashRouter([
       { path: "material-optimization", Component: MaterialOptimization },
       { path: "manufacturing-transition", Component: ManufacturingTransition },
       { path: "bom-analysis", Component: BOMAnalysis },
-      { path: "geometry-analysis", Component: GeometryAnalysis },
+      { path: "geometry-analysis",    Component: GeometryAnalysis },
+      { path: "production-readiness", Component: ProductionReadiness },
       {
         path: "reports",
         element: (

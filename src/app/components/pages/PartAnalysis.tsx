@@ -358,24 +358,6 @@ export function PartAnalysis() {
               )}
               {protoPart && (
                 <div className="flex flex-col gap-3">
-                  <div className="flex items-center gap-3">
-                    <span
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-[13px]"
-                      style={
-                        protoPart.functionalRisk.clearToBuild
-                          ? { background: "#F0FDF4", color: "#16A34A", borderColor: "#BBF7D0", fontWeight: 500 }
-                          : { background: "#FFF1F2", color: "#E11D48", borderColor: "#FECDD3", fontWeight: 500 }
-                      }
-                    >
-                      <CheckCircle2 size={13} />
-                      {protoPart.functionalRisk.clearToBuild ? "Clear to Build" : "Not Clear to Build"}
-                    </span>
-                    {protoPart.functionalRisk.clearToBuildNotes && (
-                      <p className="text-[12px] text-[#64748B]">
-                        {protoPart.functionalRisk.clearToBuildNotes}
-                      </p>
-                    )}
-                  </div>
                   <div className="rounded-lg border border-[#E2E8F0] p-3">
                     <p className="text-[10px] uppercase tracking-wider text-[#94A3B8] mb-1.5" style={{ fontWeight: 500 }}>
                       Change Impact Radius
@@ -882,13 +864,6 @@ export function PartAnalysis() {
                           Iteration Complexity
                         </div>
                         <AssessmentBadge value={protoPart.iterationProfile.iterationComplexity} type="difficulty" />
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-2 text-[12px] text-[#64748B]">
-                          <AlertTriangle size={12} />
-                          Functional Risk
-                        </div>
-                        <AssessmentBadge value={protoPart.functionalRisk.riskLevel} type="risk" />
                       </div>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center gap-2 text-[12px] text-[#64748B]">

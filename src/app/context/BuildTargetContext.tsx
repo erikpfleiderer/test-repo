@@ -15,10 +15,13 @@ interface BuildTargetContextValue {
   estimatedBuildDays: number;
   /** User-managed set of part numbers on the critical path. */
   criticalPathParts: string[];
+  /** Number of assemblies to build in this prototype run. Drives total build cost. */
+  buildQuantity: number;
   setBuildTargetDate: (date: string) => void;
   setEstimatedBuildDays: (days: number) => void;
   /** Toggle a part number on/off the critical path. */
   toggleCriticalPath: (partNumber: string) => void;
+  setBuildQuantity: (qty: number) => void;
 }
 
 // ─── Context ──────────────────────────────────────────────────────────────────
@@ -35,9 +38,11 @@ export function useBuildTarget(): BuildTargetContextValue {
       buildTargetDate: PROTOTYPE_ASSEMBLY.nextBuildTargetDate ?? "",
       estimatedBuildDays: PROTOTYPE_ASSEMBLY.estimatedBuildDays,
       criticalPathParts: PROTOTYPE_ASSEMBLY.criticalPathParts,
+      buildQuantity: 1,
       setBuildTargetDate: () => { /* no-op outside provider */ },
       setEstimatedBuildDays: () => { /* no-op outside provider */ },
       toggleCriticalPath: () => { /* no-op outside provider */ },
+      setBuildQuantity: () => { /* no-op outside provider */ },
     };
   }
   return ctx;
@@ -48,6 +53,7 @@ export function useBuildTarget(): BuildTargetContextValue {
 const DATE_KEY = "proto_buildTargetDate";
 const DAYS_KEY = "proto_estimatedBuildDays";
 const CP_KEY   = "proto_criticalPathParts";
+const QTY_KEY  = "proto_buildQuantity";
 
 function readStoredDate(): string {
   return (
@@ -79,12 +85,22 @@ function readStoredCriticalPath(): string[] {
   return PROTOTYPE_ASSEMBLY.criticalPathParts;
 }
 
+function readStoredBuildQuantity(): number {
+  const stored = localStorage.getItem(QTY_KEY);
+  if (stored) {
+    const v = parseInt(stored, 10);
+    if (!isNaN(v) && v > 0) return v;
+  }
+  return 1;
+}
+
 // ─── Provider ─────────────────────────────────────────────────────────────────
 
 export function BuildTargetProvider({ children }: { children: ReactNode }) {
   const [buildTargetDate, setBuildTargetDateState] = useState<string>(readStoredDate);
   const [estimatedBuildDays, setEstimatedBuildDaysState] = useState<number>(readStoredDays);
   const [criticalPathParts, setCriticalPathPartsState] = useState<string[]>(readStoredCriticalPath);
+  const [buildQuantity, setBuildQuantityState] = useState<number>(readStoredBuildQuantity);
 
   const setBuildTargetDate = (date: string) => {
     localStorage.setItem(DATE_KEY, date);
@@ -106,9 +122,14 @@ export function BuildTargetProvider({ children }: { children: ReactNode }) {
     });
   };
 
+  const setBuildQuantity = (qty: number) => {
+    localStorage.setItem(QTY_KEY, String(qty));
+    setBuildQuantityState(qty);
+  };
+
   return (
     <BuildTargetContext.Provider
-      value={{ buildTargetDate, estimatedBuildDays, criticalPathParts, setBuildTargetDate, setEstimatedBuildDays, toggleCriticalPath }}
+      value={{ buildTargetDate, estimatedBuildDays, criticalPathParts, buildQuantity, setBuildTargetDate, setEstimatedBuildDays, toggleCriticalPath, setBuildQuantity }}
     >
       {children}
     </BuildTargetContext.Provider>

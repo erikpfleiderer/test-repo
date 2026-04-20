@@ -19,6 +19,7 @@ import {
 import {
   PROTOTYPE_PART_DATA,
   computeOrderByDate,
+  getPartOrderBy,
   type BuildBlocker,
   type ChecklistEntry,
   computeBuildChecklist,
@@ -392,9 +393,15 @@ function ChecklistRow({ entry }: { entry: ChecklistEntry }) {
   );
 }
 
-function PreBuildChecklist() {
+function PreBuildChecklist({
+  buildTargetDate,
+  estimatedBuildDays,
+}: {
+  buildTargetDate: string;
+  estimatedBuildDays: number;
+}) {
   const [readyExpanded, setReadyExpanded] = useState(false);
-  const { blocked, conditional, ready } = computeBuildChecklist();
+  const { blocked, conditional, ready } = computeBuildChecklist(buildTargetDate, estimatedBuildDays);
   const totalIssues = blocked.length + conditional.length;
   const totalValidation = [...blocked, ...conditional, ...ready].reduce(
     (s, e) => s + e.validationCount,
@@ -541,11 +548,57 @@ export function BuildTimingSection() {
   if (mode === "prototype") {
     const br = data.buildRecord;
 
-    const { color: readinessColor } = buildReadinessStyle(br.buildReadiness);
-    const hardBlockers = br.blockers.filter((b) => b.isHardBlocker);
-    const softBlockers = br.blockers.filter((b) => !b.isHardBlocker);
+    // Dynamic blocker lists: overdue order-by = hard blocker, ≤7 days = conditional.
+    // Walk all BOM rows that have prototype part data or are static hard blockers.
+    const staticHardBlockerSet = new Set(
+      br.blockers.filter((b) => b.isHardBlocker && b.partNumber).map((b) => b.partNumber!),
+    );
+    const allBomParts = CANONICAL_BOM_845_000112.filter(
+      (r) => PROTOTYPE_PART_DATA[r.partNumber] || staticHardBlockerSet.has(r.partNumber),
+    );
+
+    const dynamicHardBlockers: BuildBlocker[] = [];
+    const dynamicSoftBlockers: BuildBlocker[] = [];
+
+    for (const row of allBomParts) {
+      const orderBy = getPartOrderBy(row.partNumber, buildTargetDate, estimatedBuildDays);
+      // Keep static hard-blocker description/resolution if available
+      const staticBlocker = br.blockers.find((b) => b.partNumber === row.partNumber && b.isHardBlocker);
+      const staticSoft    = br.blockers.find((b) => b.partNumber === row.partNumber && !b.isHardBlocker);
+      if (staticBlocker || orderBy?.isOverdue) {
+        const daysOverdue = orderBy ? Math.abs(orderBy.daysUntilDeadline) : null;
+        dynamicHardBlockers.push(staticBlocker ?? {
+          description: daysOverdue != null
+            ? `${row.name.replace(/^RS320 /i, "")} — order deadline passed (${daysOverdue}d overdue)`
+            : `${row.name.replace(/^RS320 /i, "")} — order deadline passed`,
+          resolution: "Order immediately to avoid build delay",
+          isHardBlocker: true,
+          partNumber: row.partNumber,
+        });
+      } else if (staticSoft || (orderBy && orderBy.daysUntilDeadline <= 7)) {
+        const daysLeft = orderBy?.daysUntilDeadline ?? null;
+        dynamicSoftBlockers.push(staticSoft ?? {
+          description: daysLeft != null
+            ? `${row.name.replace(/^RS320 /i, "")} — must order within ${daysLeft}d`
+            : `${row.name.replace(/^RS320 /i, "")} — order soon`,
+          resolution: "Order now to stay on schedule",
+          isHardBlocker: false,
+          partNumber: row.partNumber,
+        });
+      }
+    }
+    // Include any assembly-level (no partNumber) static blockers
+    for (const b of br.blockers) {
+      if (b.partNumber) continue;
+      if (b.isHardBlocker) dynamicHardBlockers.push(b);
+      else dynamicSoftBlockers.push(b);
+    }
+
+    const hardBlockers = dynamicHardBlockers;
+    const softBlockers = dynamicSoftBlockers;
 
     // Next build date: use context value (user-configurable) then fall back to assembly record
+    const { color: readinessColor } = buildReadinessStyle(br.buildReadiness);
     const today = new Date();
     const effectiveTargetDate = buildTargetDate || br.nextBuildTargetDate;
     const targetDate = effectiveTargetDate ? new Date(effectiveTargetDate) : null;
@@ -590,7 +643,7 @@ export function BuildTimingSection() {
           <StatCell
             label="Build Status"
             value={br.buildReadiness}
-            sub={`${br.blockers.length} blocker${br.blockers.length !== 1 ? "s" : ""} total`}
+            sub={`${hardBlockers.length + softBlockers.length} blocker${hardBlockers.length + softBlockers.length !== 1 ? "s" : ""} total`}
             valueColor={readinessColor}
           />
           <StatCell
@@ -627,7 +680,7 @@ export function BuildTimingSection() {
 
             {/* Critical path parts */}
             <div>
-              <SectionLabel>Critical Path Parts (by lead time)</SectionLabel>
+              <SectionLabel>Critical Path Parts</SectionLabel>
               {criticalPartsRanked.length > 0 ? (
                 <div>
                   {criticalPartsRanked.map(({ pn, rank }) => (
@@ -662,26 +715,8 @@ export function BuildTimingSection() {
             )}
           </div>
 
-          {/* Right: iteration objectives + acceleration */}
+          {/* Right: acceleration */}
           <div className="p-5 flex flex-col gap-5">
-
-            {/* Iteration objectives */}
-            <div>
-              <SectionLabel>This Build Must Answer</SectionLabel>
-              <div>
-                {br.iterationObjectives.map((obj, i) => (
-                  <Row key={i}>
-                    <Circle size={13} style={{ color: "#CBD5E1", flexShrink: 0, marginTop: 2 }} />
-                    <p
-                      className="text-[12px] text-[#1E293B] leading-snug"
-                      style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-                    >
-                      {obj}
-                    </p>
-                  </Row>
-                ))}
-              </div>
-            </div>
 
             {/* Acceleration suggestions from simplifications */}
             {topSimplifications.length > 0 && (
@@ -716,35 +751,14 @@ export function BuildTimingSection() {
               </div>
             )}
 
-            {/* Open questions */}
-            {br.openQuestions.length > 0 && (
-              <div>
-                <SectionLabel>Open Questions After This Build</SectionLabel>
-                <div>
-                  {br.openQuestions.map((q, i) => (
-                    <Row key={i}>
-                      <span
-                        className="text-[10px] text-[#94A3B8] shrink-0 mt-0.5"
-                        style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-                      >
-                        {i + 1}.
-                      </span>
-                      <p
-                        className="text-[11px] text-[#64748B] leading-snug"
-                        style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-                      >
-                        {q}
-                      </p>
-                    </Row>
-                  ))}
-                </div>
-              </div>
-            )}
           </div>
         </div>
 
         {/* Pre-Build Checklist */}
-        <PreBuildChecklist />
+        <PreBuildChecklist
+            buildTargetDate={buildTargetDate}
+            estimatedBuildDays={estimatedBuildDays}
+          />
       </div>
     );
   }

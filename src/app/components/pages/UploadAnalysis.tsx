@@ -191,8 +191,9 @@ export function UploadAnalysis() {
   const navigate = useNavigate();
   const { expectedAnnualVolume, setExpectedAnnualVolume } = useCostModel();
   const { mode } = useAppMode();
-  const { buildTargetDate, estimatedBuildDays, setBuildTargetDate, setEstimatedBuildDays } = useBuildTarget();
+  const { buildTargetDate, estimatedBuildDays, setBuildTargetDate, setEstimatedBuildDays, buildQuantity, setBuildQuantity } = useBuildTarget();
   const [buildDaysInput, setBuildDaysInput] = useState(String(estimatedBuildDays));
+  const [buildQtyInput, setBuildQtyInput] = useState(String(buildQuantity));
   const [stage, setStage] = useState<Stage>("idle");
   const [isDragging, setIsDragging] = useState(false);
   const [fileName, setFileName] = useState<string | null>(null);
@@ -394,53 +395,59 @@ export function UploadAnalysis() {
               Project Settings
             </p>
           </div>
-          <div className="flex items-end gap-4">
-            <div className="flex-1 max-w-[220px]">
-              <label
-                className="block text-[11px] text-[#64748B] mb-1.5"
-                style={{ fontWeight: 500, fontFamily: "'IBM Plex Sans', sans-serif" }}
-              >
-                Expected Annual Volume
-              </label>
-              <div className="relative">
-                <span
-                  className="absolute left-3 top-1/2 -translate-y-1/2 text-[#94A3B8] text-[12px] select-none"
-                  style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+          {mode === "prototype" ? (
+            <p className="text-[12px] text-[#94A3B8]" style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}>
+              Annual volume is not applicable in prototype mode. Set build quantity in Prototype Build Settings below.
+            </p>
+          ) : (
+            <div className="flex items-end gap-4">
+              <div className="flex-1 max-w-[220px]">
+                <label
+                  className="block text-[11px] text-[#64748B] mb-1.5"
+                  style={{ fontWeight: 500, fontFamily: "'IBM Plex Sans', sans-serif" }}
                 >
-                  ×
-                </span>
-                <input
-                  type="number"
-                  min={1}
-                  step={500}
-                  value={volumeInput}
-                  onChange={(e) => {
-                    setVolumeInput(e.target.value);
-                    const v = parseInt(e.target.value, 10);
-                    if (!isNaN(v) && v > 0) setExpectedAnnualVolume(v);
-                  }}
-                  onBlur={() => setVolumeInput(String(expectedAnnualVolume))}
-                  className="w-full h-9 pl-7 pr-3 rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] text-[13px] text-[#1E293B] focus:outline-none focus:border-[#93C5FD] focus:bg-white transition-colors"
-                  style={{ fontFamily: "'IBM Plex Mono', monospace" }}
-                  onClick={(e) => e.stopPropagation()}
-                />
+                  Expected Annual Volume
+                </label>
+                <div className="relative">
+                  <span
+                    className="absolute left-3 top-1/2 -translate-y-1/2 text-[#94A3B8] text-[12px] select-none"
+                    style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+                  >
+                    ×
+                  </span>
+                  <input
+                    type="number"
+                    min={1}
+                    step={500}
+                    value={volumeInput}
+                    onChange={(e) => {
+                      setVolumeInput(e.target.value);
+                      const v = parseInt(e.target.value, 10);
+                      if (!isNaN(v) && v > 0) setExpectedAnnualVolume(v);
+                    }}
+                    onBlur={() => setVolumeInput(String(expectedAnnualVolume))}
+                    className="w-full h-9 pl-7 pr-3 rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] text-[13px] text-[#1E293B] focus:outline-none focus:border-[#93C5FD] focus:bg-white transition-colors"
+                    style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                </div>
+                <p className="text-[11px] text-[#94A3B8] mt-1.5" style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}>
+                  Used to project annual savings across cost interventions
+                </p>
               </div>
-              <p className="text-[11px] text-[#94A3B8] mt-1.5" style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}>
-                Used to project annual savings across cost interventions
-              </p>
-            </div>
-            <div className="pb-0.5">
-              <div
-                className="px-3 py-2 rounded-lg border border-[#E2E8F0] text-[12px] text-[#64748B]"
-                style={{ background: "#F8FAFC", fontFamily: "'IBM Plex Sans', sans-serif" }}
-              >
-                <span className="text-[#94A3B8]">Active:</span>{" "}
-                <span style={{ fontWeight: 600, color: "#1B3A5C" }}>
-                  {expectedAnnualVolume.toLocaleString()} units/yr
-                </span>
+              <div className="pb-0.5">
+                <div
+                  className="px-3 py-2 rounded-lg border border-[#E2E8F0] text-[12px] text-[#64748B]"
+                  style={{ background: "#F8FAFC", fontFamily: "'IBM Plex Sans', sans-serif" }}
+                >
+                  <span className="text-[#94A3B8]">Active:</span>{" "}
+                  <span style={{ fontWeight: 600, color: "#1B3A5C" }}>
+                    {expectedAnnualVolume.toLocaleString()} units/yr
+                  </span>
+                </div>
               </div>
             </div>
-          </div>
+          )}
         </motion.div>
 
         {/* Prototype Build Settings */}
@@ -486,6 +493,36 @@ export function UploadAnalysis() {
                 />
                 <p className="text-[11px] text-[#94A3B8] mt-1.5" style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}>
                   Drives order-by deadlines and overdue flags across all views
+                </p>
+              </div>
+              {/* Build Quantity */}
+              <div style={{ width: 140 }}>
+                <label
+                  className="block text-[11px] text-[#64748B] mb-1.5"
+                  style={{ fontWeight: 500, fontFamily: "'IBM Plex Sans', sans-serif" }}
+                >
+                  Build Quantity
+                </label>
+                <div className="relative">
+                  <Package size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#94A3B8]" />
+                  <input
+                    type="number"
+                    min={1}
+                    max={100}
+                    value={buildQtyInput}
+                    onChange={(e) => {
+                      setBuildQtyInput(e.target.value);
+                      const v = parseInt(e.target.value, 10);
+                      if (!isNaN(v) && v > 0) setBuildQuantity(v);
+                    }}
+                    onBlur={() => setBuildQtyInput(String(buildQuantity))}
+                    className="w-full h-9 pl-8 pr-3 rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] text-[13px] text-[#1E293B] focus:outline-none focus:border-[#93C5FD] focus:bg-white transition-colors"
+                    style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+                    onClick={(e) => e.stopPropagation()}
+                  />
+                </div>
+                <p className="text-[11px] text-[#94A3B8] mt-1.5" style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}>
+                  units
                 </p>
               </div>
               {/* Estimated Build Days */}

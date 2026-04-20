@@ -2026,7 +2026,10 @@ export interface BuildChecklistResult {
  * clearToBuildNotes set), or "ready".
  * Pure function — safe to call at module level.
  */
-export function computeBuildChecklist(): BuildChecklistResult {
+export function computeBuildChecklist(
+  targetDate?: string | null,
+  buildDays?: number,
+): BuildChecklistResult {
   const hardBlockerMap = new Map<string, BuildBlocker>();
   const softBlockerMap = new Map<string, BuildBlocker>();
   for (const b of PROTOTYPE_ASSEMBLY.blockers) {
@@ -2050,11 +2053,31 @@ export function computeBuildChecklist(): BuildChecklistResult {
     const notes = pd?.functionalRisk.clearToBuildNotes;
     const name = row.name.replace(/^RS320 /i, "");
 
-    if (hardBlockerMap.has(row.partNumber)) {
-      return { partNumber: row.partNumber, name, subsystem: row.subsystem, status: "blocked", validationCount, blocker: hardBlockerMap.get(row.partNumber) };
+    // Compute order-by urgency to dynamically promote status
+    const orderBy = getPartOrderBy(row.partNumber, targetDate, buildDays);
+    const isOverdue = orderBy?.isOverdue ?? false;
+    const daysLeft = orderBy?.daysUntilDeadline ?? null;
+    const isUrgent = daysLeft != null && daysLeft <= 7 && !isOverdue;
+
+    if (hardBlockerMap.has(row.partNumber) || isOverdue) {
+      const blocker = hardBlockerMap.get(row.partNumber) ?? {
+        description: isOverdue
+          ? `Order deadline passed — ${Math.abs(daysLeft!)}d overdue`
+          : "Ordering deadline has passed",
+        resolution: "Order immediately to avoid build delay",
+        isHardBlocker: true,
+        partNumber: row.partNumber,
+      };
+      return { partNumber: row.partNumber, name, subsystem: row.subsystem, status: "blocked", validationCount, blocker };
     }
-    if (softBlockerMap.has(row.partNumber) || notes) {
-      return { partNumber: row.partNumber, name, subsystem: row.subsystem, status: "conditional", validationCount, clearToBuildNotes: notes, blocker: softBlockerMap.get(row.partNumber) };
+    if (softBlockerMap.has(row.partNumber) || notes || isUrgent) {
+      const blocker = softBlockerMap.get(row.partNumber) ?? (isUrgent ? {
+        description: `Must order within ${daysLeft}d`,
+        resolution: "Order now to stay on schedule",
+        isHardBlocker: false,
+        partNumber: row.partNumber,
+      } : undefined);
+      return { partNumber: row.partNumber, name, subsystem: row.subsystem, status: "conditional", validationCount, clearToBuildNotes: notes, blocker };
     }
     return { partNumber: row.partNumber, name, subsystem: row.subsystem, status: "ready", validationCount };
   });

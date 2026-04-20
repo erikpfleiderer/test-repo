@@ -21,6 +21,9 @@ import {
   Clock,
   Calendar,
   Flag,
+  Square,
+  CheckSquare2,
+  Send,
 } from "lucide-react";
 import {
   CANONICAL_BOM_845_000112,
@@ -152,7 +155,7 @@ function GroupHeader({ label, count, extCost, protoMode = false }: { label: stri
   return (
     <tr>
       <td
-        colSpan={protoMode ? 15 : 12}
+        colSpan={protoMode ? 16 : 13}
         className="px-4 py-2"
         style={{ background: s.bg, borderBottom: `1px solid ${s.border}`, borderTop: "1px solid #E2E8F0" }}
       >
@@ -514,6 +517,8 @@ function GroupRows({
   estimatedBuildDays,
   criticalPathSet,
   onToggleCriticalPath,
+  selectedParts,
+  onTogglePartSelect,
 }: {
   subsystem: string;
   parts: CanonicalBomRow[];
@@ -527,6 +532,8 @@ function GroupRows({
   estimatedBuildDays?: number;
   criticalPathSet?: ReadonlySet<string>;
   onToggleCriticalPath?: (partNumber: string) => void;
+  selectedParts: Set<string>;
+  onTogglePartSelect: (partNumber: string) => void;
 }) {
   const groupExtCost = (() => {
     let sum = 0;
@@ -577,6 +584,18 @@ function GroupRows({
                 : "3px solid transparent",
             }}
           >
+            {/* Select checkbox */}
+            <td className="px-2 py-2.5" onClick={(e) => e.stopPropagation()}>
+              <button
+                onClick={() => onTogglePartSelect(part.partNumber)}
+                className="flex items-center justify-center w-full"
+                title={selectedParts.has(part.partNumber) ? "Deselect" : "Select for ordering"}
+              >
+                {selectedParts.has(part.partNumber)
+                  ? <CheckSquare2 size={14} color="#2563EB" />
+                  : <Square size={14} color="#CBD5E1" />}
+              </button>
+            </td>
             {/* Line ID */}
             <td className="px-3 py-2.5">
               <span className="text-[10px] text-[#CBD5E1]" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{part.bomLineId}</span>
@@ -797,6 +816,8 @@ export function BOMAnalysis() {
   const [sortBy,             setSortBy]             = useState<"default" | "leadTime" | "urgency">("default");
   const [filterCriticalPath, setFilterCriticalPath] = useState(false);
   const [filterOverdue,      setFilterOverdue]      = useState(false);
+  const [selectedParts,      setSelectedParts]      = useState<Set<string>>(new Set());
+  const [fictivSent,         setFictivSent]         = useState(false);
 
   const { mode } = useAppMode();
   const { buildTargetDate, estimatedBuildDays, criticalPathParts, toggleCriticalPath } = useBuildTarget();
@@ -868,6 +889,39 @@ export function BOMAnalysis() {
 
   const makeParts = CANONICAL_BOM_845_000112.filter((p) => p.makeBuy === "Make").length;
   const buyParts  = CANONICAL_BOM_845_000112.filter((p) => p.makeBuy === "Buy").length;
+
+  // Part selection helpers
+  const allFilteredPartNumbers = (sortedFlat ?? Object.values(groupedRows).flat()).map((p) => p.partNumber);
+  const allSelected = allFilteredPartNumbers.length > 0 && allFilteredPartNumbers.every((pn) => selectedParts.has(pn));
+  const someSelected = !allSelected && allFilteredPartNumbers.some((pn) => selectedParts.has(pn));
+
+  const togglePartSelect = (partNumber: string) => {
+    setSelectedParts((prev) => {
+      const next = new Set(prev);
+      if (next.has(partNumber)) next.delete(partNumber);
+      else next.add(partNumber);
+      return next;
+    });
+    setFictivSent(false);
+  };
+
+  const toggleSelectAll = () => {
+    if (allSelected) {
+      setSelectedParts(new Set());
+    } else {
+      setSelectedParts(new Set(allFilteredPartNumbers));
+    }
+    setFictivSent(false);
+  };
+
+  const handleSendToFictiv = () => {
+    // Hypothetical: in a real integration this would POST to Fictiv's order API.
+    setFictivSent(true);
+    setTimeout(() => {
+      setSelectedParts(new Set());
+      setFictivSent(false);
+    }, 2500);
+  };
   const selectedPart = selectedLineId != null
     ? CANONICAL_BOM_845_000112.find((p) => p.bomLineId === selectedLineId) ?? null
     : null;
@@ -1066,24 +1120,39 @@ export function BOMAnalysis() {
             <div className="overflow-x-auto">
               <table className="w-full" style={{ borderCollapse: "collapse", tableLayout: "fixed" }}>
                 <colgroup>
-                  <col style={{ width: 36 }} />
-                  <col style={{ width: 120 }} />
-                  <col style={{ width: 145 }} />
-                  <col style={{ width: 90 }} />
-                  <col style={{ width: 110 }} />
-                  <col style={{ width: 190 }} />
-                  <col style={{ width: 165 }} />
-                  <col style={{ width: 40 }} />
-                  <col style={{ width: 76 }} />
-                  {protoMode && <col style={{ width: 68 }} />}
-                  {protoMode && <col style={{ width: 96 }} />}
-                  {protoMode && <col style={{ width: 46 }} />}
-                  <col style={{ width: 82 }} />
-                  <col style={{ width: 85 }} />
-                  <col style={{ width: 34 }} />
+                  <col style={{ width: 34 }} />  {/* checkbox */}
+                  <col style={{ width: 34 }} />  {/* # */}
+                  <col style={{ width: 116 }} /> {/* Part Number */}
+                  <col style={{ width: 148 }} /> {/* Name */}
+                  <col style={{ width: 92 }} />  {/* Category */}
+                  <col style={{ width: 104 }} /> {/* Material */}
+                  <col style={{ width: 172 }} /> {/* Design Intent */}
+                  <col style={{ width: 160 }} /> {/* Cost Drivers */}
+                  <col style={{ width: 44 }} />  {/* Qty */}
+                  <col style={{ width: 74 }} />  {/* Make/Buy */}
+                  {protoMode && <col style={{ width: 68 }} />}   {/* Lead Time */}
+                  {protoMode && <col style={{ width: 94 }} />}   {/* Order By */}
+                  {protoMode && <col style={{ width: 46 }} />}   {/* CP */}
+                  <col style={{ width: 82 }} />  {/* Unit Cost */}
+                  <col style={{ width: 84 }} />  {/* Ext. Cost */}
+                  <col style={{ width: 32 }} />  {/* expand chevron */}
                 </colgroup>
                 <thead>
                   <tr style={{ background: "#F8FAFC", borderBottom: "2px solid #E2E8F0" }}>
+                    {/* Select-all checkbox */}
+                    <th className="px-2 py-3 w-8">
+                      <button
+                        onClick={toggleSelectAll}
+                        className="flex items-center justify-center w-full"
+                        title={allSelected ? "Deselect all" : "Select all"}
+                      >
+                        {allSelected
+                          ? <CheckSquare2 size={14} color="#2563EB" />
+                          : someSelected
+                          ? <CheckSquare2 size={14} color="#93C5FD" />
+                          : <Square size={14} color="#CBD5E1" />}
+                      </button>
+                    </th>
                     {[
                       { label: "#"            },
                       { label: "Part Number"  },
@@ -1120,7 +1189,7 @@ export function BOMAnalysis() {
                     // Flat sorted view (prototype: lead time or urgency sort)
                     sortedFlat.length === 0 ? (
                       <tr>
-                        <td colSpan={protoMode ? 15 : 12} className="px-6 py-12 text-center">
+                        <td colSpan={protoMode ? 16 : 13} className="px-6 py-12 text-center">
                           <div className="flex flex-col items-center gap-3">
                             <Search size={24} color="#CBD5E1" />
                             <p className="text-[13px] text-[#94A3B8]" style={{ fontWeight: 500 }}>No parts match your current filters</p>
@@ -1141,11 +1210,13 @@ export function BOMAnalysis() {
                         estimatedBuildDays={estimatedBuildDays}
                         criticalPathSet={activeCriticalPathSet}
                         onToggleCriticalPath={toggleCriticalPath}
+                        selectedParts={selectedParts}
+                        onTogglePartSelect={togglePartSelect}
                       />
                     )
                   ) : Object.keys(groupedRows).length === 0 ? (
                     <tr>
-                      <td colSpan={protoMode ? 15 : 12} className="px-6 py-12 text-center">
+                      <td colSpan={protoMode ? 16 : 13} className="px-6 py-12 text-center">
                         <div className="flex flex-col items-center gap-3">
                           <Search size={24} color="#CBD5E1" />
                           <p className="text-[13px] text-[#94A3B8]" style={{ fontWeight: 500 }}>No parts match your current filters</p>
@@ -1167,6 +1238,8 @@ export function BOMAnalysis() {
                         estimatedBuildDays={estimatedBuildDays}
                         criticalPathSet={activeCriticalPathSet}
                         onToggleCriticalPath={toggleCriticalPath}
+                        selectedParts={selectedParts}
+                        onTogglePartSelect={togglePartSelect}
                       />
                     ))
                   )}
@@ -1174,37 +1247,102 @@ export function BOMAnalysis() {
               </table>
             </div>
 
-            {/* Table footer — cost totals */}
-            <div className="px-5 py-3 border-t border-[#E2E8F0]" style={{ background: "#FAFBFD" }}>
-              <div className="flex items-center justify-between">
-                <p className="text-[11px] text-[#94A3B8]">
-                  Showing {filtered.length} of {TOTAL_BOM_PARTS} parts · Assembly 845-000112 · excl. MFG resource pkg
-                </p>
-                <div className="flex items-center gap-4">
-                  <div className="flex items-center gap-2">
-                    <DollarSign size={11} className="text-[#94A3B8]" />
-                    <span className="text-[11px] text-[#64748B]" style={{ fontWeight: 500 }}>
-                      Current BOM Total:
-                    </span>
-                    <span className="text-[12px] text-[#0F2035]" style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 700 }}>
-                      {fmtCurrency(currentBomCost)}
-                    </span>
+            {/* Table footer — cost totals + Fictiv ordering */}
+            <div className="border-t border-[#E2E8F0]" style={{ background: "#FAFBFD" }}>
+              {/* Fictiv action bar — visible when parts are selected */}
+              <AnimatePresence>
+                {selectedParts.size > 0 && (
+                  <motion.div
+                    initial={{ opacity: 0, height: 0 }}
+                    animate={{ opacity: 1, height: "auto" }}
+                    exit={{ opacity: 0, height: 0 }}
+                    transition={{ duration: 0.18 }}
+                    className="overflow-hidden"
+                  >
+                    <div
+                      className="px-5 py-3 flex items-center gap-3 border-b border-[#E2E8F0]"
+                      style={{ background: fictivSent ? "#F0FDF4" : "#EFF6FF" }}
+                    >
+                      {fictivSent ? (
+                        <>
+                          <CheckCircle2 size={15} color="#16A34A" />
+                          <span
+                            className="text-[13px] text-[#15803D]"
+                            style={{ fontWeight: 600, fontFamily: "'IBM Plex Sans', sans-serif" }}
+                          >
+                            {selectedParts.size} part{selectedParts.size !== 1 ? "s" : ""} submitted to Fictiv
+                          </span>
+                          <span className="text-[12px] text-[#86EFAC]" style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}>
+                            Order request sent
+                          </span>
+                        </>
+                      ) : (
+                        <>
+                          <CheckSquare2 size={15} color="#2563EB" />
+                          <span
+                            className="text-[13px] text-[#1D4ED8]"
+                            style={{ fontWeight: 600, fontFamily: "'IBM Plex Sans', sans-serif" }}
+                          >
+                            {selectedParts.size} part{selectedParts.size !== 1 ? "s" : ""} selected
+                          </span>
+                          <button
+                            onClick={() => setSelectedParts(new Set())}
+                            className="text-[12px] text-[#93C5FD] hover:text-[#1D4ED8] transition-colors"
+                            style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+                          >
+                            Clear
+                          </button>
+                          <div className="ml-auto flex items-center gap-2">
+                            <button
+                              onClick={handleSendToFictiv}
+                              className="flex items-center gap-2 px-4 py-1.5 rounded-lg text-white text-[12px] transition-colors"
+                              style={{
+                                background: "#1D4ED8",
+                                fontFamily: "'IBM Plex Sans', sans-serif",
+                                fontWeight: 600,
+                              }}
+                            >
+                              <Send size={12} />
+                              Send to Fictiv
+                            </button>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+              <div className="px-5 py-3">
+                <div className="flex items-center justify-between">
+                  <p className="text-[11px] text-[#94A3B8]">
+                    Showing {filtered.length} of {TOTAL_BOM_PARTS} parts · Assembly 845-000112 · excl. MFG resource pkg
+                  </p>
+                  <div className="flex items-center gap-4">
+                    <div className="flex items-center gap-2">
+                      <DollarSign size={11} className="text-[#94A3B8]" />
+                      <span className="text-[11px] text-[#64748B]" style={{ fontWeight: 500 }}>
+                        Current BOM Total:
+                      </span>
+                      <span className="text-[12px] text-[#0F2035]" style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 700 }}>
+                        {fmtCurrency(currentBomCost)}
+                      </span>
+                    </div>
+                    {hasSavings && (
+                      <>
+                        <span className="text-[#E2E8F0]">|</span>
+                        <div className="flex items-center gap-2">
+                          <TrendingDown size={11} className="text-[#10B981]" />
+                          <span className="text-[11px] text-[#64748B]" style={{ fontWeight: 500 }}>Projected:</span>
+                          <span className="text-[12px] text-[#059669]" style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 700 }}>
+                            {fmtCurrency(projectedBomCost)}
+                          </span>
+                          <span className="text-[11px] text-[#059669]" style={{ fontWeight: 500 }}>
+                            ({fmtSavingsDelta(currentBomCost, projectedBomCost)} saved)
+                          </span>
+                        </div>
+                      </>
+                    )}
                   </div>
-                  {hasSavings && (
-                    <>
-                      <span className="text-[#E2E8F0]">|</span>
-                      <div className="flex items-center gap-2">
-                        <TrendingDown size={11} className="text-[#10B981]" />
-                        <span className="text-[11px] text-[#64748B]" style={{ fontWeight: 500 }}>Projected:</span>
-                        <span className="text-[12px] text-[#059669]" style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 700 }}>
-                          {fmtCurrency(projectedBomCost)}
-                        </span>
-                        <span className="text-[11px] text-[#059669]" style={{ fontWeight: 500 }}>
-                          ({fmtSavingsDelta(currentBomCost, projectedBomCost)} saved)
-                        </span>
-                      </div>
-                    </>
-                  )}
                 </div>
               </div>
             </div>

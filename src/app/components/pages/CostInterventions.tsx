@@ -35,7 +35,7 @@ import { useDashboardData,
   type ProductionIntervention,
   type PrototypeSimplification,
 } from "../../data/dashboardData";
-import { PROTOTYPE_ASSEMBLY, CRITICAL_PATH_SET } from "../../data/prototypeData";
+import { PROTOTYPE_ASSEMBLY, CRITICAL_PATH_SET, PROTOTYPE_PART_DATA } from "../../data/prototypeData";
 import {
   DIFFICULTY_STYLE,
   RISK_STYLE,

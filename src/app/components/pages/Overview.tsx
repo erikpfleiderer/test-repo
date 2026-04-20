@@ -182,8 +182,14 @@ function StatCard({
 // Answers: "What matters most right now?" in ~10 seconds.
 function PrototypeSummaryPanel({
   summary,
+  perAssemblyCost,
+  totalBuildCost,
+  buildQuantity,
 }: {
   summary: PrototypeSummaryData;
+  perAssemblyCost: number;
+  totalBuildCost: number;
+  buildQuantity: number;
 }) {
   const readinessStyle = buildReadinessStyle(summary.buildReadiness);
 
@@ -366,74 +372,50 @@ function PrototypeSummaryPanel({
           )}
         </div>
 
-        {/* ── Top Functional Risk ── */}
+        {/* ── Build Cost ── */}
         <div className="px-4 py-4">
           <div className="flex items-center gap-2 mb-2.5">
             <div
               className="w-6 h-6 rounded-md flex items-center justify-center shrink-0"
-              style={{ background: "#FFFBEB" }}
+              style={{ background: "#F0FDF4" }}
             >
-              <AlertCircle size={13} color="#D97706" />
+              <TrendingDown size={13} color="#059669" />
             </div>
             <span
               className="text-[11px] uppercase tracking-wider text-[#64748B]"
               style={{ fontWeight: 500, fontFamily: "'IBM Plex Sans', sans-serif" }}
             >
-              Top Functional Risk
+              Build Cost
             </span>
           </div>
-          {summary.topFunctionalRisk ? (
+          {perAssemblyCost > 0 ? (
             <>
-              <div className="flex items-center gap-2 mb-1">
-                <p
-                  className="text-[12px] text-[#1E293B] leading-snug"
-                  style={{ fontWeight: 600, fontFamily: "'IBM Plex Sans', sans-serif" }}
-                >
-                  {partName(summary.topFunctionalRisk.partNumber)}
-                </p>
-                <span
-                  className="text-[10px] px-1.5 py-0.5 rounded border shrink-0"
-                  style={{
-                    background: summary.topFunctionalRisk.riskLevel === "High" || summary.topFunctionalRisk.riskLevel === "Critical"
-                      ? "#FFF1F2" : "#FFFBEB",
-                    color: summary.topFunctionalRisk.riskLevel === "High" || summary.topFunctionalRisk.riskLevel === "Critical"
-                      ? "#BE123C" : "#92400E",
-                    borderColor: summary.topFunctionalRisk.riskLevel === "High" || summary.topFunctionalRisk.riskLevel === "Critical"
-                      ? "#FECDD3" : "#FDE68A",
-                    fontWeight: 600,
-                    fontFamily: "'IBM Plex Sans', sans-serif",
-                  }}
-                >
-                  {summary.topFunctionalRisk.riskLevel}
-                </span>
-              </div>
-              <p
-                className="text-[11px] text-[#475569] leading-snug mb-2"
-                style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-              >
-                {summary.topFunctionalRisk.primaryRisk}
-              </p>
-              <div className="flex items-center gap-1">
-                {summary.topFunctionalRisk.clearToBuild ? (
-                  <CheckCircle2 size={11} color="#059669" />
-                ) : (
-                  <CircleAlert size={11} color="#E11D48" />
-                )}
-                <span
-                  className="text-[10px]"
-                  style={{
-                    color: summary.topFunctionalRisk.clearToBuild ? "#059669" : "#E11D48",
-                    fontWeight: 500,
-                    fontFamily: "'IBM Plex Sans', sans-serif",
-                  }}
-                >
-                  {summary.topFunctionalRisk.clearToBuild ? "Clear to build" : "Blocked"}
-                  {" · "}{summary.topFunctionalRisk.validationCount} validation{summary.topFunctionalRisk.validationCount !== 1 ? "s" : ""} required
-                </span>
+              <div className="flex flex-col gap-2">
+                <div>
+                  <p className="text-[10px] text-[#94A3B8] mb-0.5" style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontWeight: 500 }}>Per Assembly</p>
+                  <p
+                    className="text-[17px] text-[#0F2035]"
+                    style={{ fontWeight: 700, fontFamily: "'IBM Plex Mono', monospace", letterSpacing: "-0.02em" }}
+                  >
+                    {fmtCurrency(perAssemblyCost)}
+                  </p>
+                </div>
+                <div className="h-px bg-[#F1F5F9]" />
+                <div>
+                  <p className="text-[10px] text-[#94A3B8] mb-0.5" style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontWeight: 500 }}>
+                    Total ({buildQuantity} unit{buildQuantity !== 1 ? "s" : ""})
+                  </p>
+                  <p
+                    className="text-[17px] text-[#059669]"
+                    style={{ fontWeight: 700, fontFamily: "'IBM Plex Mono', monospace", letterSpacing: "-0.02em" }}
+                  >
+                    {fmtCurrency(totalBuildCost)}
+                  </p>
+                </div>
               </div>
             </>
           ) : (
-            <p className="text-[12px] text-[#94A3B8]">No functional risks recorded</p>
+            <p className="text-[12px] text-[#94A3B8]">No cost data available</p>
           )}
         </div>
 
@@ -502,25 +484,18 @@ function PrototypeSummaryPanel({
   );
 }
 
-// ── Production Readiness Scorecard ────────────────────────────────────────────
-// Aggregates all manufacturingRiskSignals from PROTOTYPE_PART_DATA.
-// Answers: "What design decisions will break us when we scale?"
+// ── Production Readiness Scorecard — compact teaser (full page at /production-readiness) ──
 function ProductionReadinessScorecard() {
-  const allSignals = getAllProductionRiskSignals();
+  const navigate    = useNavigate();
+  const allSignals  = getAllProductionRiskSignals();
 
   const blockSignals = allSignals.filter((s) => s.severity === "Block");
   const flagCount    = allSignals.filter((s) => s.severity === "Flag").length;
   const watchCount   = allSignals.filter((s) => s.severity === "Watch").length;
 
-  const categoryMap = new Map<string, number>();
-  for (const s of allSignals) {
-    categoryMap.set(s.category, (categoryMap.get(s.category) ?? 0) + 1);
-  }
-  const categorySorted = Array.from(categoryMap.entries()).sort((a, b) => b[1] - a[1]);
-
   return (
     <div className="bg-white rounded-xl border border-[#E2E8F0] overflow-hidden">
-      {/* Header */}
+      {/* Header row */}
       <div
         className="px-5 py-4 border-b border-[#F1F5F9] flex items-center justify-between"
         style={{ background: "#FAFBFD" }}
@@ -544,162 +519,118 @@ function ProductionReadinessScorecard() {
             </p>
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          {blockSignals.length > 0 && (
-            <span
-              className="px-2.5 py-1 rounded-md text-[11px]"
-              style={{
-                background: SEVERITY_SIGNAL_STYLE.Block.bg,
-                color: SEVERITY_SIGNAL_STYLE.Block.text,
-                border: `1px solid ${SEVERITY_SIGNAL_STYLE.Block.border}`,
-                fontWeight: 600,
-                fontFamily: "'IBM Plex Sans', sans-serif",
-              }}
-            >
-              {blockSignals.length} Block{blockSignals.length > 1 ? "s" : ""}
-            </span>
-          )}
-          <span
-            className="px-2.5 py-1 rounded-md text-[11px]"
-            style={{
-              background: "#F1F5F9",
-              color: "#64748B",
-              fontWeight: 500,
-              fontFamily: "'IBM Plex Sans', sans-serif",
-            }}
-          >
-            {allSignals.length} signals
-          </span>
-        </div>
+        <button
+          onClick={() => navigate("/production-readiness")}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[12px] border border-[#E2E8F0] hover:border-[#1B3A5C]/30 hover:bg-[#F8FAFC] transition-all"
+          style={{ color: "#1B3A5C", fontWeight: 500, fontFamily: "'IBM Plex Sans', sans-serif" }}
+        >
+          View full scorecard
+          <ArrowRight size={12} />
+        </button>
       </div>
 
-      {/* Severity counts + category breakdown */}
-      <div className="px-5 py-4 border-b border-[#F1F5F9] flex items-center gap-6 flex-wrap">
-        <div className="flex items-center gap-2">
-          {(["Block", "Flag", "Watch"] as const).map((sev) => {
-            const count =
-              sev === "Block" ? blockSignals.length :
-              sev === "Flag"  ? flagCount :
-              watchCount;
-            const st = SEVERITY_SIGNAL_STYLE[sev];
-            return (
-              <div
-                key={sev}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-lg border"
-                style={{ background: st.bg, borderColor: st.border }}
-              >
-                <div className="w-2 h-2 rounded-full shrink-0" style={{ background: st.dot }} />
-                <span
-                  className="text-[14px]"
-                  style={{ color: st.text, fontWeight: 700, fontFamily: "'IBM Plex Sans', sans-serif", lineHeight: 1 }}
-                >
-                  {count}
-                </span>
-                <span
-                  className="text-[11px]"
-                  style={{ color: st.text, fontWeight: 500, fontFamily: "'IBM Plex Sans', sans-serif" }}
-                >
-                  {sev}
-                </span>
-              </div>
-            );
-          })}
-        </div>
-        <div className="w-px h-6 bg-[#E2E8F0] shrink-0" />
-        <div className="flex items-center gap-2 flex-wrap">
-          {categorySorted.map(([cat, count]) => (
+      {/* Severity stat pills */}
+      <div className="px-5 py-3.5 border-b border-[#F1F5F9] flex items-center gap-3 flex-wrap">
+        {(["Block", "Flag", "Watch"] as const).map((sev) => {
+          const count =
+            sev === "Block" ? blockSignals.length :
+            sev === "Flag"  ? flagCount :
+            watchCount;
+          const st = SEVERITY_SIGNAL_STYLE[sev];
+          return (
             <div
-              key={cat}
-              className="flex items-center gap-1.5 px-2.5 py-1 rounded-md border border-[#E2E8F0]"
-              style={{ background: "#F8FAFC" }}
+              key={sev}
+              className="flex items-center gap-2 px-3 py-1.5 rounded-lg border"
+              style={{ background: st.bg, borderColor: st.border }}
             >
+              <div className="w-2 h-2 rounded-full shrink-0" style={{ background: st.dot }} />
               <span
-                className="text-[11px] text-[#64748B]"
-                style={{ fontWeight: 500, fontFamily: "'IBM Plex Sans', sans-serif" }}
-              >
-                {cat}
-              </span>
-              <span
-                className="text-[11px] text-[#1B3A5C]"
-                style={{ fontWeight: 700, fontFamily: "'IBM Plex Sans', sans-serif" }}
+                className="text-[14px]"
+                style={{ color: st.text, fontWeight: 700, fontFamily: "'IBM Plex Sans', sans-serif", lineHeight: 1 }}
               >
                 {count}
               </span>
+              <span
+                className="text-[11px]"
+                style={{ color: st.text, fontWeight: 500, fontFamily: "'IBM Plex Sans', sans-serif" }}
+              >
+                {sev}
+              </span>
             </div>
-          ))}
-        </div>
+          );
+        })}
+        <span
+          className="ml-2 text-[11px] text-[#94A3B8]"
+          style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+        >
+          {allSignals.length} total signals across {new Set(allSignals.map((s) => s.partNumber)).size} parts
+        </span>
       </div>
 
-      {/* Top Block signals */}
-      {blockSignals.length > 0 && (
-        <div className="px-5 py-4 space-y-3">
-          <p
-            className="text-[11px] uppercase tracking-wider text-[#94A3B8]"
-            style={{ fontWeight: 500, fontFamily: "'IBM Plex Sans', sans-serif" }}
-          >
-            Must Resolve Before Pilot
-          </p>
+      {/* Top Block signals preview (up to 3) */}
+      {blockSignals.length > 0 ? (
+        <div className="divide-y divide-[#F1F5F9]">
           {blockSignals.slice(0, 3).map((s, i) => (
-            <div
-              key={i}
-              className="rounded-lg border border-[#FECDD3] overflow-hidden"
-              style={{ background: "#FFF8F8" }}
-            >
-              <div className="px-4 py-3 flex items-start gap-3">
-                <div
-                  className="w-6 h-6 rounded-full flex items-center justify-center shrink-0 mt-0.5"
-                  style={{ background: "#FFF1F2", border: "1px solid #FECDD3" }}
+            <div key={i} className="px-5 py-3 flex items-start gap-3">
+              <div
+                className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5"
+                style={{ background: "#FFF1F2", border: "1px solid #FECDD3" }}
+              >
+                <span
+                  className="text-[9px]"
+                  style={{ color: "#BE123C", fontWeight: 700, fontFamily: "'IBM Plex Mono', monospace" }}
                 >
+                  B
+                </span>
+              </div>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-0.5 flex-wrap">
                   <span
-                    className="text-[10px]"
-                    style={{ color: "#BE123C", fontWeight: 700, fontFamily: "'IBM Plex Mono', monospace" }}
+                    className="text-[12px] text-[#1E293B]"
+                    style={{ fontWeight: 600, fontFamily: "'IBM Plex Sans', sans-serif" }}
                   >
-                    B
+                    {s.partName.replace(/^RS320 /, "")}
+                  </span>
+                  <span
+                    className="text-[10px] text-[#94A3B8]"
+                    style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+                  >
+                    {s.partNumber}
+                  </span>
+                  <span
+                    className="text-[10px] px-1.5 py-0.5 rounded border border-[#E2E8F0] bg-[#F8FAFC] text-[#64748B]"
+                    style={{ fontWeight: 500, fontFamily: "'IBM Plex Sans', sans-serif" }}
+                  >
+                    {s.category}
                   </span>
                 </div>
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-2 mb-1 flex-wrap">
-                    <span
-                      className="text-[12px] text-[#1E293B]"
-                      style={{ fontWeight: 600, fontFamily: "'IBM Plex Sans', sans-serif" }}
-                    >
-                      {s.partName}
-                    </span>
-                    <span
-                      className="text-[10px] text-[#94A3B8]"
-                      style={{ fontFamily: "'IBM Plex Mono', monospace" }}
-                    >
-                      {s.partNumber}
-                    </span>
-                    <span
-                      className="text-[10px] px-1.5 py-0.5 rounded border border-[#E2E8F0] bg-[#F8FAFC] text-[#64748B]"
-                      style={{ fontWeight: 500, fontFamily: "'IBM Plex Sans', sans-serif" }}
-                    >
-                      {s.category}
-                    </span>
-                  </div>
-                  <p
-                    className="text-[12px] text-[#475569]"
-                    style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-                  >
-                    {s.signal}
-                  </p>
-                  <div
-                    className="mt-2 flex items-start gap-2 px-3 py-2 rounded-md"
-                    style={{ background: "#F0FDF4", border: "1px solid #BBF7D0" }}
-                  >
-                    <ArrowRight size={12} color="#059669" className="shrink-0 mt-0.5" />
-                    <p
-                      className="text-[11px] text-[#166534]"
-                      style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-                    >
-                      {s.mitigation}
-                    </p>
-                  </div>
-                </div>
+                <p
+                  className="text-[12px] text-[#475569] leading-snug"
+                  style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+                >
+                  {s.signal}
+                </p>
               </div>
             </div>
           ))}
+          {blockSignals.length > 3 && (
+            <div className="px-5 py-2.5">
+              <button
+                onClick={() => navigate("/production-readiness")}
+                className="text-[12px] text-[#2563EB] hover:underline"
+                style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontWeight: 500 }}
+              >
+                +{blockSignals.length - 3} more block{blockSignals.length - 3 !== 1 ? "s" : ""} — view all →
+              </button>
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="px-5 py-4 flex items-center gap-2">
+          <div className="w-2 h-2 rounded-full bg-[#10B981]" />
+          <p className="text-[12px] text-[#059669]" style={{ fontWeight: 500, fontFamily: "'IBM Plex Sans', sans-serif" }}>
+            No Block signals — {flagCount + watchCount} lower-severity items to review before pilot
+          </p>
         </div>
       )}
     </div>
@@ -916,9 +847,11 @@ export function Overview() {
 function PrototypeOverview() {
   const navigate = useNavigate();
   const data = useDashboardData();
-  const { buildTargetDate, estimatedBuildDays } = useBuildTarget();
+  const { buildTargetDate, estimatedBuildDays, buildQuantity } = useBuildTarget();
+  const { currentBomCost } = useCostModel();
   const summary = computePrototypeSummary(buildTargetDate, estimatedBuildDays);
   const simplificationCount = isPrototypeData(data) ? data.simplifications.length : 0;
+  const totalBuildCost = currentBomCost * buildQuantity;
 
   return (
     <div
@@ -962,7 +895,12 @@ function PrototypeOverview() {
       </div>
 
       {/* 1. Prototype Summary — 10-second status board */}
-      <PrototypeSummaryPanel summary={summary} />
+      <PrototypeSummaryPanel
+        summary={summary}
+        perAssemblyCost={currentBomCost}
+        totalBuildCost={totalBuildCost}
+        buildQuantity={buildQuantity}
+      />
 
       {/* 2 + 3. Build Readiness + Order Timeline */}
       <BuildTimingSection />
@@ -1230,36 +1168,28 @@ function ProductionOverview() {
           value={data.assembly.totalPartCount}
           sub={`${data.assembly.makePartCount} make · ${data.assembly.buyPartCount} buy`}
         />
-        <StatCard
-          icon={Layers}
-          label="Subsystem Count"
-          value={data.subsystems.length}
-          sub={data.subsystems
-            .map((s) => SUBSYSTEM_SHORT_NAMES[s.name] ?? s.name)
-            .join(" · ")}
-        />
         <div className="bg-white rounded-xl border border-[#E2E8F0] p-5 flex flex-col gap-3">
           <div className="flex items-center justify-between">
             <span
               className="text-[12px] text-[#64748B] uppercase tracking-wider"
               style={{ fontWeight: 500 }}
             >
-              {cfg.driversCardLabel}
+              Current BOM Cost
             </span>
-            <div className="w-8 h-8 rounded-lg bg-[#FEF3C7] flex items-center justify-center">
-              <AlertCircle size={15} color="#D97706" />
+            <div className="w-8 h-8 rounded-lg bg-[#EFF4FA] flex items-center justify-center">
+              <Package size={15} color="#1B3A5C" />
             </div>
           </div>
-          <div className="flex flex-col gap-1.5">
-            {topDrivers.map((driver, i) => (
-              <div
-                key={i}
-                className="flex items-start gap-2 rounded-lg bg-[#F8FAFC] border border-dashed border-[#CBD5E1] px-3 py-2"
-              >
-                <Info size={12} className="text-[#94A3B8] shrink-0 mt-0.5" />
-                <p className="text-[11px] text-[#94A3B8]">{driver}</p>
-              </div>
-            ))}
+          <div>
+            <p
+              className="text-[28px] text-[#0F2035]"
+              style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 700, lineHeight: 1 }}
+            >
+              {fmtCurrency(currentBomCost)}
+            </p>
+            <p className="text-[12px] text-[#94A3B8] mt-1.5" style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}>
+              per assembly · real-time pricing
+            </p>
           </div>
         </div>
         <div className="bg-white rounded-xl border border-[#E2E8F0] p-5 flex flex-col gap-3">
@@ -1268,7 +1198,31 @@ function ProductionOverview() {
               className="text-[12px] text-[#64748B] uppercase tracking-wider"
               style={{ fontWeight: 500 }}
             >
-              {cfg.topOpportunityLabel}
+              Projected BOM Cost
+            </span>
+            <div className="w-8 h-8 rounded-lg bg-[#F0FDF4] flex items-center justify-center">
+              <TrendingDown size={15} color="#15803D" />
+            </div>
+          </div>
+          <div>
+            <p
+              className="text-[28px] text-[#059669]"
+              style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 700, lineHeight: 1 }}
+            >
+              {fmtCurrency(fullProjectedBomCost)}
+            </p>
+            <p className="text-[12px] text-[#94A3B8] mt-1.5" style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}>
+              {fmtSavingsDelta(currentBomCost, fullProjectedBomCost)} if all interventions applied
+            </p>
+          </div>
+        </div>
+        <div className="bg-white rounded-xl border border-[#E2E8F0] p-5 flex flex-col gap-3">
+          <div className="flex items-center justify-between">
+            <span
+              className="text-[12px] text-[#64748B] uppercase tracking-wider"
+              style={{ fontWeight: 500 }}
+            >
+              Annual Savings Potential
             </span>
             <div className="w-8 h-8 rounded-lg bg-[#DCFCE7] flex items-center justify-center">
               <TrendingDown size={15} color="#15803D" />
@@ -1276,20 +1230,13 @@ function ProductionOverview() {
           </div>
           <div>
             <p
-              className="text-[22px] text-[#059669]"
-              style={{
-                fontFamily: "'IBM Plex Sans', sans-serif",
-                fontWeight: 600,
-                lineHeight: 1.2,
-              }}
+              className="text-[28px] text-[#059669]"
+              style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 700, lineHeight: 1 }}
             >
-              {topOpportunity.headline}
+              {fmtCurrency(fullAnnualSavingsPotential)}
             </p>
-            <p
-              className="text-[12px] text-[#64748B] mt-1.5"
-              style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-            >
-              {topOpportunity.sub}
+            <p className="text-[12px] text-[#94A3B8] mt-1.5" style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}>
+              {fmtSavingsDelta(currentBomCost, fullProjectedBomCost)} / unit · {expectedAnnualVolume.toLocaleString()} units/yr
             </p>
           </div>
         </div>
