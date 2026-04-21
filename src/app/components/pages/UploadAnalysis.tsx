@@ -275,18 +275,20 @@ export function UploadAnalysis() {
 
   // ── Stage: idle/upload ──────────────────────────────────────────────────────
   const renderUpload = () => (
-    <div className="flex flex-col items-center justify-center flex-1 px-6 py-8">
-      <div className="w-full max-w-2xl">
+    <div className="flex-1 px-6 py-5 grid grid-cols-2 gap-5 min-h-0" style={{ alignContent: "start" }}>
+
+      {/* ── LEFT column: drop zone + file requirements ── */}
+      <div className="flex flex-col gap-4">
         {/* Drop zone */}
         <motion.div
-          initial={{ opacity: 0, y: 12 }}
+          initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.35 }}
+          transition={{ duration: 0.3 }}
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
           onClick={() => fileInputRef.current?.click()}
-          className="relative rounded-2xl border-2 border-dashed p-12 flex flex-col items-center gap-4 cursor-pointer transition-all duration-200"
+          className="relative rounded-2xl border-2 border-dashed p-10 flex flex-col items-center gap-4 cursor-pointer transition-all duration-200"
           style={{
             borderColor: isDragging ? "#3B82F6" : "#CBD5E1",
             background: isDragging ? "#EFF6FF" : "#FAFBFD",
@@ -299,21 +301,17 @@ export function UploadAnalysis() {
             className="hidden"
             onChange={handleFileChange}
           />
-
-          {/* Icon */}
           <motion.div
             animate={isDragging ? { scale: 1.1 } : { scale: 1 }}
-            className="w-16 h-16 rounded-2xl flex items-center justify-center"
+            className="w-14 h-14 rounded-2xl flex items-center justify-center"
             style={{ background: isDragging ? "#DBEAFE" : "#EFF4FA" }}
           >
-            <FileArchive size={30} color={isDragging ? "#3B82F6" : "#1B3A5C"} />
+            <FileArchive size={28} color={isDragging ? "#3B82F6" : "#1B3A5C"} />
           </motion.div>
-
-          {/* Text */}
           <div className="text-center">
             <p
               className="text-[#1E293B] mb-1"
-              style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontWeight: 600, fontSize: 16 }}
+              style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontWeight: 600, fontSize: 15 }}
             >
               {isDragging ? "Drop your ZIP file here" : "Upload your assembly package"}
             </p>
@@ -322,8 +320,6 @@ export function UploadAnalysis() {
               <span className="text-[#2563EB]" style={{ fontWeight: 500 }}>browse your files</span>
             </p>
           </div>
-
-          {/* ZIP badge */}
           <div
             className="px-3 py-1.5 rounded-lg text-[12px]"
             style={{ background: "#F1F5F9", color: "#64748B", fontFamily: "'IBM Plex Sans', sans-serif", fontWeight: 500 }}
@@ -332,12 +328,12 @@ export function UploadAnalysis() {
           </div>
         </motion.div>
 
-        {/* Instructions */}
+        {/* File requirements */}
         <motion.div
-          initial={{ opacity: 0, y: 8 }}
+          initial={{ opacity: 0, y: 6 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.35, delay: 0.1 }}
-          className="mt-5 rounded-xl border border-[#E2E8F0] bg-white p-5"
+          transition={{ duration: 0.3, delay: 0.08 }}
+          className="rounded-xl border border-[#E2E8F0] bg-white p-5"
         >
           <p
             className="text-[12px] text-[#64748B] uppercase tracking-wider mb-4"
@@ -378,13 +374,17 @@ export function UploadAnalysis() {
             })}
           </div>
         </motion.div>
+      </div>
+
+      {/* ── RIGHT column: settings ── */}
+      <div className="flex flex-col gap-4">
 
         {/* Project Settings */}
         <motion.div
-          initial={{ opacity: 0, y: 8 }}
+          initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.35, delay: 0.18 }}
-          className="mt-4 rounded-xl border border-[#E2E8F0] bg-white p-5"
+          transition={{ duration: 0.3, delay: 0.06 }}
+          className="rounded-xl border border-[#E2E8F0] bg-white p-5"
         >
           <div className="flex items-center gap-2 mb-4">
             <Settings size={13} color="#94A3B8" />
@@ -397,11 +397,11 @@ export function UploadAnalysis() {
           </div>
           {mode === "prototype" ? (
             <p className="text-[12px] text-[#94A3B8]" style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}>
-              Annual volume is not applicable in prototype mode. Set build quantity in Prototype Build Settings below.
+              Annual volume is not applicable in prototype mode. Configure build quantity and timing in Prototype Build Settings below.
             </p>
           ) : (
             <div className="flex items-end gap-4">
-              <div className="flex-1 max-w-[220px]">
+              <div className="flex-1">
                 <label
                   className="block text-[11px] text-[#64748B] mb-1.5"
                   style={{ fontWeight: 500, fontFamily: "'IBM Plex Sans', sans-serif" }}
@@ -435,9 +435,9 @@ export function UploadAnalysis() {
                   Used to project annual savings across cost interventions
                 </p>
               </div>
-              <div className="pb-0.5">
+              <div className="pb-0.5 shrink-0">
                 <div
-                  className="px-3 py-2 rounded-lg border border-[#E2E8F0] text-[12px] text-[#64748B]"
+                  className="px-3 py-2 rounded-lg border border-[#E2E8F0] text-[12px] text-[#64748B] whitespace-nowrap"
                   style={{ background: "#F8FAFC", fontFamily: "'IBM Plex Sans', sans-serif" }}
                 >
                   <span className="text-[#94A3B8]">Active:</span>{" "}
@@ -453,11 +453,11 @@ export function UploadAnalysis() {
         {/* Prototype Build Settings */}
         {mode === "prototype" && (
           <motion.div
-            initial={{ opacity: 0, y: 8 }}
+            initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.35, delay: 0.24 }}
-            className="mt-4 rounded-xl border border-[#E2E8F0] bg-white p-5"
-            style={{ borderColor: "#E0E7EF" }}
+            transition={{ duration: 0.3, delay: 0.12 }}
+            className="rounded-xl border bg-white p-5"
+            style={{ borderColor: "#BFDBFE" }}
           >
             <div className="flex items-center gap-2 mb-4">
               <CalendarDays size={13} color="#2563EB" />
@@ -474,9 +474,10 @@ export function UploadAnalysis() {
                 Prototype mode
               </span>
             </div>
-            <div className="flex items-end gap-4 flex-wrap">
-              {/* Next Build Target Date */}
-              <div className="flex-1" style={{ minWidth: 180 }}>
+
+            <div className="flex flex-col gap-4">
+              {/* Build Target Date */}
+              <div>
                 <label
                   className="block text-[11px] text-[#64748B] mb-1.5"
                   style={{ fontWeight: 500, fontFamily: "'IBM Plex Sans', sans-serif" }}
@@ -495,81 +496,114 @@ export function UploadAnalysis() {
                   Drives order-by deadlines and overdue flags across all views
                 </p>
               </div>
-              {/* Build Quantity */}
-              <div style={{ width: 140 }}>
-                <label
-                  className="block text-[11px] text-[#64748B] mb-1.5"
-                  style={{ fontWeight: 500, fontFamily: "'IBM Plex Sans', sans-serif" }}
-                >
-                  Build Quantity
-                </label>
-                <div className="relative">
-                  <Package size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#94A3B8]" />
-                  <input
-                    type="number"
-                    min={1}
-                    max={100}
-                    value={buildQtyInput}
-                    onChange={(e) => {
-                      setBuildQtyInput(e.target.value);
-                      const v = parseInt(e.target.value, 10);
-                      if (!isNaN(v) && v > 0) setBuildQuantity(v);
-                    }}
-                    onBlur={() => setBuildQtyInput(String(buildQuantity))}
-                    className="w-full h-9 pl-8 pr-3 rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] text-[13px] text-[#1E293B] focus:outline-none focus:border-[#93C5FD] focus:bg-white transition-colors"
-                    style={{ fontFamily: "'IBM Plex Mono', monospace" }}
-                    onClick={(e) => e.stopPropagation()}
-                  />
+
+              {/* Build Qty + Duration side by side */}
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label
+                    className="block text-[11px] text-[#64748B] mb-1.5"
+                    style={{ fontWeight: 500, fontFamily: "'IBM Plex Sans', sans-serif" }}
+                  >
+                    Build Quantity
+                  </label>
+                  <div className="relative">
+                    <Package size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#94A3B8]" />
+                    <input
+                      type="number"
+                      min={1}
+                      max={100}
+                      value={buildQtyInput}
+                      onChange={(e) => {
+                        setBuildQtyInput(e.target.value);
+                        const v = parseInt(e.target.value, 10);
+                        if (!isNaN(v) && v > 0) setBuildQuantity(v);
+                      }}
+                      onBlur={() => setBuildQtyInput(String(buildQuantity))}
+                      className="w-full h-9 pl-8 pr-3 rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] text-[13px] text-[#1E293B] focus:outline-none focus:border-[#93C5FD] focus:bg-white transition-colors"
+                      style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+                      onClick={(e) => e.stopPropagation()}
+                    />
+                  </div>
+                  <p className="text-[11px] text-[#94A3B8] mt-1.5" style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}>units in this build run</p>
                 </div>
-                <p className="text-[11px] text-[#94A3B8] mt-1.5" style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}>
-                  units
-                </p>
-              </div>
-              {/* Estimated Build Days */}
-              <div style={{ width: 140 }}>
-                <label
-                  className="block text-[11px] text-[#64748B] mb-1.5"
-                  style={{ fontWeight: 500, fontFamily: "'IBM Plex Sans', sans-serif" }}
-                >
-                  Est. Build Duration
-                </label>
-                <div className="relative">
-                  <Hammer size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#94A3B8]" />
-                  <input
-                    type="number"
-                    min={1}
-                    max={30}
-                    value={buildDaysInput}
-                    onChange={(e) => {
-                      setBuildDaysInput(e.target.value);
-                      const v = parseInt(e.target.value, 10);
-                      if (!isNaN(v) && v > 0) setEstimatedBuildDays(v);
-                    }}
-                    onBlur={() => setBuildDaysInput(String(estimatedBuildDays))}
-                    className="w-full h-9 pl-8 pr-3 rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] text-[13px] text-[#1E293B] focus:outline-none focus:border-[#93C5FD] focus:bg-white transition-colors"
-                    style={{ fontFamily: "'IBM Plex Mono', monospace" }}
-                    onClick={(e) => e.stopPropagation()}
-                  />
+                <div>
+                  <label
+                    className="block text-[11px] text-[#64748B] mb-1.5"
+                    style={{ fontWeight: 500, fontFamily: "'IBM Plex Sans', sans-serif" }}
+                  >
+                    Est. Build Duration
+                  </label>
+                  <div className="relative">
+                    <Hammer size={12} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#94A3B8]" />
+                    <input
+                      type="number"
+                      min={1}
+                      max={30}
+                      value={buildDaysInput}
+                      onChange={(e) => {
+                        setBuildDaysInput(e.target.value);
+                        const v = parseInt(e.target.value, 10);
+                        if (!isNaN(v) && v > 0) setEstimatedBuildDays(v);
+                      }}
+                      onBlur={() => setBuildDaysInput(String(estimatedBuildDays))}
+                      className="w-full h-9 pl-8 pr-3 rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] text-[13px] text-[#1E293B] focus:outline-none focus:border-[#93C5FD] focus:bg-white transition-colors"
+                      style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+                      onClick={(e) => e.stopPropagation()}
+                    />
+                  </div>
+                  <p className="text-[11px] text-[#94A3B8] mt-1.5" style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}>days from parts-in-hand</p>
                 </div>
-                <p className="text-[11px] text-[#94A3B8] mt-1.5" style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}>
-                  days
-                </p>
               </div>
+
               {/* Summary chip */}
               {buildTargetDate && (
-                <div className="pb-0.5">
-                  <div
-                    className="px-3 py-2 rounded-lg border text-[12px]"
-                    style={{ background: "#EFF6FF", borderColor: "#BFDBFE", fontFamily: "'IBM Plex Sans', sans-serif" }}
-                  >
-                    <span className="text-[#64748B]">Target:</span>{" "}
-                    <span style={{ fontWeight: 600, color: "#1D4ED8" }}>
-                      {new Date(buildTargetDate).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
-                    </span>
-                    <span className="text-[#94A3B8] ml-2">· {estimatedBuildDays}d build</span>
-                  </div>
+                <div
+                  className="flex items-center gap-2 px-3 py-2.5 rounded-lg border text-[12px]"
+                  style={{ background: "#EFF6FF", borderColor: "#BFDBFE", fontFamily: "'IBM Plex Sans', sans-serif" }}
+                >
+                  <CalendarDays size={12} color="#2563EB" className="shrink-0" />
+                  <span className="text-[#64748B]">Target:</span>{" "}
+                  <span style={{ fontWeight: 600, color: "#1D4ED8" }}>
+                    {new Date(buildTargetDate).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" })}
+                  </span>
+                  <span className="text-[#94A3B8] ml-1">· {buildQuantity} unit{buildQuantity !== 1 ? "s" : ""} · {estimatedBuildDays}d build</span>
                 </div>
               )}
+            </div>
+          </motion.div>
+        )}
+
+        {/* Production mode — second settings card placeholder area is empty for now */}
+        {mode === "production" && (
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.3, delay: 0.12 }}
+            className="rounded-xl border border-[#E2E8F0] bg-white p-5"
+          >
+            <div className="flex items-center gap-2 mb-3">
+              <BarChart2 size={13} color="#94A3B8" />
+              <p
+                className="text-[12px] text-[#64748B] uppercase tracking-wider"
+                style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontWeight: 500 }}
+              >
+                Analysis Pipeline
+              </p>
+            </div>
+            <div className="flex flex-col gap-2">
+              {PIPELINE_STEPS.map((step) => {
+                const Icon = step.icon;
+                return (
+                  <div key={step.id} className="flex items-center gap-2.5">
+                    <div className="w-6 h-6 rounded-md bg-[#F8FAFC] border border-[#E2E8F0] flex items-center justify-center shrink-0">
+                      <Icon size={12} color="#94A3B8" />
+                    </div>
+                    <span className="text-[12px] text-[#475569]" style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}>
+                      {step.label}
+                    </span>
+                  </div>
+                );
+              })}
             </div>
           </motion.div>
         )}
@@ -903,11 +937,11 @@ export function UploadAnalysis() {
 
   return (
     <div
-      className="flex flex-col min-h-full"
+      className="flex flex-col h-full overflow-hidden"
       style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
     >
       {/* Page header */}
-      <div className="px-6 pt-6 pb-4 shrink-0">
+      <div className="px-6 pt-5 pb-4 shrink-0 border-b border-[#E2E8F0]">
         <div className="flex items-center gap-2 mb-1">
           <span className="text-[11px] text-[#94A3B8] uppercase tracking-wider">Dashboard</span>
           <ChevronRight size={12} className="text-[#CBD5E1]" />
@@ -965,7 +999,7 @@ export function UploadAnalysis() {
       </div>
 
       {/* Divider */}
-      <div className="h-px bg-[#E2E8F0] shrink-0" />
+      <div className="hidden" />
 
       {/* Content */}
       <AnimatePresence mode="wait">
@@ -975,7 +1009,7 @@ export function UploadAnalysis() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="flex-1 flex flex-col"
+            className="flex-1 flex flex-col overflow-auto"
           >
             {renderUpload()}
           </motion.div>
