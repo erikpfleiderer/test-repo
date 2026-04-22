@@ -734,3 +734,111 @@ export const PRODUCTION_ENGINEERING_NOTES: Record<string, EngineeringNote> = {
   "432-001483": { material: "ABS / Nylon",        manufacturingProcess: "3D printed (candidate for injection molding)",            designIntent: "Cable relief clamp; secures cable bundle at exit.",                                 costDrivers: ["3D print unit cost", "Post-processing"] },
   "432-001540": { material: "ABS",                manufacturingProcess: "3D printed (candidate for injection molding)",            designIntent: "Output grommet; cable routing/strain relief at output port.",                        costDrivers: ["3D print unit cost", "Low throughput", "Post-processing / fit iteration"] },
 };
+
+// ─── Analysis page set ────────────────────────────────────────────────────────
+// Parts that have a dedicated Part Analysis deep-dive page.
+// Derived from PRODUCTION_PART_DETAILS so the two cannot drift.
+
+/** Set of partNumbers with a full Part Analysis page. */
+export const ANALYSIS_PAGE_PARTS_SET: ReadonlySet<string> = new Set(
+  Object.keys(PRODUCTION_PART_DETAILS),
+);
+
+// ─── Intervention implementation notes ────────────────────────────────────────
+// Rationale, tooling estimates, lead times, and validation requirements for each
+// ranked production intervention. Keyed by PRODUCTION_INTERVENTIONS[i].rank.
+//
+// Previously defined locally inside CostInterventions.tsx — centralised here so
+// both CostInterventions and the shared PartAnalysisModel can reference them.
+
+export interface InterventionImplNote {
+  rationale:        string;
+  considerations:   string[];
+  toolingEst:       string;
+  leadTimeNote:     string;
+  validationNeeded: string[];
+}
+
+export const INTERVENTION_IMPL_NOTES: Record<number, InterventionImplNote> = {
+  1: {
+    rationale:
+      "Ring gear cost is dominated by slow CNC internal gear cutting, heat treatment distortion risk, and CMM inspection time. Powder metal (PM) produces near-net sintered gears at volumes ≥1 000 units, eliminating most secondary ops. The gear profile is well-suited to PM — a standard approach used in automotive planetary gearsets.",
+    considerations: [
+      "Tooling investment: $15 000 – $40 000 (sintering die + sizing tooling)",
+      "PM density typically 7.0–7.4 g/cm³ vs wrought 7.85 — verify strength margins",
+      "Surface finish on tooth flanks may need post-sinter sizing or light grinding",
+      "Tolerances: AGMA Q9–Q10 achievable with sizing; Q11+ requires grind after sinter",
+    ],
+    toolingEst:       "$15k – $40k NRE",
+    leadTimeNote:     "10–14 weeks first article; 4–6 weeks repeat",
+    validationNeeded: ["Gear mesh FEA at PM density", "CMM verification on first article", "NVH / vibration test"],
+  },
+  2: {
+    rationale:
+      "Housing cost is driven by starting from billet, high material removal rate, and multiple setups required to machine bearing bores and pocket features. Die casting produces near-net shape in A380 alloy at a fraction of the per-part machining cost, with finish machining retained only on critical bearing bores and datums.",
+    considerations: [
+      "Tooling investment: $30 000 – $80 000 (die + trim die + fixture)",
+      "Draft angles of 1–2° required on walls — review pocket geometry for die pull direction",
+      "Porosity risk in bearing bore locations — specify weld-line restrictions in die design",
+      "Retain CNC finish on bearing bores, locating faces, and threaded features",
+    ],
+    toolingEst:       "$30k – $80k NRE",
+    leadTimeNote:     "14–18 weeks first article; 3–5 weeks repeat",
+    validationNeeded: [
+      "Die flow simulation (Moldflow / MagmaSoft)",
+      "Porosity CT scan on first article",
+      "Dimensional audit of all critical interfaces",
+    ],
+  },
+  3: {
+    rationale:
+      "The Output part uses 7075-T6 primarily for its higher yield strength, but design analysis suggests structural margins allow substitution with 6061-T6 in most feature areas. This eliminates the 7075 material premium without a process change, making it one of the lowest-risk interventions in the queue.",
+    considerations: [
+      "No tooling change required — direct material swap on existing program",
+      "7075 YS: ~503 MPa · 6061 YS: ~276 MPa — verify all stress concentrations",
+      "Re-run FEA for rated torque + shock load cases",
+      "Corrosion performance of 7075 vs 6061 comparable with anodize",
+    ],
+    toolingEst:       "$0 NRE (process unchanged)",
+    leadTimeNote:     "No lead time impact — same supplier, same process",
+    validationNeeded: [
+      "Structural FEA (material substitution)",
+      "Torque/shock margin review",
+      "First article at 6061 for functional test",
+    ],
+  },
+  4: {
+    rationale:
+      "The Output Grommet is currently FDM-printed, which has high per-unit cost and slow throughput. At production volumes, injection molding in ABS or TPU yields cost reductions of 85–92% on a per-unit basis. Tooling complexity is low — the grommet is a simple candidate with minimal undercuts.",
+    considerations: [
+      "Tooling investment: $5 000 – $15 000 (single- or multi-cavity tool)",
+      "Wall thickness standardized to 2.0–2.5mm for uniform fill",
+      "Add 0.5–1° draft on all vertical surfaces",
+      "If TPU desired for flex: confirm shore hardness with cable interface team",
+    ],
+    toolingEst:       "$5k – $15k NRE",
+    leadTimeNote:     "6–10 weeks first article; 2–3 weeks repeat",
+    validationNeeded: [
+      "Pull-force test on cable retention features",
+      "IP rating seal test",
+      "Dimensional fit check on housing interface",
+    ],
+  },
+  5: {
+    rationale:
+      "Carrier cost is driven by multi-axis CNC setup time and high material removal from 7075 billet. A forged blank provides near-net shape closer to final geometry, reducing machine time by 40–60% while retaining CNC finish ops on critical bores and pocket features. The geometry is compatible with closed-die forging.",
+    considerations: [
+      "Tooling investment: $20 000 – $50 000 (forging die + trim die)",
+      "Forging flow lines improve fatigue performance vs billet",
+      "Coordinate forging parting line with CNC setup datum faces",
+      "Draft angles on forging pockets: 3–5°; may require minor design changes to deep pockets",
+    ],
+    toolingEst:       "$20k – $50k NRE",
+    leadTimeNote:     "12–16 weeks first article; 4–6 weeks repeat",
+    validationNeeded: [
+      "Forging FEA / grain flow analysis",
+      "CMM audit on first forged + machined article",
+      "Weight vs billet baseline",
+    ],
+  },
+};

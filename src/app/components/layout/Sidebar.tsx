@@ -29,7 +29,9 @@ export function Sidebar() {
       {/* Nav items */}
       <nav className="flex-1 py-3 px-2 flex flex-col gap-0.5">
         {navItems.map((item) => {
-          const isActive = location.pathname === item.path;
+          const isActive =
+            location.pathname === item.path ||
+            (item.path === "/bom-analysis" && location.pathname.startsWith("/part/"));
           const Icon = item.icon;
           return (
             <button
@@ -40,15 +42,15 @@ export function Sidebar() {
                   ? "bg-white/10 text-white"
                   : "text-[#7FA8C9] hover:bg-white/5 hover:text-white/80"
               }`}
-              style={{ fontWeight: isActive ? 500 : 400 }}
+              style={{ fontWeight: isActive ? 600 : 400 }}
             >
               <Icon
                 size={14}
-                className={isActive ? "text-[#4DB6E5]" : "text-[#4A6F8A]"}
+                style={{ color: isActive ? "#4DB6E5" : "#4A6F8A" }}
               />
               {item.label}
               {isActive && (
-                <div className="ml-auto w-1 h-1 rounded-full bg-[#4DB6E5]" />
+                <div className="ml-auto w-1.5 h-1.5 rounded-full bg-[#4DB6E5]" />
               )}
             </button>
           );

@@ -22,7 +22,6 @@ import {
   BarChart2,
   Package,
   ChevronRight,
-  LayoutDashboard,
   CalendarDays,
   Hammer,
 } from "lucide-react";
@@ -906,27 +905,19 @@ export function UploadAnalysis() {
         className="flex items-center gap-3"
       >
         <button
-          onClick={() => navigate("/overview")}
+          onClick={() => navigate("/bom-analysis")}
           className="flex items-center gap-2 px-5 py-2.5 rounded-lg bg-[#1B3A5C] text-white text-[13px] hover:bg-[#162F4A] transition-colors"
           style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontWeight: 500 }}
         >
-          <LayoutDashboard size={14} />
-          Overview
-        </button>
-        <button
-          onClick={() => navigate("/cost-interventions")}
-          className="flex items-center gap-2 px-5 py-2.5 rounded-lg border border-[#E2E8F0] bg-white text-[#1B3A5C] text-[13px] hover:border-[#1B3A5C]/30 hover:bg-[#EFF4FA] transition-colors"
-          style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontWeight: 500 }}
-        >
-          View Cost Interventions
-          <ArrowRight size={13} />
-        </button>
-        <button
-          onClick={() => navigate("/bom-analysis")}
-          className="flex items-center gap-2 px-5 py-2.5 rounded-lg border border-[#E2E8F0] bg-white text-[#1B3A5C] text-[13px] hover:border-[#1B3A5C]/30 hover:bg-[#EFF4FA] transition-colors"
-          style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontWeight: 500 }}
-        >
+          <List size={14} />
           View BOM Analysis
+        </button>
+        <button
+          onClick={() => navigate("/upload")}
+          className="flex items-center gap-2 px-5 py-2.5 rounded-lg border border-[#E2E8F0] bg-white text-[#1B3A5C] text-[13px] hover:border-[#1B3A5C]/30 hover:bg-[#EFF4FA] transition-colors"
+          style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontWeight: 500 }}
+        >
+          Upload Another
           <ArrowRight size={13} />
         </button>
       </motion.div>

@@ -1,17 +1,11 @@
 import { createHashRouter, Navigate } from "react-router";
 import { DashboardLayout } from "./components/layout/DashboardLayout";
-import { Overview } from "./components/pages/Overview";
 import { EmptyPage } from "./components/pages/EmptyPage";
 import { UploadAnalysis } from "./components/pages/UploadAnalysis";
-import { CostInterventions } from "./components/pages/CostInterventions";
 import { PartAnalysis } from "./components/pages/PartAnalysis";
-import { SubsystemAnalysis } from "./components/pages/SubsystemAnalysis";
-import { DFMOpportunities } from "./components/pages/DFMOpportunities";
-import { MaterialOptimization } from "./components/pages/MaterialOptimization";
-import { ManufacturingTransition } from "./components/pages/ManufacturingTransition";
 import { BOMAnalysis } from "./components/pages/BOMAnalysis";
-import { GeometryAnalysis } from "./components/pages/GeometryAnalysis";
-import { ProductionReadiness } from "./components/pages/ProductionReadiness";
+import { CostInterventions } from "./components/pages/CostInterventions";
+import { DFMOpportunities } from "./components/pages/DFMOpportunities";
 import { FileText, Download } from "lucide-react";
 
 export const router = createHashRouter([
@@ -19,19 +13,21 @@ export const router = createHashRouter([
     path: "/",
     Component: DashboardLayout,
     children: [
-      { index: true, element: <Navigate to="/upload" replace /> },
-      { path: "overview", Component: Overview },
-      { path: "upload", Component: UploadAnalysis },
-      { path: "analysis", Component: UploadAnalysis },
-      { path: "cost-interventions", Component: CostInterventions },
-      { path: "part/:partNumber", Component: PartAnalysis },
-      { path: "subsystem-analysis", Component: SubsystemAnalysis },
-      { path: "dfm-opportunities", Component: DFMOpportunities },
-      { path: "material-optimization", Component: MaterialOptimization },
-      { path: "manufacturing-transition", Component: ManufacturingTransition },
-      { path: "bom-analysis", Component: BOMAnalysis },
-      { path: "geometry-analysis",    Component: GeometryAnalysis },
-      { path: "production-readiness", Component: ProductionReadiness },
+      { index: true,                      element: <Navigate to="/bom-analysis" replace /> },
+      // Legacy routes — all redirect to BOM Analysis (except cost-interventions)
+      { path: "overview",                 element: <Navigate to="/bom-analysis" replace /> },
+      { path: "production-readiness",     element: <Navigate to="/bom-analysis" replace /> },
+      { path: "subsystem-analysis",       element: <Navigate to="/bom-analysis" replace /> },
+      { path: "dfm-opportunities",        Component: DFMOpportunities },
+      { path: "geometry-analysis",        element: <Navigate to="/bom-analysis" replace /> },
+      { path: "material-optimization",    element: <Navigate to="/bom-analysis" replace /> },
+      { path: "manufacturing-transition", element: <Navigate to="/bom-analysis" replace /> },
+      // Active routes
+      { path: "upload",                   Component: UploadAnalysis },
+      { path: "analysis",                 Component: UploadAnalysis },
+      { path: "bom-analysis",             Component: BOMAnalysis },
+      { path: "cost-interventions",       Component: CostInterventions },
+      { path: "part/:partNumber",         Component: PartAnalysis },
       {
         path: "reports",
         element: (

@@ -19,16 +19,18 @@ import {
   ArrowRight,
   ThumbsUp,
   Clock,
+  Microscope,
 } from "lucide-react";
 import { useDashboardData, type ProductionPartDetail, type PrototypePartRecord } from "../../data/dashboardData";
 import { CANONICAL_BOM_845_000112 } from "../../data/canonicalBom";
+import { buildPartAnalysisModel } from "../../data/partModel";
+import { useAppMode } from "../../context/AppModeContext";
 import {
   DIFFICULTY_STYLE,
   RISK_STYLE,
   CONFIDENCE_STYLE,
   SEVERITY_SIGNAL_STYLE,
 } from "../ui/badgeStyles";
-import { MODE_CONFIG } from "../../data/modeConfig";
 
 // ─── Badge helpers ─────────────────────────────────────────────────────────────
 
@@ -196,24 +198,23 @@ function PlaceholderNotice({ label }: { label: string }) {
 export function PartAnalysis() {
   const { partNumber } = useParams<{ partNumber: string }>();
   const navigate = useNavigate();
-  const data = useDashboardData();
-  const mode = data.mode;
-  const cfg = MODE_CONFIG[mode];
+  const { mode } = useAppMode();
 
-  // Type-narrowed part lookup
-  let prodPart: ProductionPartDetail | null = null;
-  let protoPart: PrototypePartRecord | null = null;
-  if (data.mode === "production") {
-    prodPart = (partNumber ? data.partDetails[partNumber] : undefined) ?? null;
-  } else {
-    protoPart = (partNumber ? data.partDetails[partNumber] : undefined) ?? null;
-  }
+  // ── Shared model — single data assembly point ─────────────────────────────────
+  const model = partNumber ? buildPartAnalysisModel(partNumber) : null;
 
-  // For prototype mode, derive identity from canonical BOM
+  // Narrow to mode-specific deep-dive records
+  const prodPart: ProductionPartDetail | null = (mode === "production" ? model?.productionDetail : null) ?? null;
+  const protoPart: PrototypePartRecord | null = (mode === "prototype"  ? model?.prototypeDetail  : null) ?? null;
+
+  // Normalised DFM feedback — use the shared selector, not protoPart.dfm directly
+  const dfmFeedback = mode === "prototype" ? (model?.dfmFeedback ?? null) : null;
+
+  // For prototype mode, fall back to canonical BOM for name/subsystem
   const bomRow = partNumber
     ? CANONICAL_BOM_845_000112.find((r) => r.partNumber === partNumber) ?? null
     : null;
-  const partName = prodPart?.partName ?? bomRow?.name ?? partNumber ?? "Unknown";
+  const partName  = prodPart?.partName  ?? bomRow?.name      ?? partNumber ?? "Unknown";
   const subsystem = prodPart?.subsystem ?? bomRow?.subsystem ?? null;
 
   if (!prodPart && !protoPart) {
@@ -235,12 +236,12 @@ export function PartAnalysis() {
           </p>
         </div>
         <button
-          onClick={() => navigate("/cost-interventions")}
+          onClick={() => navigate("/bom-analysis")}
           className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#1B3A5C] text-white text-[13px] hover:bg-[#162F4A] transition-colors"
           style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontWeight: 500 }}
         >
           <ArrowLeft size={13} />
-          Back to {cfg.interventionsNavLabel}
+          Back to BOM Analysis
         </button>
       </div>
     );
@@ -249,6 +250,9 @@ export function PartAnalysis() {
   const hasAssessment = prodPart
     ? !!(prodPart.engineeringDifficulty || prodPart.riskLevel || prodPart.confidenceLevel)
     : true;
+
+  // Intervention for the navigation shortcut — from model, not a second lookup
+  const intervention = mode === "production" ? (model?.intervention ?? null) : null;
 
   return (
     <div
@@ -260,10 +264,10 @@ export function PartAnalysis() {
         {/* Breadcrumb */}
         <div className="flex items-center gap-2 mb-2">
           <button
-            onClick={() => navigate("/cost-interventions")}
+            onClick={() => navigate("/bom-analysis")}
             className="text-[11px] text-[#94A3B8] uppercase tracking-wider hover:text-[#64748B] transition-colors"
           >
-            {cfg.interventionsNavLabel}
+            BOM Analysis
           </button>
           <ChevronRight size={12} className="text-[#CBD5E1]" />
           <span className="text-[11px] text-[#64748B] uppercase tracking-wider">
@@ -273,12 +277,24 @@ export function PartAnalysis() {
           <span className="text-[11px] text-[#475569] uppercase tracking-wider font-mono">
             {partNumber}
           </span>
+          {dfmFeedback && (
+            <>
+              <ChevronRight size={12} className="text-[#CBD5E1]" />
+              <button
+                onClick={() => navigate(`/dfm-opportunities?part=${partNumber}&process=${encodeURIComponent(dfmFeedback.process)}`)}
+                className="flex items-center gap-1 text-[11px] text-indigo-400 hover:text-indigo-600 uppercase tracking-wider transition-colors"
+              >
+                <Microscope size={10} />
+                DFM Workspace
+              </button>
+            </>
+          )}
         </div>
 
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-4">
             <button
-              onClick={() => navigate("/cost-interventions")}
+              onClick={() => navigate("/bom-analysis")}
               className="w-8 h-8 rounded-lg border border-[#E2E8F0] bg-white flex items-center justify-center text-[#64748B] hover:border-[#CBD5E1] hover:bg-[#F8FAFC] transition-all"
             >
               <ArrowLeft size={14} />
@@ -316,15 +332,28 @@ export function PartAnalysis() {
             </div>
           )}
           {protoPart && (
-            <div
-              className="flex items-center gap-2 px-4 py-2 rounded-xl border border-[#BFDBFE] text-[#2563EB]"
-              style={{ background: "#EFF6FF" }}
-            >
-              <Clock size={15} color="#2563EB" />
-              <span className="text-[20px] leading-none" style={{ fontWeight: 700 }}>
-                {protoPart.iterationProfile.leadTimeDays}d
-              </span>
-              <span className="text-[12px] text-[#93C5FD]">lead time</span>
+            <div className="flex items-center gap-2">
+              <div
+                className="flex items-center gap-2 px-4 py-2 rounded-xl border border-[#BFDBFE] text-[#2563EB]"
+                style={{ background: "#EFF6FF" }}
+              >
+                <Clock size={15} color="#2563EB" />
+                <span className="text-[20px] leading-none" style={{ fontWeight: 700 }}>
+                  {protoPart.iterationProfile.leadTimeDays}d
+                </span>
+                <span className="text-[12px] text-[#93C5FD]">lead time</span>
+              </div>
+              {dfmFeedback && (
+                <button
+                  onClick={() => navigate(`/dfm-opportunities?part=${partNumber}&process=${encodeURIComponent(dfmFeedback.process)}`)}
+                  className="flex items-center gap-1.5 px-3 py-2 rounded-xl border border-indigo-200 bg-indigo-50 text-indigo-700 text-[12px] hover:bg-indigo-100 hover:border-indigo-300 transition-colors"
+                  style={{ fontWeight: 500 }}
+                  title="Open in DFM Workspace"
+                >
+                  <Microscope size={13} />
+                  DFM
+                </button>
+              )}
             </div>
           )}
         </div>
@@ -501,13 +530,13 @@ export function PartAnalysis() {
               )}
               {protoPart && (
                 <div className="flex flex-col gap-4">
-                  {protoPart.dfm.geometryIssues.length > 0 && (
+                  {dfmFeedback && dfmFeedback.geometryIssues.length > 0 && (
                     <div>
                       <p className="text-[11px] uppercase tracking-wider text-[#94A3B8] mb-2" style={{ fontWeight: 500 }}>
                         Geometry Issues
                       </p>
                       <div className="flex flex-col gap-2">
-                        {protoPart.dfm.geometryIssues.map((issue, i) => (
+                        {dfmFeedback.geometryIssues.map((issue, i) => (
                           <div
                             key={i}
                             className="flex items-center gap-3 px-4 py-3 rounded-lg border border-[#FDE68A]"
@@ -522,13 +551,13 @@ export function PartAnalysis() {
                       </div>
                     </div>
                   )}
-                  {protoPart.dfm.recommendations.length > 0 && (
+                  {dfmFeedback && dfmFeedback.recommendations.length > 0 && (
                     <div>
                       <p className="text-[11px] uppercase tracking-wider text-[#94A3B8] mb-2" style={{ fontWeight: 500 }}>
                         DFM Recommendations
                       </p>
                       <div className="flex flex-col gap-2">
-                        {protoPart.dfm.recommendations.map((rec, i) => (
+                        {dfmFeedback.recommendations.map((rec, i) => (
                           <div key={i} className="flex items-center gap-3 py-2.5 border-b border-[#F8FAFC] last:border-0">
                             <div className="w-6 h-6 rounded-full flex items-center justify-center shrink-0 text-[11px] text-white" style={{ background: "#D97706", fontWeight: 700 }}>
                               {i + 1}
@@ -539,10 +568,10 @@ export function PartAnalysis() {
                       </div>
                     </div>
                   )}
-                  {protoPart.dfm.notes && (
+                  {dfmFeedback?.notes && (
                     <div className="rounded-lg border border-dashed border-[#CBD5E1] p-3 flex items-start gap-2.5">
                       <Info size={13} className="text-[#94A3B8] mt-0.5 shrink-0" />
-                      <p className="text-[12px] text-[#64748B]">{protoPart.dfm.notes}</p>
+                      <p className="text-[12px] text-[#64748B]">{dfmFeedback.notes}</p>
                     </div>
                   )}
                 </div>
@@ -939,15 +968,31 @@ export function PartAnalysis() {
               className="flex flex-col gap-2"
             >
               <button
-                onClick={() => navigate("/cost-interventions")}
+                onClick={() => navigate("/bom-analysis")}
                 className="w-full flex items-center justify-between px-4 py-2.5 rounded-lg bg-[#1B3A5C] text-white text-[13px] hover:bg-[#162F4A] transition-colors"
                 style={{ fontWeight: 500 }}
               >
                 <span className="flex items-center gap-2">
                   <ArrowLeft size={13} />
-                  Back to {cfg.interventionsNavLabel}
+                  Back to BOM Analysis
                 </span>
               </button>
+              {/* Cost Interventions — production mode only, when this part has an intervention */}
+              {mode === "production" && intervention && (
+                <button
+                  onClick={() => navigate("/cost-interventions")}
+                  className="w-full flex items-center justify-between px-4 py-2.5 rounded-lg border border-[#BBF7D0] text-[13px] hover:border-[#86EFAC] transition-colors"
+                  style={{ background: "#F0FDF4", color: "#065F46", fontWeight: 500 }}
+                >
+                  <span className="flex items-center gap-2">
+                    <TrendingDown size={13} color="#16A34A" />
+                    View Cost Interventions
+                  </span>
+                  <span className="text-[11px] text-[#16A34A]" style={{ fontWeight: 600 }}>
+                    #{intervention.rank}
+                  </span>
+                </button>
+              )}
               <button
                 onClick={() => navigate("/upload")}
                 className="w-full flex items-center justify-between px-4 py-2.5 rounded-lg border border-[#E2E8F0] bg-white text-[#1B3A5C] text-[13px] hover:bg-[#EFF4FA] hover:border-[#1B3A5C]/20 transition-colors"

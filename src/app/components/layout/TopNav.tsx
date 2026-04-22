@@ -1,23 +1,10 @@
 import { useNavigate, useLocation } from "react-router";
-import {
-  FolderOpen,
-  Upload,
-  BarChart2,
-  FileText,
-  Download,
-  Cpu,
-  ChevronDown,
-  Bell,
-  Search,
-} from "lucide-react";
+import { List, Upload, Cpu, Search, Bell, ChevronDown } from "lucide-react";
 import { useAppMode, type AppMode } from "../../context/AppModeContext";
 
 const navItems = [
-  { label: "Projects", icon: FolderOpen, path: "/overview" },
-  { label: "Upload Files", icon: Upload, path: "/upload" },
-  { label: "Analysis", icon: BarChart2, path: "/analysis" },
-  { label: "Reports", icon: FileText, path: "/reports" },
-  { label: "Export", icon: Download, path: "/export" },
+  { label: "BOM Analysis",  icon: List,   path: "/bom-analysis" },
+  { label: "Upload Files",  icon: Upload, path: "/upload" },
 ];
 
 export function TopNav() {
@@ -35,7 +22,7 @@ export function TopNav() {
       {/* Brand */}
       <div
         className="flex items-center gap-2.5 cursor-pointer select-none mr-2"
-        onClick={() => navigate("/upload")}
+        onClick={() => navigate("/bom-analysis")}
       >
         <div className="w-7 h-7 rounded-md bg-[#1B3A5C] flex items-center justify-center">
           <Cpu size={14} className="text-white" />
@@ -54,6 +41,7 @@ export function TopNav() {
         {navItems.map((item) => {
           const isActive =
             location.pathname === item.path ||
+            (item.path === "/bom-analysis" && location.pathname.startsWith("/part/")) ||
             (item.path === "/upload" && location.pathname === "/");
           const Icon = item.icon;
           return (
@@ -77,18 +65,24 @@ export function TopNav() {
       {/* Spacer */}
       <div className="flex-1" />
 
-      {/* Mode selector */}
+      {/* Mode selector — full labels ≥900px, icon-only pills below */}
       <div
         className="flex items-center rounded-md p-0.5 gap-0.5"
         style={{ background: "#F1F5F9", border: "1px solid #E2E8F0" }}
       >
         {modes.map(({ value, label }) => {
           const isActive = mode === value;
+          const Icon = value === "production"
+            ? () => <span className="text-[10px] font-bold" style={{ color: isActive ? "#059669" : "#94A3B8" }}>P</span>
+            : () => <span className="text-[10px] font-bold" style={{ color: isActive ? "#1B3A5C" : "#94A3B8" }}>β</span>;
           return (
             <button
               key={value}
               onClick={() => setMode(value)}
-              className="px-3 py-1 rounded text-[12px] transition-all duration-150"
+              title={label}
+              aria-label={`Switch to ${label} mode`}
+              aria-pressed={isActive}
+              className="px-3 py-1 rounded text-[12px] transition-all duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-400"
               style={{
                 fontFamily: "'IBM Plex Sans', sans-serif",
                 fontWeight: isActive ? 600 : 400,
@@ -102,7 +96,11 @@ export function TopNav() {
                   : "1px solid transparent",
               }}
             >
-              {label}
+              {/* Full label on wide screens, abbreviated on narrow */}
+              <span className="hidden min-[900px]:inline">{label}</span>
+              <span className="inline min-[900px]:hidden">
+                <Icon />
+              </span>
             </button>
           );
         })}
@@ -110,8 +108,11 @@ export function TopNav() {
 
       {/* Right side */}
       <div className="flex items-center gap-3">
-        {/* Search */}
-        <button className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-[#F8FAFC] border border-[#E2E8F0] text-[#94A3B8] text-[13px] hover:border-[#CBD5E1] transition-colors" style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}>
+        {/* Search — hidden below 900px to save space */}
+        <button
+          className="hidden min-[900px]:flex items-center gap-2 px-3 py-1.5 rounded-md bg-[#F8FAFC] border border-[#E2E8F0] text-[#94A3B8] text-[13px] hover:border-[#CBD5E1] transition-colors"
+          style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+        >
           <Search size={13} />
           <span>Search...</span>
           <kbd className="ml-2 px-1.5 py-0.5 rounded text-[10px] bg-[#E2E8F0] text-[#64748B]">⌘K</kbd>
@@ -127,7 +128,7 @@ export function TopNav() {
           <div className="w-7 h-7 rounded-full bg-[#1B3A5C] flex items-center justify-center text-white text-[11px]" style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontWeight: 600 }}>
             ME
           </div>
-          <ChevronDown size={13} className="text-[#94A3B8]" />
+          <ChevronDown size={13} className="hidden min-[900px]:block text-[#94A3B8]" />
         </button>
       </div>
     </header>

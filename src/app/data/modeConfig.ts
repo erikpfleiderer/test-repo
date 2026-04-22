@@ -1,14 +1,14 @@
 // ─── MODE_CONFIG — mode-specific UI vocabulary ────────────────────────────────
 //
-// Single source of truth for all user-facing label strings that differ between
-// production and prototype modes. Components read `const cfg = MODE_CONFIG[mode]`
-// at the top and reference `cfg.fieldName` instead of scattering inline ternaries.
+// NOTE: ModeConfig / MODE_CONFIG are retained for reference but are NO LONGER
+// consumed by any active page (BOMAnalysis, PartAnalysis, UploadAnalysis).
+// These definitions exist only in the demoted legacy pages (CostInterventions,
+// DFMOpportunities, SubsystemAnalysis, Overview) whose routes now redirect to
+// /bom-analysis. They are candidates for full removal once those page files are
+// deleted.
 //
-// ── Adding a new mode ─────────────────────────────────────────────────────────
-//   1. Extend `AppMode` with the new key.
-//   2. Add a matching entry to MODE_CONFIG — TypeScript will surface any missing
-//      fields.
-//   3. Add the new data branch to DashboardData (see dashboardData.ts).
+// The `AppMode` type is still live — consumed by navConfig, dashboardData, and
+// all context providers.
 // ─────────────────────────────────────────────────────────────────────────────
 
 export type AppMode = "production" | "prototype";
