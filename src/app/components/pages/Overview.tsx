@@ -80,10 +80,9 @@ const CustomTooltip = ({ active, payload }: any) => {
     const d = payload[0].payload;
     return (
       <div
-        className="bg-[#0F2035] text-white rounded-lg px-3 py-2 shadow-xl border border-white/10 text-[12px]"
-        style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+        className="bg-[#0F2035] text-white rounded-lg px-3 py-2 shadow-xl border border-white/10 text-sm"
       >
-        <p style={{ fontWeight: 600 }}>{d.name}</p>
+        <p className="font-semibold">{d.name}</p>
         <p className="text-[#4DB6E5] mt-0.5">
           Weight: {d.value} ({d.pct}%)
         </p>
@@ -98,10 +97,9 @@ const BarTooltip = ({ active, payload }: any) => {
     const d = payload[0].payload;
     return (
       <div
-        className="bg-[#0F2035] text-white rounded-lg px-3 py-2 shadow-xl border border-white/10 text-[12px]"
-        style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+        className="bg-[#0F2035] text-white rounded-lg px-3 py-2 shadow-xl border border-white/10 text-sm"
       >
-        <p style={{ fontWeight: 600 }}>{d.name}</p>
+        <p className="font-semibold">{d.name}</p>
         <p className="text-[#4DB6E5] mt-0.5">
           Relative Weight: {d.weight} ({d.pct}%)
         </p>
@@ -142,12 +140,9 @@ function StatCard({
   accent?: string;
 }) {
   return (
-    <div className="bg-white rounded-xl border border-[#E2E8F0] p-5 flex flex-col gap-3">
+    <div className="bg-surface-card rounded-xl border border-border p-5 flex flex-col gap-3">
       <div className="flex items-center justify-between">
-        <span
-          className="text-[12px] text-[#64748B] uppercase tracking-wider"
-          style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontWeight: 500 }}
-        >
+        <span className="text-sm text-text-muted uppercase tracking-wider font-medium">
           {label}
         </span>
         <div
@@ -158,17 +153,11 @@ function StatCard({
         </div>
       </div>
       <div>
-        <p
-          className="text-[28px] text-[#0F2035]"
-          style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontWeight: 600, lineHeight: 1 }}
-        >
+        <p className="text-[28px] text-text-primary font-semibold leading-none">
           {value}
         </p>
         {sub && (
-          <p
-            className="text-[12px] text-[#94A3B8] mt-1.5"
-            style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-          >
+          <p className="text-sm text-text-subtle mt-1.5">
             {sub}
           </p>
         )}
@@ -198,49 +187,36 @@ function PrototypeSummaryPanel({
     pn ? getBomPartName(pn) : "";
 
   return (
-    <div
-      className="rounded-xl border border-[#E2E8F0] overflow-hidden"
-      style={{ background: "#FAFBFD" }}
-    >
+    <div className="rounded-xl border border-border overflow-hidden bg-surface-raised">
       {/* Header row */}
       <div
-        className="px-5 py-3.5 border-b border-[#E2E8F0] flex items-center justify-between"
+        className="px-5 py-3.5 border-b border-border flex items-center justify-between"
         style={{ background: "#0F2035" }}
       >
         <div className="flex items-center gap-2.5">
-          <span
-            className="text-[13px] text-white"
-            style={{ fontWeight: 600, fontFamily: "'IBM Plex Sans', sans-serif" }}
-          >
+          <span className="text-base text-white font-semibold">
             Prototype Summary
           </span>
-          <span
-            className="text-[11px] text-[#93C5FD]"
-            style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-          >
+          <span className="text-xs text-[#93C5FD]">
             What matters most right now
           </span>
         </div>
         <div className="flex items-center gap-2">
           <span
-            className="px-2.5 py-1 rounded-md text-[11px]"
+            className="px-2.5 py-1 rounded-md text-xs font-semibold"
             style={{
               background: readinessStyle.bg,
               color: readinessStyle.color,
-              fontWeight: 600,
-              fontFamily: "'IBM Plex Sans', sans-serif",
             }}
           >
             {summary.buildReadiness}
           </span>
           {summary.daysToNextBuild != null && (
             <span
-              className="flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px]"
+              className="flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-semibold"
               style={{
                 background: summary.daysToNextBuild <= 7 ? "#FFF1F2" : "#EFF6FF",
                 color: summary.daysToNextBuild <= 7 ? "#BE123C" : "#2563EB",
-                fontWeight: 600,
-                fontFamily: "'IBM Plex Sans', sans-serif",
               }}
             >
               <CalendarClock size={11} />
@@ -255,7 +231,7 @@ function PrototypeSummaryPanel({
       </div>
 
       {/* Four signal cells */}
-      <div className="grid grid-cols-4 divide-x divide-[#E2E8F0]">
+      <div className="grid grid-cols-4 divide-x divide-border">
         {/* ── Top Blocker ── */}
         <div className="px-4 py-4">
           <div className="flex items-center gap-2 mb-2.5">
@@ -265,21 +241,13 @@ function PrototypeSummaryPanel({
             >
               <CircleAlert size={13} color="#E11D48" />
             </div>
-            <span
-              className="text-[11px] uppercase tracking-wider text-[#64748B]"
-              style={{ fontWeight: 500, fontFamily: "'IBM Plex Sans', sans-serif" }}
-            >
+            <span className="text-xs uppercase tracking-wider text-text-muted font-medium">
               Top Blocker
             </span>
             {summary.hardBlockerCount > 0 && (
               <span
-                className="ml-auto text-[10px] px-1.5 py-0.5 rounded-md"
-                style={{
-                  background: "#FFF1F2",
-                  color: "#BE123C",
-                  fontWeight: 700,
-                  fontFamily: "'IBM Plex Sans', sans-serif",
-                }}
+                className="ml-auto text-2xs px-1.5 py-0.5 rounded-md font-bold"
+                style={{ background: "#FFF1F2", color: "#BE123C" }}
               >
                 {summary.hardBlockerCount}
               </span>
@@ -287,43 +255,28 @@ function PrototypeSummaryPanel({
           </div>
           {summary.topBlocker ? (
             <>
-              <p
-                className="text-[12px] text-[#1E293B] leading-snug mb-1"
-                style={{ fontWeight: 600, fontFamily: "'IBM Plex Sans', sans-serif" }}
-              >
+              <p className="text-sm text-text-body font-semibold leading-snug mb-1">
                 {partName(summary.topBlocker.partNumber) || "Assembly blocker"}
               </p>
               {summary.topBlocker.leadTimeDays != null && (
                 <div className="flex items-center gap-1 mb-1.5">
                   <Clock size={10} color="#94A3B8" />
-                  <span
-                    className="text-[11px] text-[#94A3B8]"
-                    style={{ fontFamily: "'IBM Plex Mono', monospace" }}
-                  >
+                  <span className="text-xs text-text-subtle font-mono">
                     {summary.topBlocker.leadTimeDays}d lead time
                   </span>
                 </div>
               )}
-              <p
-                className="text-[11px] text-[#475569] leading-snug mb-2"
-                style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-              >
+              <p className="text-xs text-text-secondary leading-snug mb-2">
                 {summary.topBlocker.description}
               </p>
-              <div
-                className="px-2.5 py-1.5 rounded-md"
-                style={{ background: "#F0FDF4", border: "1px solid #BBF7D0" }}
-              >
-                <p
-                  className="text-[11px] text-[#166534] leading-snug"
-                  style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-                >
+              <div className="px-2.5 py-1.5 rounded-md bg-success-bg border border-success-border">
+                <p className="text-xs text-[#166534] leading-snug">
                   {summary.topBlocker.resolution}
                 </p>
               </div>
             </>
           ) : (
-            <p className="text-[12px] text-[#94A3B8]">No hard blockers</p>
+            <p className="text-sm text-text-subtle">No hard blockers</p>
           )}
         </div>
 
@@ -336,39 +289,27 @@ function PrototypeSummaryPanel({
             >
               <Wrench size={13} color="#059669" />
             </div>
-            <span
-              className="text-[11px] uppercase tracking-wider text-[#64748B]"
-              style={{ fontWeight: 500, fontFamily: "'IBM Plex Sans', sans-serif" }}
-            >
+            <span className="text-xs uppercase tracking-wider text-text-muted font-medium">
               Top Simplification
             </span>
           </div>
           {summary.topSimplification ? (
             <>
-              <p
-                className="text-[12px] text-[#1E293B] leading-snug mb-1"
-                style={{ fontWeight: 600, fontFamily: "'IBM Plex Sans', sans-serif" }}
-              >
+              <p className="text-sm text-text-body font-semibold leading-snug mb-1">
                 {summary.topSimplification.partName.replace(/^RS320 /, "")}
               </p>
               <div className="flex items-center gap-1 mb-1.5">
-                <span
-                  className="text-[11px] text-[#059669]"
-                  style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 600 }}
-                >
+                <span className="text-xs text-success font-mono font-semibold">
                   −{summary.topSimplification.leadTimeSavingsDays}d
                 </span>
-                <span className="text-[11px] text-[#94A3B8]">lead time savings</span>
+                <span className="text-xs text-text-subtle">lead time savings</span>
               </div>
-              <p
-                className="text-[11px] text-[#475569] leading-snug"
-                style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-              >
+              <p className="text-xs text-text-secondary leading-snug">
                 {summary.topSimplification.simplificationPath}
               </p>
             </>
           ) : (
-            <p className="text-[12px] text-[#94A3B8]">No simplifications recorded</p>
+            <p className="text-sm text-text-subtle">No simplifications recorded</p>
           )}
         </div>
 
@@ -381,10 +322,7 @@ function PrototypeSummaryPanel({
             >
               <TrendingDown size={13} color="#059669" />
             </div>
-            <span
-              className="text-[11px] uppercase tracking-wider text-[#64748B]"
-              style={{ fontWeight: 500, fontFamily: "'IBM Plex Sans', sans-serif" }}
-            >
+            <span className="text-xs uppercase tracking-wider text-text-muted font-medium">
               Build Cost
             </span>
           </div>
@@ -392,30 +330,24 @@ function PrototypeSummaryPanel({
             <>
               <div className="flex flex-col gap-2">
                 <div>
-                  <p className="text-[10px] text-[#94A3B8] mb-0.5" style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontWeight: 500 }}>Per Assembly</p>
-                  <p
-                    className="text-[17px] text-[#0F2035]"
-                    style={{ fontWeight: 700, fontFamily: "'IBM Plex Mono', monospace", letterSpacing: "-0.02em" }}
-                  >
+                  <p className="text-2xs text-text-subtle font-medium mb-0.5">Per Assembly</p>
+                  <p className="text-[17px] text-text-primary font-bold font-mono" style={{ letterSpacing: "-0.02em" }}>
                     {fmtCurrency(perAssemblyCost)}
                   </p>
                 </div>
-                <div className="h-px bg-[#F1F5F9]" />
+                <div className="h-px bg-surface-subtle" />
                 <div>
-                  <p className="text-[10px] text-[#94A3B8] mb-0.5" style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontWeight: 500 }}>
+                  <p className="text-2xs text-text-subtle font-medium mb-0.5">
                     Total ({buildQuantity} unit{buildQuantity !== 1 ? "s" : ""})
                   </p>
-                  <p
-                    className="text-[17px] text-[#059669]"
-                    style={{ fontWeight: 700, fontFamily: "'IBM Plex Mono', monospace", letterSpacing: "-0.02em" }}
-                  >
+                  <p className="text-[17px] text-success font-bold font-mono" style={{ letterSpacing: "-0.02em" }}>
                     {fmtCurrency(totalBuildCost)}
                   </p>
                 </div>
               </div>
             </>
           ) : (
-            <p className="text-[12px] text-[#94A3B8]">No cost data available</p>
+            <p className="text-sm text-text-subtle">No cost data available</p>
           )}
         </div>
 
@@ -428,55 +360,38 @@ function PrototypeSummaryPanel({
             >
               <ShieldAlert size={13} color="#BE123C" />
             </div>
-            <span
-              className="text-[11px] uppercase tracking-wider text-[#64748B]"
-              style={{ fontWeight: 500, fontFamily: "'IBM Plex Sans', sans-serif" }}
-            >
+            <span className="text-xs uppercase tracking-wider text-text-muted font-medium">
               Top Scale Risk
             </span>
           </div>
           {summary.topProductionRisk ? (
             <>
               <div className="flex items-center gap-2 mb-1">
-                <p
-                  className="text-[12px] text-[#1E293B] leading-snug"
-                  style={{ fontWeight: 600, fontFamily: "'IBM Plex Sans', sans-serif" }}
-                >
+                <p className="text-sm text-text-body font-semibold leading-snug">
                   {partName(summary.topProductionRisk.partNumber)}
                 </p>
                 <span
-                  className="text-[10px] px-1.5 py-0.5 rounded border shrink-0"
+                  className="text-2xs px-1.5 py-0.5 rounded border shrink-0 font-semibold"
                   style={{
                     background: SEVERITY_SIGNAL_STYLE.Block.bg,
                     color: SEVERITY_SIGNAL_STYLE.Block.text,
                     borderColor: SEVERITY_SIGNAL_STYLE.Block.border,
-                    fontWeight: 600,
-                    fontFamily: "'IBM Plex Sans', sans-serif",
                   }}
                 >
                   Block
                 </span>
               </div>
-              <p
-                className="text-[11px] text-[#475569] leading-snug mb-2"
-                style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-              >
+              <p className="text-xs text-text-secondary leading-snug mb-2">
                 {summary.topProductionRisk.signal}
               </p>
-              <div
-                className="px-2.5 py-1.5 rounded-md"
-                style={{ background: "#F0FDF4", border: "1px solid #BBF7D0" }}
-              >
-                <p
-                  className="text-[11px] text-[#166534] leading-snug"
-                  style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-                >
+              <div className="px-2.5 py-1.5 rounded-md bg-success-bg border border-success-border">
+                <p className="text-xs text-[#166534] leading-snug">
                   {summary.topProductionRisk.mitigation}
                 </p>
               </div>
             </>
           ) : (
-            <p className="text-[12px] text-[#94A3B8]">No Block signals recorded</p>
+            <p className="text-sm text-text-subtle">No Block signals recorded</p>
           )}
         </div>
       </div>
@@ -494,35 +409,25 @@ function ProductionReadinessScorecard() {
   const watchCount   = allSignals.filter((s) => s.severity === "Watch").length;
 
   return (
-    <div className="bg-white rounded-xl border border-[#E2E8F0] overflow-hidden">
+    <div className="bg-surface-card rounded-xl border border-border overflow-hidden">
       {/* Header row */}
-      <div
-        className="px-5 py-4 border-b border-[#F1F5F9] flex items-center justify-between"
-        style={{ background: "#FAFBFD" }}
-      >
+      <div className="px-5 py-4 border-b border-surface-subtle flex items-center justify-between bg-surface-raised">
         <div className="flex items-center gap-3">
-          <div
-            className="w-9 h-9 rounded-lg flex items-center justify-center"
-            style={{ background: "#FFF1F2" }}
-          >
+          <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ background: "#FFF1F2" }}>
             <ShieldAlert size={16} color="#E11D48" />
           </div>
           <div>
-            <h2
-              className="text-[#0F2035]"
-              style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontWeight: 600 }}
-            >
+            <h2 className="text-text-primary font-semibold">
               Production Readiness Scorecard
             </h2>
-            <p className="text-[12px] text-[#94A3B8]">
+            <p className="text-sm text-text-subtle">
               Design decisions that will break at scale — resolve before pilot
             </p>
           </div>
         </div>
         <button
           onClick={() => navigate("/production-readiness")}
-          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[12px] border border-[#E2E8F0] hover:border-[#1B3A5C]/30 hover:bg-[#F8FAFC] transition-all"
-          style={{ color: "#1B3A5C", fontWeight: 500, fontFamily: "'IBM Plex Sans', sans-serif" }}
+          className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm font-medium border border-border hover:border-brand-800/30 hover:bg-surface-muted transition-all text-text-primary"
         >
           View full scorecard
           <ArrowRight size={12} />
@@ -530,7 +435,7 @@ function ProductionReadinessScorecard() {
       </div>
 
       {/* Severity stat pills */}
-      <div className="px-5 py-3.5 border-b border-[#F1F5F9] flex items-center gap-3 flex-wrap">
+      <div className="px-5 py-3.5 border-b border-surface-subtle flex items-center gap-3 flex-wrap">
         {(["Block", "Flag", "Watch"] as const).map((sev) => {
           const count =
             sev === "Block" ? blockSignals.length :
@@ -544,70 +449,44 @@ function ProductionReadinessScorecard() {
               style={{ background: st.bg, borderColor: st.border }}
             >
               <div className="w-2 h-2 rounded-full shrink-0" style={{ background: st.dot }} />
-              <span
-                className="text-[14px]"
-                style={{ color: st.text, fontWeight: 700, fontFamily: "'IBM Plex Sans', sans-serif", lineHeight: 1 }}
-              >
+              <span className="text-md font-bold" style={{ color: st.text, lineHeight: 1 }}>
                 {count}
               </span>
-              <span
-                className="text-[11px]"
-                style={{ color: st.text, fontWeight: 500, fontFamily: "'IBM Plex Sans', sans-serif" }}
-              >
+              <span className="text-xs font-medium" style={{ color: st.text }}>
                 {sev}
               </span>
             </div>
           );
         })}
-        <span
-          className="ml-2 text-[11px] text-[#94A3B8]"
-          style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-        >
+        <span className="ml-2 text-xs text-text-subtle">
           {allSignals.length} total signals across {new Set(allSignals.map((s) => s.partNumber)).size} parts
         </span>
       </div>
 
       {/* Top Block signals preview (up to 3) */}
       {blockSignals.length > 0 ? (
-        <div className="divide-y divide-[#F1F5F9]">
+        <div className="divide-y divide-surface-subtle">
           {blockSignals.slice(0, 3).map((s, i) => (
             <div key={i} className="px-5 py-3 flex items-start gap-3">
               <div
                 className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 mt-0.5"
                 style={{ background: "#FFF1F2", border: "1px solid #FECDD3" }}
               >
-                <span
-                  className="text-[9px]"
-                  style={{ color: "#BE123C", fontWeight: 700, fontFamily: "'IBM Plex Mono', monospace" }}
-                >
-                  B
-                </span>
+                <span className="text-[9px] text-[#BE123C] font-mono font-bold">B</span>
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-0.5 flex-wrap">
-                  <span
-                    className="text-[12px] text-[#1E293B]"
-                    style={{ fontWeight: 600, fontFamily: "'IBM Plex Sans', sans-serif" }}
-                  >
+                  <span className="text-sm text-text-body font-semibold">
                     {s.partName.replace(/^RS320 /, "")}
                   </span>
-                  <span
-                    className="text-[10px] text-[#94A3B8]"
-                    style={{ fontFamily: "'IBM Plex Mono', monospace" }}
-                  >
+                  <span className="text-2xs text-text-subtle font-mono">
                     {s.partNumber}
                   </span>
-                  <span
-                    className="text-[10px] px-1.5 py-0.5 rounded border border-[#E2E8F0] bg-[#F8FAFC] text-[#64748B]"
-                    style={{ fontWeight: 500, fontFamily: "'IBM Plex Sans', sans-serif" }}
-                  >
+                  <span className="text-2xs px-1.5 py-0.5 rounded border border-border bg-surface-muted text-text-muted font-medium">
                     {s.category}
                   </span>
                 </div>
-                <p
-                  className="text-[12px] text-[#475569] leading-snug"
-                  style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-                >
+                <p className="text-sm text-text-secondary leading-snug">
                   {s.signal}
                 </p>
               </div>
@@ -617,8 +496,7 @@ function ProductionReadinessScorecard() {
             <div className="px-5 py-2.5">
               <button
                 onClick={() => navigate("/production-readiness")}
-                className="text-[12px] text-[#2563EB] hover:underline"
-                style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontWeight: 500 }}
+                className="text-sm text-[#2563EB] font-medium hover:underline"
               >
                 +{blockSignals.length - 3} more block{blockSignals.length - 3 !== 1 ? "s" : ""} — view all →
               </button>
@@ -628,7 +506,7 @@ function ProductionReadinessScorecard() {
       ) : (
         <div className="px-5 py-4 flex items-center gap-2">
           <div className="w-2 h-2 rounded-full bg-[#10B981]" />
-          <p className="text-[12px] text-[#059669]" style={{ fontWeight: 500, fontFamily: "'IBM Plex Sans', sans-serif" }}>
+          <p className="text-sm text-success font-medium">
             No Block signals — {flagCount + watchCount} lower-severity items to review before pilot
           </p>
         </div>
@@ -640,85 +518,50 @@ function ProductionReadinessScorecard() {
 // ── Prototype: Fastest Iteration Wins ─────────────────────────────────────────
 function ProtoIterationWins() {
   return (
-    <div className="bg-white rounded-xl border border-[#E2E8F0] overflow-hidden flex flex-col">
-      <div
-        className="px-5 py-4 border-b border-[#F1F5F9] flex items-center justify-between"
-        style={{ background: "#FAFBFD" }}
-      >
+    <div className="bg-surface-card rounded-xl border border-border overflow-hidden flex flex-col">
+      <div className="px-5 py-4 border-b border-surface-subtle flex items-center justify-between bg-surface-raised">
         <div className="flex items-center gap-3">
-          <div
-            className="w-9 h-9 rounded-lg flex items-center justify-center"
-            style={{ background: "#ECFDF5" }}
-          >
+          <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ background: "#ECFDF5" }}>
             <ListChecks size={16} color="#059669" />
           </div>
           <div>
-            <h2
-              className="text-[#0F2035]"
-              style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontWeight: 600 }}
-            >
+            <h2 className="text-text-primary font-semibold">
               Fastest Iteration Wins
             </h2>
-            <p
-              className="text-[12px] text-[#94A3B8]"
-              style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-            >
+            <p className="text-sm text-text-subtle">
               Changes with biggest cycle time impact
             </p>
           </div>
         </div>
         <span
-          className="text-[11px] px-2.5 py-1 rounded-md"
-          style={{
-            background: "#F1F5F9",
-            color: "#64748B",
-            fontWeight: 500,
-            fontFamily: "'IBM Plex Sans', sans-serif",
-          }}
+          className="text-xs px-2.5 py-1 rounded-md font-medium bg-surface-subtle text-text-muted"
         >
           {PROTOTYPE_SIMPLIFICATIONS.length} total
         </span>
       </div>
-      <div className="flex flex-col divide-y divide-[#F1F5F9] flex-1">
+      <div className="flex flex-col divide-y divide-surface-subtle flex-1">
         {PROTOTYPE_SIMPLIFICATIONS.slice(0, 3).map((s, i) => (
           <div key={s.partNumber} className="px-5 py-4 flex items-start gap-3">
-            <div
-              className="w-6 h-6 rounded-full flex items-center justify-center shrink-0 mt-0.5 border border-[#E2E8F0] bg-white"
-            >
-              <span
-                className="text-[10px] text-[#94A3B8]"
-                style={{ fontWeight: 700, fontFamily: "'IBM Plex Mono', monospace" }}
-              >
+            <div className="w-6 h-6 rounded-full flex items-center justify-center shrink-0 mt-0.5 border border-border bg-white">
+              <span className="text-2xs text-text-subtle font-bold font-mono">
                 {i + 1}
               </span>
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-center gap-2 mb-1 flex-wrap">
-                <span
-                  className="text-[12px] text-[#1E293B]"
-                  style={{ fontWeight: 600, fontFamily: "'IBM Plex Sans', sans-serif" }}
-                >
+                <span className="text-sm text-text-body font-semibold">
                   {s.partName.replace(/^RS320 /, "")}
                 </span>
                 {s.subsystem && (
-                  <span
-                    className="text-[10px] px-1.5 py-0.5 rounded border border-[#E2E8F0] bg-[#F8FAFC] text-[#64748B]"
-                    style={{ fontWeight: 500, fontFamily: "'IBM Plex Sans', sans-serif" }}
-                  >
+                  <span className="text-2xs px-1.5 py-0.5 rounded border border-border bg-surface-muted text-text-muted font-medium">
                     {s.subsystem}
                   </span>
                 )}
-                <span
-                  className="ml-auto text-[12px]"
-                  style={{ color: "#059669", fontWeight: 700, fontFamily: "'IBM Plex Mono', monospace" }}
-                >
+                <span className="ml-auto text-sm text-success font-bold font-mono">
                   −{s.leadTimeSavingsDays}d
                 </span>
               </div>
-              <p
-                className="text-[11px] text-[#475569] leading-snug"
-                style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-              >
+              <p className="text-xs text-text-secondary leading-snug">
                 {s.simplificationPath}
               </p>
             </div>
@@ -734,35 +577,23 @@ function ProtoFunctionalRisk() {
   const top3 = getTopFunctionalRiskParts(3);
 
   return (
-    <div className="bg-white rounded-xl border border-[#E2E8F0] overflow-hidden flex flex-col">
-      <div
-        className="px-5 py-4 border-b border-[#F1F5F9] flex items-center justify-between"
-        style={{ background: "#FAFBFD" }}
-      >
+    <div className="bg-surface-card rounded-xl border border-border overflow-hidden flex flex-col">
+      <div className="px-5 py-4 border-b border-surface-subtle flex items-center justify-between bg-surface-raised">
         <div className="flex items-center gap-3">
-          <div
-            className="w-9 h-9 rounded-lg flex items-center justify-center"
-            style={{ background: "#FFFBEB" }}
-          >
+          <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ background: "#FFFBEB" }}>
             <AlertCircle size={16} color="#D97706" />
           </div>
           <div>
-            <h2
-              className="text-[#0F2035]"
-              style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontWeight: 600 }}
-            >
+            <h2 className="text-text-primary font-semibold">
               Functional Risk
             </h2>
-            <p
-              className="text-[12px] text-[#94A3B8]"
-              style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-            >
+            <p className="text-sm text-text-subtle">
               Parts most likely to fail build validation
             </p>
           </div>
         </div>
       </div>
-      <div className="flex flex-col divide-y divide-[#F1F5F9] flex-1">
+      <div className="flex flex-col divide-y divide-surface-subtle flex-1">
         {top3.map(({ partNumber: pn, record }) => {
           const displayName = getBomPartName(pn).replace(/^RS320 /, "");
           const fr = record.functionalRisk;
@@ -778,36 +609,25 @@ function ProtoFunctionalRisk() {
               }}
             >
               <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-                <span
-                  className="text-[12px] text-[#1E293B]"
-                  style={{ fontWeight: 600, fontFamily: "'IBM Plex Sans', sans-serif" }}
-                >
+                <span className="text-sm text-text-body font-semibold">
                   {displayName.replace(/^RS320 /, "")}
                 </span>
                 <span
-                  className="text-[10px] px-1.5 py-0.5 rounded border shrink-0"
+                  className="text-2xs px-1.5 py-0.5 rounded border shrink-0 font-semibold"
                   style={{
                     background: riskSt.bg,
                     color: riskSt.text,
                     borderColor: riskSt.border,
-                    fontWeight: 600,
-                    fontFamily: "'IBM Plex Sans', sans-serif",
                   }}
                 >
                   {fr.riskLevel}
                 </span>
-                <span
-                  className="ml-auto text-[10px] text-[#94A3B8]"
-                  style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-                >
+                <span className="ml-auto text-2xs text-text-subtle">
                   {fr.validationRequired.length} validation
                   {fr.validationRequired.length !== 1 ? "s" : ""}
                 </span>
               </div>
-              <p
-                className="text-[11px] text-[#475569] leading-snug mb-1.5"
-                style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-              >
+              <p className="text-xs text-text-secondary leading-snug mb-1.5">
                 {fr.primaryRisks[0] ?? ""}
               </p>
               <div className="flex items-center gap-1">
@@ -817,12 +637,8 @@ function ProtoFunctionalRisk() {
                   <CircleAlert size={11} color="#E11D48" />
                 )}
                 <span
-                  className="text-[10px]"
-                  style={{
-                    color: fr.clearToBuild ? "#059669" : "#E11D48",
-                    fontWeight: 500,
-                    fontFamily: "'IBM Plex Sans', sans-serif",
-                  }}
+                  className="text-2xs font-medium"
+                  style={{ color: fr.clearToBuild ? "#059669" : "#E11D48" }}
                 >
                   {fr.clearToBuild ? "Clear to build" : "Not clear to build"}
                   {fr.clearToBuildNotes ? ` · ${fr.clearToBuildNotes}` : ""}
@@ -854,40 +670,30 @@ function PrototypeOverview() {
   const totalBuildCost = currentBomCost * buildQuantity;
 
   return (
-    <div
-      className="p-6 space-y-6 min-h-full"
-      style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-    >
+    <div className="p-6 space-y-6 min-h-full">
       {/* Header */}
       <div className="flex items-start justify-between">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-[11px] text-[#94A3B8] uppercase tracking-wider">
+            <span className="text-xs text-text-subtle uppercase tracking-wider">
               Dashboard
             </span>
-            <ChevronRight size={12} className="text-[#CBD5E1]" />
-            <span className="text-[11px] text-[#64748B] uppercase tracking-wider">
+            <ChevronRight size={12} className="text-text-ghost" />
+            <span className="text-xs text-text-muted uppercase tracking-wider">
               Overview
             </span>
           </div>
-          <h1
-            className="text-[#0F2035]"
-            style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontWeight: 600 }}
-          >
+          <h1 className="text-text-primary font-semibold">
             Build Command Center
           </h1>
-          <p
-            className="text-[13px] text-[#64748B] mt-0.5"
-            style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-          >
+          <p className="text-base text-text-muted mt-0.5">
             {data.assembly.assemblyName} · {data.assembly.assemblyId} ·{" "}
             {data.assembly.totalPartCount} parts
           </p>
         </div>
         <button
           onClick={() => navigate("/upload")}
-          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#1B3A5C] text-white text-[13px] hover:bg-[#162F4A] transition-colors"
-          style={{ fontWeight: 500 }}
+          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-brand-800 text-white text-base font-medium hover:bg-brand-900 transition-colors"
         >
           <Zap size={14} />
           Update Analysis
@@ -916,10 +722,7 @@ function PrototypeOverview() {
 
       {/* Analysis Modules nav */}
       <div>
-        <h3
-          className="text-[13px] text-[#64748B] uppercase tracking-wider mb-3"
-          style={{ fontWeight: 500 }}
-        >
+        <h3 className="text-base text-text-muted uppercase tracking-wider font-medium mb-3">
           Analysis Modules
         </h3>
         <div className="grid grid-cols-4 gap-3">
@@ -934,33 +737,21 @@ function PrototypeOverview() {
               <button
                 key={item.label}
                 onClick={() => navigate(item.path)}
-                className="group bg-white rounded-xl border border-[#E2E8F0] p-4 text-left hover:border-[#1B3A5C]/30 hover:shadow-sm transition-all"
+                className="group bg-surface-card rounded-xl border border-border p-4 text-left hover:border-brand-800/30 hover:shadow-sm transition-all"
               >
                 <div className="flex items-center justify-between mb-2">
-                  <div
-                    className="w-2 h-2 rounded-full"
-                    style={{ background: item.color }}
-                  />
-                  <span
-                    className="text-[10px] px-2 py-0.5 rounded-full border border-[#E2E8F0] text-[#94A3B8]"
-                    style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-                  >
+                  <div className="w-2 h-2 rounded-full" style={{ background: item.color }} />
+                  <span className="text-2xs px-2 py-0.5 rounded-full border border-border text-text-subtle">
                     {statusMap[item.statusKey] ?? ""}
                   </span>
                 </div>
-                <p
-                  className="text-[13px] text-[#1E293B] mb-1"
-                  style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontWeight: 500 }}
-                >
+                <p className="text-base text-text-body font-medium mb-1">
                   {item.label}
                 </p>
-                <p
-                  className="text-[11px] text-[#94A3B8]"
-                  style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-                >
+                <p className="text-xs text-text-subtle">
                   {item.desc}
                 </p>
-                <div className="flex items-center gap-1 mt-3 text-[11px] text-[#CBD5E1] group-hover:text-[#1B3A5C] transition-colors">
+                <div className="flex items-center gap-1 mt-3 text-xs text-text-ghost group-hover:text-brand-800 transition-colors">
                   <span>Open</span>
                   <ArrowRight size={11} />
                 </div>
@@ -1052,40 +843,30 @@ function ProductionOverview() {
         })();
 
   return (
-    <div
-      className="p-6 space-y-6 min-h-full"
-      style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-    >
+    <div className="p-6 space-y-6 min-h-full">
       {/* Page header */}
       <div className="flex items-start justify-between">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="text-[11px] text-[#94A3B8] uppercase tracking-wider">
+            <span className="text-xs text-text-subtle uppercase tracking-wider">
               Dashboard
             </span>
-            <ChevronRight size={12} className="text-[#CBD5E1]" />
-            <span className="text-[11px] text-[#64748B] uppercase tracking-wider">
+            <ChevronRight size={12} className="text-text-ghost" />
+            <span className="text-xs text-text-muted uppercase tracking-wider">
               Overview
             </span>
           </div>
-          <h1
-            className="text-[#0F2035]"
-            style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontWeight: 600 }}
-          >
+          <h1 className="text-text-primary font-semibold">
             Assembly Overview
           </h1>
-          <p
-            className="text-[13px] text-[#64748B] mt-0.5"
-            style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-          >
+          <p className="text-base text-text-muted mt-0.5">
             {cfg.overviewSubtitle}
           </p>
         </div>
         <div className="flex items-center gap-2">
           <button
             onClick={() => navigate("/upload")}
-            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-[#1B3A5C] text-white text-[13px] hover:bg-[#162F4A] transition-colors"
-            style={{ fontWeight: 500 }}
+            className="flex items-center gap-2 px-4 py-2 rounded-lg bg-brand-800 text-white text-base font-medium hover:bg-brand-900 transition-colors"
           >
             <Zap size={14} />
             Run Analysis
@@ -1094,33 +875,21 @@ function ProductionOverview() {
       </div>
 
       {/* Assembly Identity Card */}
-      <div className="bg-white rounded-xl border border-[#E2E8F0] overflow-hidden">
-        <div
-          className="flex items-center gap-3 px-5 py-4 border-b border-[#F1F5F9]"
-          style={{ background: "#FAFBFD" }}
-        >
-          <div className="w-9 h-9 rounded-lg bg-[#1B3A5C] flex items-center justify-center">
+      <div className="bg-surface-card rounded-xl border border-border overflow-hidden">
+        <div className="flex items-center gap-3 px-5 py-4 border-b border-surface-subtle bg-surface-raised">
+          <div className="w-9 h-9 rounded-lg bg-brand-800 flex items-center justify-center">
             <Package size={16} className="text-white" />
           </div>
           <div className="flex-1">
-            <h2
-              className="text-[#0F2035]"
-              style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontWeight: 600 }}
-            >
+            <h2 className="text-text-primary font-semibold">
               {data.assembly.assemblyName} · {data.assembly.assemblyId}
             </h2>
-            <p
-              className="text-[12px] text-[#94A3B8]"
-              style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-            >
+            <p className="text-sm text-text-subtle">
               Mechanical assembly · {data.assembly.makePartCount} make ·{" "}
               {data.assembly.buyPartCount} buy
             </p>
           </div>
-          <div
-            className="px-2.5 py-1 rounded-md bg-[#DCFCE7] text-[#15803D] text-[11px]"
-            style={{ fontWeight: 500 }}
-          >
+          <div className="px-2.5 py-1 rounded-md bg-[#DCFCE7] text-[#15803D] text-xs font-medium">
             Analysis Ready
           </div>
         </div>
@@ -1128,11 +897,8 @@ function ProductionOverview() {
         {/* Subsystem tags */}
         <div className="px-5 py-4">
           <div className="flex items-center gap-2 mb-3">
-            <Layers size={13} className="text-[#94A3B8]" />
-            <span
-              className="text-[12px] text-[#64748B] uppercase tracking-wider"
-              style={{ fontWeight: 500 }}
-            >
+            <Layers size={13} className="text-text-subtle" />
+            <span className="text-sm text-text-muted uppercase tracking-wider font-medium">
               Subsystems
             </span>
           </div>
@@ -1141,18 +907,16 @@ function ProductionOverview() {
               <button
                 key={s.name}
                 onClick={() => navigate("/subsystem-analysis")}
-                className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-[#E2E8F0] bg-[#F8FAFC] text-[13px] text-[#1E293B] hover:border-[#1B3A5C]/30 hover:bg-[#EFF4FA] transition-all group"
+                className="flex items-center gap-2 px-3 py-1.5 rounded-lg border border-border bg-surface-muted text-base text-text-body hover:border-brand-800/30 hover:bg-surface-subtle transition-all group"
               >
                 <div
                   className="w-2 h-2 rounded-full"
                   style={{ background: SUBSYSTEM_CHART_COLORS[s.name] ?? "#64748B" }}
                 />
-                <span style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}>
-                  {s.name}
-                </span>
+                <span>{s.name}</span>
                 <ArrowRight
                   size={11}
-                  className="text-[#CBD5E1] group-hover:text-[#1B3A5C] transition-colors"
+                  className="text-text-ghost group-hover:text-brand-800 transition-colors"
                 />
               </button>
             ))}
@@ -1168,12 +932,9 @@ function ProductionOverview() {
           value={data.assembly.totalPartCount}
           sub={`${data.assembly.makePartCount} make · ${data.assembly.buyPartCount} buy`}
         />
-        <div className="bg-white rounded-xl border border-[#E2E8F0] p-5 flex flex-col gap-3">
+        <div className="bg-surface-card rounded-xl border border-border p-5 flex flex-col gap-3">
           <div className="flex items-center justify-between">
-            <span
-              className="text-[12px] text-[#64748B] uppercase tracking-wider"
-              style={{ fontWeight: 500 }}
-            >
+            <span className="text-sm text-text-muted uppercase tracking-wider font-medium">
               Current BOM Cost
             </span>
             <div className="w-8 h-8 rounded-lg bg-[#EFF4FA] flex items-center justify-center">
@@ -1181,23 +942,17 @@ function ProductionOverview() {
             </div>
           </div>
           <div>
-            <p
-              className="text-[28px] text-[#0F2035]"
-              style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 700, lineHeight: 1 }}
-            >
+            <p className="text-[28px] text-text-primary font-bold leading-none font-mono">
               {fmtCurrency(currentBomCost)}
             </p>
-            <p className="text-[12px] text-[#94A3B8] mt-1.5" style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}>
+            <p className="text-sm text-text-subtle mt-1.5">
               per assembly · real-time pricing
             </p>
           </div>
         </div>
-        <div className="bg-white rounded-xl border border-[#E2E8F0] p-5 flex flex-col gap-3">
+        <div className="bg-surface-card rounded-xl border border-border p-5 flex flex-col gap-3">
           <div className="flex items-center justify-between">
-            <span
-              className="text-[12px] text-[#64748B] uppercase tracking-wider"
-              style={{ fontWeight: 500 }}
-            >
+            <span className="text-sm text-text-muted uppercase tracking-wider font-medium">
               Projected BOM Cost
             </span>
             <div className="w-8 h-8 rounded-lg bg-[#F0FDF4] flex items-center justify-center">
@@ -1205,23 +960,17 @@ function ProductionOverview() {
             </div>
           </div>
           <div>
-            <p
-              className="text-[28px] text-[#059669]"
-              style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 700, lineHeight: 1 }}
-            >
+            <p className="text-[28px] text-success font-bold leading-none font-mono">
               {fmtCurrency(fullProjectedBomCost)}
             </p>
-            <p className="text-[12px] text-[#94A3B8] mt-1.5" style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}>
+            <p className="text-sm text-text-subtle mt-1.5">
               {fmtSavingsDelta(currentBomCost, fullProjectedBomCost)} if all interventions applied
             </p>
           </div>
         </div>
-        <div className="bg-white rounded-xl border border-[#E2E8F0] p-5 flex flex-col gap-3">
+        <div className="bg-surface-card rounded-xl border border-border p-5 flex flex-col gap-3">
           <div className="flex items-center justify-between">
-            <span
-              className="text-[12px] text-[#64748B] uppercase tracking-wider"
-              style={{ fontWeight: 500 }}
-            >
+            <span className="text-sm text-text-muted uppercase tracking-wider font-medium">
               Annual Savings Potential
             </span>
             <div className="w-8 h-8 rounded-lg bg-[#DCFCE7] flex items-center justify-center">
@@ -1229,13 +978,10 @@ function ProductionOverview() {
             </div>
           </div>
           <div>
-            <p
-              className="text-[28px] text-[#059669]"
-              style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 700, lineHeight: 1 }}
-            >
+            <p className="text-[28px] text-success font-bold leading-none font-mono">
               {fmtCurrency(fullAnnualSavingsPotential)}
             </p>
-            <p className="text-[12px] text-[#94A3B8] mt-1.5" style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}>
+            <p className="text-sm text-text-subtle mt-1.5">
               {fmtSavingsDelta(currentBomCost, fullProjectedBomCost)} / unit · {expectedAnnualVolume.toLocaleString()} units/yr
             </p>
           </div>
@@ -1248,21 +994,15 @@ function ProductionOverview() {
       {/* Charts */}
       <div className="grid grid-cols-2 gap-4">
         {/* Donut chart */}
-        <div className="bg-white rounded-xl border border-[#E2E8F0] p-5">
+        <div className="bg-surface-card rounded-xl border border-border p-5">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3
-                className="text-[#0F2035]"
-                style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontWeight: 600 }}
-              >
+              <h3 className="text-text-primary font-semibold">
                 {cfg.chartTitle}
               </h3>
-              <p className="text-[12px] text-[#94A3B8] mt-0.5">{cfg.chartSubtitle}</p>
+              <p className="text-sm text-text-subtle mt-0.5">{cfg.chartSubtitle}</p>
             </div>
-            <div
-              className="px-2.5 py-1 rounded-md bg-[#F1F5F9] text-[#64748B] text-[11px]"
-              style={{ fontWeight: 500 }}
-            >
+            <div className="px-2.5 py-1 rounded-md bg-surface-subtle text-text-muted text-xs font-medium">
               Weighted
             </div>
           </div>
@@ -1290,20 +1030,11 @@ function ProductionOverview() {
             <div className="flex-1 flex flex-col gap-2">
               {pieData.map((d) => (
                 <div key={d.name} className="flex items-center gap-2.5">
-                  <div
-                    className="w-2.5 h-2.5 rounded-sm shrink-0"
-                    style={{ background: d.color }}
-                  />
-                  <span
-                    className="flex-1 text-[12px] text-[#475569]"
-                    style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-                  >
+                  <div className="w-2.5 h-2.5 rounded-sm shrink-0" style={{ background: d.color }} />
+                  <span className="flex-1 text-sm text-text-secondary">
                     {d.name}
                   </span>
-                  <span
-                    className="text-[12px] text-[#1B3A5C]"
-                    style={{ fontWeight: 600 }}
-                  >
+                  <span className="text-sm text-brand-800 font-semibold">
                     {d.pct}%
                   </span>
                 </div>
@@ -1313,23 +1044,17 @@ function ProductionOverview() {
         </div>
 
         {/* Bar chart */}
-        <div className="bg-white rounded-xl border border-[#E2E8F0] p-5">
+        <div className="bg-surface-card rounded-xl border border-border p-5">
           <div className="flex items-center justify-between mb-4">
             <div>
-              <h3
-                className="text-[#0F2035]"
-                style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontWeight: 600 }}
-              >
+              <h3 className="text-text-primary font-semibold">
                 Subsystem Cost Weights
               </h3>
-              <p className="text-[12px] text-[#94A3B8] mt-0.5">
+              <p className="text-sm text-text-subtle mt-0.5">
                 Relative cost contribution score
               </p>
             </div>
-            <div
-              className="px-2.5 py-1 rounded-md bg-[#F1F5F9] text-[#64748B] text-[11px]"
-              style={{ fontWeight: 500 }}
-            >
+            <div className="px-2.5 py-1 rounded-md bg-surface-subtle text-text-muted text-xs font-medium">
               Raw Score
             </div>
           </div>
@@ -1346,20 +1071,12 @@ function ProductionOverview() {
               />
               <XAxis
                 dataKey="name"
-                tick={{
-                  fontSize: 11,
-                  fill: "#94A3B8",
-                  fontFamily: "'IBM Plex Sans', sans-serif",
-                }}
+                tick={{ fontSize: 11, fill: "#94A3B8" }}
                 axisLine={false}
                 tickLine={false}
               />
               <YAxis
-                tick={{
-                  fontSize: 11,
-                  fill: "#94A3B8",
-                  fontFamily: "'IBM Plex Sans', sans-serif",
-                }}
+                tick={{ fontSize: 11, fill: "#94A3B8" }}
                 axisLine={false}
                 tickLine={false}
                 ticks={[0, 2, 4, 6, 8, 10]}
@@ -1378,10 +1095,7 @@ function ProductionOverview() {
 
       {/* Quick nav cards */}
       <div>
-        <h3
-          className="text-[13px] text-[#64748B] uppercase tracking-wider mb-3"
-          style={{ fontWeight: 500 }}
-        >
+        <h3 className="text-base text-text-muted uppercase tracking-wider font-medium mb-3">
           Analysis Modules
         </h3>
         <div className="grid grid-cols-3 gap-3">
@@ -1403,33 +1117,21 @@ function ProductionOverview() {
                 <button
                   key={item.label}
                   onClick={() => navigate(item.path)}
-                  className="group bg-white rounded-xl border border-[#E2E8F0] p-4 text-left hover:border-[#1B3A5C]/30 hover:shadow-sm transition-all"
+                  className="group bg-surface-card rounded-xl border border-border p-4 text-left hover:border-brand-800/30 hover:shadow-sm transition-all"
                 >
                   <div className="flex items-center justify-between mb-2">
-                    <div
-                      className="w-2 h-2 rounded-full"
-                      style={{ background: item.color }}
-                    />
-                    <span
-                      className="text-[10px] px-2 py-0.5 rounded-full border border-[#E2E8F0] text-[#94A3B8]"
-                      style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-                    >
+                    <div className="w-2 h-2 rounded-full" style={{ background: item.color }} />
+                    <span className="text-2xs px-2 py-0.5 rounded-full border border-border text-text-subtle">
                       {status}
                     </span>
                   </div>
-                  <p
-                    className="text-[13px] text-[#1E293B] mb-1"
-                    style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontWeight: 500 }}
-                  >
+                  <p className="text-base text-text-body font-medium mb-1">
                     {item.label}
                   </p>
-                  <p
-                    className="text-[11px] text-[#94A3B8]"
-                    style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-                  >
+                  <p className="text-xs text-text-subtle">
                     {item.desc}
                   </p>
-                  <div className="flex items-center gap-1 mt-3 text-[11px] text-[#CBD5E1] group-hover:text-[#1B3A5C] transition-colors">
+                  <div className="flex items-center gap-1 mt-3 text-xs text-text-ghost group-hover:text-brand-800 transition-colors">
                     <span>Open</span>
                     <ArrowRight size={11} />
                   </div>

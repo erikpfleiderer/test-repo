@@ -10,10 +10,8 @@ export function DashboardLayout() {
     <AppModeProvider>
     <BuildTargetProvider>
     <CostModelProvider>
-      <div
-        className="flex flex-col h-screen overflow-hidden"
-        style={{ fontFamily: "'IBM Plex Sans', sans-serif", background: "#F0F4F8" }}
-      >
+      {/* font-family and background are set globally via @layer base in index.css */}
+      <div className="flex flex-col h-screen overflow-hidden">
         <TopNav />
         <div className="flex flex-1 overflow-hidden">
           <Sidebar />

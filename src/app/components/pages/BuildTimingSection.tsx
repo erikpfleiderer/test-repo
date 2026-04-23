@@ -35,10 +35,7 @@ import { buildReadinessStyle } from "../ui/badgeStyles";
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <p
-      className="text-[10px] uppercase tracking-wider text-[#94A3B8] mb-2"
-      style={{ fontWeight: 500, fontFamily: "'IBM Plex Sans', sans-serif" }}
-    >
+    <p className="text-2xs uppercase tracking-wider text-text-subtle font-medium mb-2">
       {children}
     </p>
   );
@@ -46,7 +43,7 @@ function SectionLabel({ children }: { children: React.ReactNode }) {
 
 function Row({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex items-start gap-2.5 py-2 border-b border-[#F8FAFC] last:border-0">
+    <div className="flex items-start gap-2.5 py-2 border-b border-surface-muted last:border-0">
       {children}
     </div>
   );
@@ -72,47 +69,32 @@ function ProtoCriticalPart({
   return (
     <Row>
       <span
-        className="w-5 h-5 rounded-md flex items-center justify-center shrink-0 text-[10px] text-white mt-0.5"
-        style={{
-          background: rank <= 2 ? "#1B3A5C" : "#94A3B8",
-          fontWeight: 700,
-          fontFamily: "'IBM Plex Sans', sans-serif",
-        }}
+        className="w-5 h-5 rounded-md flex items-center justify-center shrink-0 text-2xs text-white mt-0.5 font-bold"
+        style={{ background: rank <= 2 ? "#1B3A5C" : "#94A3B8" }}
       >
         {rank}
       </span>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 flex-wrap">
-          <span
-            className="text-[12px] text-[#1E293B] truncate"
-            style={{ fontWeight: 500, fontFamily: "'IBM Plex Sans', sans-serif" }}
-          >
+          <span className="text-sm text-text-body font-medium truncate">
             {name.replace(/^RS320 /i, "")}
           </span>
-          <span
-            className="text-[10px] font-mono text-[#94A3B8]"
-            style={{ fontFamily: "'IBM Plex Mono', monospace" }}
-          >
+          <span className="text-2xs font-mono text-text-subtle">
             {partNumber}
           </span>
         </div>
-        <p
-          className="text-[11px] text-[#64748B] mt-0.5 leading-snug"
-          style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-        >
+        <p className="text-xs text-text-muted mt-0.5 leading-snug">
           {driver}
         </p>
       </div>
       <div className="shrink-0 flex flex-col items-end gap-1">
         {leadTime != null && (
           <div className="flex items-center gap-1">
-            <Clock size={10} className="text-[#94A3B8]" />
+            <Clock size={10} className="text-text-subtle" />
             <span
-              className="text-[11px]"
+              className="text-xs font-semibold"
               style={{
                 color: leadTime >= 21 ? "#E11D48" : leadTime >= 14 ? "#D97706" : "#059669",
-                fontWeight: 600,
-                fontFamily: "'IBM Plex Sans', sans-serif",
               }}
             >
               {leadTime}d
@@ -128,11 +110,10 @@ function ProtoCriticalPart({
             <div className="flex items-center gap-1">
               <Calendar size={9} style={{ color: urgencyColor }} />
               <span
-                className="text-[10px]"
+                className="text-2xs font-mono"
                 style={{
                   color: urgencyColor,
                   fontWeight: ob.isOverdue || ob.daysUntilDeadline <= 3 ? 700 : 400,
-                  fontFamily: "'IBM Plex Sans', sans-serif",
                   whiteSpace: "nowrap",
                 }}
               >
@@ -165,29 +146,17 @@ function BlockerRow({ blocker }: { blocker: BuildBlocker }) {
         style={{ background: blocker.isHardBlocker ? "#E11D48" : "#F59E0B" }}
       />
       <div className="flex-1 min-w-0">
-        <p
-          className="text-[12px] text-[#1E293B] leading-snug"
-          style={{ fontWeight: blocker.isHardBlocker ? 500 : 400, fontFamily: "'IBM Plex Sans', sans-serif" }}
-        >
+        <p className="text-sm text-text-body leading-snug" style={{ fontWeight: blocker.isHardBlocker ? 500 : 400 }}>
           {blocker.description}
         </p>
-        <p
-          className="text-[11px] text-[#64748B] mt-0.5 leading-snug"
-          style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-        >
+        <p className="text-xs text-text-muted mt-0.5 leading-snug">
           Resolution: {blocker.resolution}
         </p>
       </div>
       {blocker.isHardBlocker && (
         <span
-          className="text-[10px] px-1.5 py-0.5 rounded border shrink-0"
-          style={{
-            background: "#FFF1F2",
-            color: "#E11D48",
-            borderColor: "#FECDD3",
-            fontWeight: 600,
-            fontFamily: "'IBM Plex Sans', sans-serif",
-          }}
+          className="text-2xs px-1.5 py-0.5 rounded border shrink-0 font-semibold"
+          style={{ background: "#FFF1F2", color: "#E11D48", borderColor: "#FECDD3" }}
         >
           Hard
         </span>
@@ -217,50 +186,28 @@ function ProdCriticalRow({
   return (
     <Row>
       <span
-        className="w-5 h-5 rounded-md flex items-center justify-center shrink-0 text-[10px] text-white mt-0.5"
-        style={{
-          background: rank <= 2 ? "#1B3A5C" : "#94A3B8",
-          fontWeight: 700,
-          fontFamily: "'IBM Plex Sans', sans-serif",
-        }}
+        className="w-5 h-5 rounded-md flex items-center justify-center shrink-0 text-2xs text-white mt-0.5 font-bold"
+        style={{ background: rank <= 2 ? "#1B3A5C" : "#94A3B8" }}
       >
         {rank}
       </span>
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-2 flex-wrap">
-          <span
-            className="text-[12px] text-[#1E293B]"
-            style={{ fontWeight: 500, fontFamily: "'IBM Plex Sans', sans-serif" }}
-          >
+          <span className="text-sm text-text-body font-medium">
             {intervention.partName}
           </span>
-          <span
-            className="text-[10px]"
-            style={{
-              color: difficultyColor,
-              fontWeight: 600,
-              fontFamily: "'IBM Plex Sans', sans-serif",
-            }}
-          >
+          <span className="text-xs font-semibold" style={{ color: difficultyColor }}>
             {intervention.engineeringDifficulty}
           </span>
         </div>
-        <p
-          className="text-[11px] text-[#64748B] mt-0.5 leading-snug"
-          style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-        >
+        <p className="text-xs text-text-muted mt-0.5 leading-snug">
           {intervention.recommendedIntervention}
         </p>
       </div>
       {validationCount > 0 && (
         <div className="shrink-0 flex items-center gap-1">
-          <ShieldAlert size={10} className="text-[#94A3B8]" />
-          <span
-            className="text-[11px] text-[#94A3B8]"
-            style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-          >
-            {validationCount}v
-          </span>
+          <ShieldAlert size={10} className="text-text-subtle" />
+          <span className="text-xs text-text-subtle">{validationCount}v</span>
         </div>
       )}
     </Row>
@@ -283,33 +230,17 @@ function ScaleGateRow({ gate }: { gate: ScaleGate }) {
       <AlertTriangle size={11} style={{ color: "#E11D48", marginTop: 2, flexShrink: 0 }} />
       <div className="flex-1 min-w-0">
         <div className="flex items-center gap-1.5 flex-wrap mb-0.5">
-          <span
-            className="text-[11px] text-[#475569]"
-            style={{ fontWeight: 500, fontFamily: "'IBM Plex Sans', sans-serif" }}
-          >
+          <span className="text-xs text-text-secondary font-medium">
             {gate.partName}
           </span>
-          <span
-            className="text-[10px] px-1.5 py-0 rounded"
-            style={{
-              background: "#F1F5F9",
-              color: "#64748B",
-              fontFamily: "'IBM Plex Sans', sans-serif",
-            }}
-          >
+          <span className="text-2xs px-1.5 py-0 rounded bg-surface-subtle text-text-muted">
             {gate.category}
           </span>
         </div>
-        <p
-          className="text-[11px] text-[#64748B] leading-snug"
-          style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-        >
+        <p className="text-xs text-text-muted leading-snug">
           {gate.signal}
         </p>
-        <p
-          className="text-[10px] text-[#94A3B8] mt-0.5 leading-snug"
-          style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-        >
+        <p className="text-2xs text-text-subtle mt-0.5 leading-snug">
           → {gate.mitigation}
         </p>
       </div>
@@ -332,7 +263,7 @@ function ChecklistRow({ entry }: { entry: ChecklistEntry }) {
 
   return (
     <div
-      className="flex items-start gap-3 py-2.5 border-b border-[#F8FAFC] last:border-0"
+      className="flex items-start gap-3 py-2.5 border-b border-surface-muted last:border-0"
       style={{
         background: isBlocked ? "#FFF8F8" : "transparent",
         borderLeft: isBlocked ? "2px solid #FECDD3" : isConditional ? "2px solid #FDE68A" : "2px solid transparent",
@@ -417,30 +348,19 @@ function PreBuildChecklist({
     : "All parts clear";
 
   return (
-    <div
-      className="border-t border-[#F1F5F9]"
-      style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-    >
+    <div className="border-t border-surface-subtle">
       {/* Section header */}
-      <div className="px-5 py-3 flex items-center gap-3" style={{ background: "#FAFBFD" }}>
-        <span
-          className="text-[11px] uppercase tracking-wider text-[#94A3B8]"
-          style={{ fontWeight: 500 }}
-        >
+      <div className="px-5 py-3 flex items-center gap-3 bg-surface-raised">
+        <span className="text-xs uppercase tracking-wider text-text-subtle font-medium">
           Pre-Build Checklist
         </span>
         <span
-          className="text-[10px] px-2 py-0.5 rounded-full border"
-          style={{
-            background: headerBg,
-            color: headerColor,
-            borderColor: headerColor + "33",
-            fontWeight: 600,
-          }}
+          className="text-2xs px-2 py-0.5 rounded-full border font-semibold"
+          style={{ background: headerBg, color: headerColor, borderColor: headerColor + "33" }}
         >
           {statusLabel}
         </span>
-        <span className="ml-auto text-[11px] text-[#CBD5E1]">
+        <span className="ml-auto text-xs text-text-ghost">
           {ready.length + totalIssues} parts · {totalValidation} validation steps
         </span>
       </div>
@@ -450,10 +370,7 @@ function PreBuildChecklist({
         {/* Blocked */}
         {blocked.length > 0 && (
           <div className="mb-4">
-            <p
-              className="text-[10px] uppercase tracking-wider mb-1.5 flex items-center gap-1.5"
-              style={{ color: "#E11D48", fontWeight: 600 }}
-            >
+            <p className="text-2xs uppercase tracking-wider mb-1.5 flex items-center gap-1.5 font-semibold" style={{ color: "#E11D48" }}>
               <span className="w-1.5 h-1.5 rounded-full bg-[#E11D48] inline-block" />
               Blocked — must resolve before build
             </p>
@@ -464,10 +381,7 @@ function PreBuildChecklist({
         {/* Conditional */}
         {conditional.length > 0 && (
           <div className="mb-4">
-            <p
-              className="text-[10px] uppercase tracking-wider mb-1.5 flex items-center gap-1.5"
-              style={{ color: "#D97706", fontWeight: 600 }}
-            >
+            <p className="text-2xs uppercase tracking-wider mb-1.5 flex items-center gap-1.5 font-semibold" style={{ color: "#D97706" }}>
               <span className="w-1.5 h-1.5 rounded-full bg-[#D97706] inline-block" />
               Conditional — build with precautions
             </p>
@@ -482,10 +396,7 @@ function PreBuildChecklist({
             onClick={() => setReadyExpanded((v) => !v)}
           >
             <span className="w-1.5 h-1.5 rounded-full bg-[#16A34A] inline-block" />
-            <p
-              className="text-[10px] uppercase tracking-wider"
-              style={{ color: "#16A34A", fontWeight: 600 }}
-            >
+            <p className="text-2xs uppercase tracking-wider font-semibold" style={{ color: "#16A34A" }}>
               Ready — {ready.length} part{ready.length !== 1 ? "s" : ""}
             </p>
             {readyExpanded
@@ -515,24 +426,9 @@ function StatCell({
 }) {
   return (
     <div className="px-5 py-4">
-      <p
-        className="text-[10px] text-[#94A3B8] uppercase tracking-wider mb-1.5"
-        style={{ fontWeight: 500, fontFamily: "'IBM Plex Sans', sans-serif" }}
-      >
-        {label}
-      </p>
-      <p
-        className="text-[26px] leading-none"
-        style={{ fontWeight: 700, color: valueColor, fontFamily: "'IBM Plex Sans', sans-serif" }}
-      >
-        {value}
-      </p>
-      <p
-        className="text-[11px] text-[#94A3B8] mt-1"
-        style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-      >
-        {sub}
-      </p>
+      <p className="text-2xs text-text-subtle uppercase tracking-wider font-medium mb-1.5">{label}</p>
+      <p className="text-[26px] leading-none font-bold" style={{ color: valueColor }}>{value}</p>
+      <p className="text-xs text-text-subtle mt-1">{sub}</p>
     </div>
   );
 }
@@ -623,23 +519,20 @@ export function BuildTimingSection() {
     const topSimplifications = data.simplifications.slice(0, 3);
 
     return (
-      <div className="bg-white rounded-xl border border-[#E2E8F0] overflow-hidden">
+      <div className="bg-surface-card rounded-xl border border-border overflow-hidden">
         {/* Header */}
-        <div className="px-5 py-3.5 border-b border-[#F1F5F9] flex items-center gap-2" style={{ background: "#FAFBFD" }}>
-          <Clock size={13} className="text-[#94A3B8]" />
-          <span
-            className="text-[12px] text-[#64748B] uppercase tracking-wider"
-            style={{ fontWeight: 500, fontFamily: "'IBM Plex Sans', sans-serif" }}
-          >
+        <div className="px-5 py-3.5 border-b border-surface-subtle flex items-center gap-2 bg-surface-raised">
+          <Clock size={13} className="text-text-subtle" />
+          <span className="text-sm text-text-muted uppercase tracking-wider font-medium">
             Clear to Build Timing
           </span>
-          <span className="ml-auto text-[11px] text-[#94A3B8]" style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}>
+          <span className="ml-auto text-xs text-text-subtle">
             Assembly {data.assembly.assemblyId} · Prototype mode
           </span>
         </div>
 
         {/* Stats strip */}
-        <div className="grid grid-cols-4 divide-x divide-[#F1F5F9] border-b border-[#F1F5F9]">
+        <div className="grid grid-cols-4 divide-x divide-surface-subtle border-b border-surface-subtle">
           <StatCell
             label="Build Status"
             value={br.buildReadiness}
@@ -688,7 +581,7 @@ export function BuildTimingSection() {
                   ))}
                 </div>
               ) : (
-                <p className="text-[12px] text-[#94A3B8]" style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}>
+                <p className="text-sm text-text-subtle">
                   No critical path data available.
                 </p>
               )}
@@ -727,19 +620,13 @@ export function BuildTimingSection() {
                     <Row key={s.partNumber}>
                       <Zap size={11} style={{ color: "#3B82F6", flexShrink: 0, marginTop: 2 }} />
                       <div className="flex-1 min-w-0">
-                        <p
-                          className="text-[12px] text-[#1E293B] leading-snug"
-                          style={{ fontWeight: 500, fontFamily: "'IBM Plex Sans', sans-serif" }}
-                        >
+                        <p className="text-sm text-text-body font-medium leading-snug">
                           {s.simplificationPath}
                         </p>
-                        <p
-                          className="text-[11px] text-[#64748B] mt-0.5"
-                          style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-                        >
+                        <p className="text-xs text-text-muted mt-0.5">
                           {s.iterationImpact}
                           {s.leadTimeSavingsDays > 0 && (
-                            <span className="text-[#059669] ml-1" style={{ fontWeight: 600 }}>
+                            <span className="text-success font-semibold ml-1">
                               −{s.leadTimeSavingsDays}d
                             </span>
                           )}
@@ -826,23 +713,20 @@ export function BuildTimingSection() {
   }).slice(0, 5);
 
   return (
-    <div className="bg-white rounded-xl border border-[#E2E8F0] overflow-hidden">
+      <div className="bg-surface-card rounded-xl border border-border overflow-hidden">
       {/* Header */}
-      <div className="px-5 py-3.5 border-b border-[#F1F5F9] flex items-center gap-2" style={{ background: "#FAFBFD" }}>
-        <TrendingDown size={13} className="text-[#94A3B8]" />
-        <span
-          className="text-[12px] text-[#64748B] uppercase tracking-wider"
-          style={{ fontWeight: 500, fontFamily: "'IBM Plex Sans', sans-serif" }}
-        >
+      <div className="px-5 py-3.5 border-b border-surface-subtle flex items-center gap-2 bg-surface-raised">
+        <TrendingDown size={13} className="text-text-subtle" />
+        <span className="text-sm text-text-muted uppercase tracking-wider font-medium">
           Production Readiness Timing
         </span>
-        <span className="ml-auto text-[11px] text-[#94A3B8]" style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}>
+        <span className="ml-auto text-xs text-text-subtle">
           Assembly {data.assembly.assemblyId} · Production mode
         </span>
       </div>
 
       {/* Stats strip */}
-      <div className="grid grid-cols-4 divide-x divide-[#F1F5F9] border-b border-[#F1F5F9]">
+      <div className="grid grid-cols-4 divide-x divide-surface-subtle border-b border-surface-subtle">
         <StatCell
           label="Interventions Pending"
           value={interventions.length}
@@ -869,7 +753,7 @@ export function BuildTimingSection() {
       </div>
 
       {/* Body: two columns */}
-      <div className="grid grid-cols-2 divide-x divide-[#F1F5F9]">
+      <div className="grid grid-cols-2 divide-x divide-surface-subtle">
 
         {/* Left: critical path interventions + scale blockers */}
         <div className="p-5 flex flex-col gap-5">
@@ -883,7 +767,7 @@ export function BuildTimingSection() {
                 ))}
               </div>
             ) : (
-              <p className="text-[12px] text-[#94A3B8]" style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}>
+              <p className="text-sm text-text-subtle">
                 No high-complexity interventions identified.
               </p>
             )}
@@ -909,23 +793,14 @@ export function BuildTimingSection() {
                   />
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-1.5 flex-wrap mb-0.5">
-                      <span
-                        className="text-[11px] text-[#475569]"
-                        style={{ fontWeight: 500, fontFamily: "'IBM Plex Sans', sans-serif" }}
-                      >
+                      <span className="text-xs text-text-secondary font-medium">
                         {g.partName}
                       </span>
-                      <span
-                        className="text-[10px] px-1.5 py-0 rounded"
-                        style={{ background: "#F1F5F9", color: "#64748B", fontFamily: "'IBM Plex Sans', sans-serif" }}
-                      >
+                      <span className="text-2xs px-1.5 py-0 rounded bg-surface-subtle text-text-muted">
                         {g.category}
                       </span>
                     </div>
-                    <p
-                      className="text-[11px] text-[#64748B] leading-snug"
-                      style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-                    >
+                    <p className="text-xs text-text-muted leading-snug">
                       {g.signal}
                     </p>
                   </div>
@@ -944,25 +819,16 @@ export function BuildTimingSection() {
               <div>
                 {scaleAccelerators.map((a, i) => (
                   <Row key={i}>
-                    <div
-                      className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 text-[10px] text-white mt-0.5"
-                      style={{ background: "#1B3A5C", fontWeight: 700, fontFamily: "'IBM Plex Sans', sans-serif" }}
-                    >
+                    <div className="w-5 h-5 rounded-full flex items-center justify-center shrink-0 text-2xs text-white mt-0.5 font-bold bg-brand-800">
                       {i + 1}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-1.5 mb-0.5">
-                        <span
-                          className="text-[10px] text-[#94A3B8]"
-                          style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-                        >
+                        <span className="text-2xs text-text-subtle">
                           {a.partName} · {a.savings}
                         </span>
                       </div>
-                      <p
-                        className="text-[12px] text-[#1E293B] leading-snug"
-                        style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-                      >
+                      <p className="text-sm text-text-body leading-snug">
                         {a.change}
                       </p>
                     </div>
@@ -981,20 +847,14 @@ export function BuildTimingSection() {
                 const steps = detail?.validationRequired ?? [];
                 return steps.map((step, j) => (
                   <Row key={`${i.partNumber}-${j}`}>
-                    <Layers size={11} style={{ color: "#94A3B8", flexShrink: 0, marginTop: 2 }} />
+                    <Layers size={11} className="text-text-subtle shrink-0 mt-0.5" />
                     <div className="flex-1 min-w-0">
                       {j === 0 && (
-                        <span
-                          className="text-[10px] text-[#94A3B8] block mb-0.5"
-                          style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-                        >
+                        <span className="text-2xs text-text-subtle block mb-0.5 font-mono">
                           {i.partName}
                         </span>
                       )}
-                      <p
-                        className="text-[11px] text-[#64748B] leading-snug"
-                        style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-                      >
+                      <p className="text-xs text-text-muted leading-snug">
                         {step}
                       </p>
                     </div>
@@ -1013,18 +873,12 @@ export function BuildTimingSection() {
                 .slice(0, 3)
                 .map((i) => (
                   <Row key={i.partNumber}>
-                    <Zap size={11} style={{ color: "#3B82F6", flexShrink: 0, marginTop: 2 }} />
+                    <Zap size={11} className="text-[#3B82F6] shrink-0 mt-0.5" />
                     <div className="flex-1 min-w-0">
-                      <span
-                        className="text-[10px] text-[#94A3B8] block mb-0.5"
-                        style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-                      >
+                      <span className="text-2xs text-text-subtle block mb-0.5">
                         {i.partName} · {i.estimatedSavings} savings
                       </span>
-                      <p
-                        className="text-[12px] text-[#1E293B] leading-snug"
-                        style={{ fontWeight: 500, fontFamily: "'IBM Plex Sans', sans-serif" }}
-                      >
+                      <p className="text-sm text-text-body font-medium leading-snug">
                         {i.recommendedIntervention}
                       </p>
                     </div>

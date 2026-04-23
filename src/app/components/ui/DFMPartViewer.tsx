@@ -58,9 +58,9 @@ export interface DFMPartViewerProps {
 // ─── Severity colour map (annotation callouts) ────────────────────────────────
 
 const ANNOTATION_STYLE: Record<DFMAnnotation["severity"], string> = {
-  Watch: "bg-sky-500/20 text-sky-300 border-sky-500/30",
-  Flag:  "bg-amber-500/20 text-amber-300 border-amber-500/30",
-  Block: "bg-red-500/20 text-red-300 border-red-500/30",
+  Watch: "bg-[#F0F9FF] text-[#0284C7] border border-[#BAE6FD]",
+  Flag:  "bg-warning-bg text-warning border border-warning-border",
+  Block: "bg-danger-bg text-danger border border-danger-border",
 };
 
 // ─── Sub-components ───────────────────────────────────────────────────────────
@@ -73,35 +73,32 @@ function PlaceholderDrawing({ partNumber }: { partNumber: string }) {
         {/* outer reference circle */}
         <circle
           cx="100" cy="100" r="88"
-          fill="none" stroke="#1B3A5C" strokeWidth="1.5" strokeDasharray="6 3" opacity="0.4"
+          fill="none" stroke="#CBD5E1" strokeWidth="1.5" strokeDasharray="6 3" opacity="0.6"
         />
         {/* body rect */}
-        <rect x="38" y="38" width="124" height="124" rx="8" fill="#0F2035" stroke="#1B3A5C" strokeWidth="1.5" />
+        <rect x="38" y="38" width="124" height="124" rx="8" fill="#F8FAFC" stroke="#CBD5E1" strokeWidth="1.5" />
         {/* inner feature rect */}
-        <rect x="58" y="58" width="84" height="84" rx="4" fill="none" stroke="#2B5A8A" strokeWidth="1" strokeDasharray="4 2" />
+        <rect x="58" y="58" width="84" height="84" rx="4" fill="none" stroke="#CBD5E1" strokeWidth="1" strokeDasharray="4 2" />
         {/* centre mark */}
-        <line x1="94" y1="100" x2="106" y2="100" stroke="#3B82F6" strokeWidth="1.5" />
-        <line x1="100" y1="94" x2="100" y2="106" stroke="#3B82F6" strokeWidth="1.5" />
+        <line x1="94" y1="100" x2="106" y2="100" stroke="#2563EB" strokeWidth="1.5" />
+        <line x1="100" y1="94" x2="100" y2="106" stroke="#2563EB" strokeWidth="1.5" />
         {/* corner datums */}
-        <circle cx="38"  cy="38"  r="3" fill="#1B3A5C" />
-        <circle cx="162" cy="38"  r="3" fill="#1B3A5C" />
-        <circle cx="38"  cy="162" r="3" fill="#1B3A5C" />
-        <circle cx="162" cy="162" r="3" fill="#1B3A5C" />
+        <circle cx="38"  cy="38"  r="3" fill="#CBD5E1" />
+        <circle cx="162" cy="38"  r="3" fill="#CBD5E1" />
+        <circle cx="38"  cy="162" r="3" fill="#CBD5E1" />
+        <circle cx="162" cy="162" r="3" fill="#CBD5E1" />
         {/* horizontal dimension line */}
-        <line x1="38" y1="172" x2="162" y2="172" stroke="#1B3A5C" strokeWidth="0.8" />
-        <line x1="38"  y1="167" x2="38"  y2="177" stroke="#1B3A5C" strokeWidth="0.8" />
-        <line x1="162" y1="167" x2="162" y2="177" stroke="#1B3A5C" strokeWidth="0.8" />
+        <line x1="38" y1="172" x2="162" y2="172" stroke="#CBD5E1" strokeWidth="0.8" />
+        <line x1="38"  y1="167" x2="38"  y2="177" stroke="#CBD5E1" strokeWidth="0.8" />
+        <line x1="162" y1="167" x2="162" y2="177" stroke="#CBD5E1" strokeWidth="0.8" />
         {/* vertical dimension line */}
-        <line x1="172" y1="38"  x2="172" y2="162" stroke="#1B3A5C" strokeWidth="0.8" />
-        <line x1="167" y1="38"  x2="177" y2="38"  stroke="#1B3A5C" strokeWidth="0.8" />
-        <line x1="167" y1="162" x2="177" y2="162" stroke="#1B3A5C" strokeWidth="0.8" />
+        <line x1="172" y1="38"  x2="172" y2="162" stroke="#CBD5E1" strokeWidth="0.8" />
+        <line x1="167" y1="38"  x2="177" y2="38"  stroke="#CBD5E1" strokeWidth="0.8" />
+        <line x1="167" y1="162" x2="177" y2="162" stroke="#CBD5E1" strokeWidth="0.8" />
       </svg>
       {/* part number overlay */}
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-        <span
-          className="text-xs text-slate-400 bg-[#0F2035]/80 px-2 py-0.5 rounded"
-          style={{ fontFamily: "'IBM Plex Mono', monospace" }}
-        >
+        <span className="text-xs text-text-muted font-mono bg-white/80 px-2 py-0.5 rounded border border-border">
           {partNumber}
         </span>
       </div>
@@ -112,17 +109,11 @@ function PlaceholderDrawing({ partNumber }: { partNumber: string }) {
 /** Stat tile used in the metrics row below the geometry. */
 function StatTile({ value, label }: { value: string; label: string }) {
   return (
-    <div className="flex flex-col items-center px-4 py-2.5 rounded-lg bg-slate-800/50 border border-slate-700/50">
-      <span
-        className="text-2xl font-semibold text-white leading-none"
-        style={{ fontFamily: "'IBM Plex Mono', monospace" }}
-      >
+    <div className="flex flex-col items-center px-4 py-2.5 rounded-lg bg-surface-muted border border-border">
+      <span className="text-2xl font-semibold text-text-primary leading-none font-mono">
         {value}
       </span>
-      <span
-        className="text-[10px] text-slate-400 mt-0.5"
-        style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-      >
+      <span className="text-[10px] text-text-subtle mt-0.5">
         {label}
       </span>
     </div>
@@ -148,12 +139,9 @@ export function DFMPartViewer({
   // ── Empty state ──────────────────────────────────────────────────────────────
   if (!model) {
     return (
-      <div className="flex flex-col items-center justify-center h-full gap-4 text-slate-600">
-        <Cpu className="w-12 h-12 opacity-30" />
-        <p
-          className="text-sm font-medium"
-          style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-        >
+      <div className="flex flex-col items-center justify-center h-full gap-4">
+        <Cpu className="w-12 h-12 text-text-ghost opacity-30" />
+        <p className="text-sm font-medium text-text-muted">
           Select a part to inspect
         </p>
       </div>
@@ -163,14 +151,9 @@ export function DFMPartViewer({
   // ── Loading state ────────────────────────────────────────────────────────────
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center h-full gap-4 text-slate-600">
-        <Loader2 className="w-10 h-10 opacity-50 animate-spin" />
-        <p
-          className="text-sm"
-          style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-        >
-          Loading geometry…
-        </p>
+      <div className="flex flex-col items-center justify-center h-full gap-4">
+        <Loader2 className="w-10 h-10 text-text-ghost opacity-50 animate-spin" />
+        <p className="text-sm text-text-muted">Loading geometry…</p>
       </div>
     );
   }
@@ -178,23 +161,15 @@ export function DFMPartViewer({
   // ── Unavailable state ────────────────────────────────────────────────────────
   if (isUnavailable) {
     return (
-      <div className="flex flex-col items-center justify-center h-full gap-4 text-slate-600 px-8">
-        <PackageX className="w-10 h-10 opacity-30" />
+      <div className="flex flex-col items-center justify-center h-full gap-4 px-8">
+        <PackageX className="w-10 h-10 text-text-ghost opacity-30" />
         <div className="text-center">
-          <p
-            className="text-sm font-medium text-slate-400"
-            style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-          >
+          <p className="text-sm font-medium text-text-secondary">
             Geometry not available
           </p>
-          <p
-            className="text-xs text-slate-600 mt-1"
-            style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-          >
+          <p className="text-xs text-text-muted mt-1">
             No 3D asset found for{" "}
-            <span style={{ fontFamily: "'IBM Plex Mono', monospace" }}>
-              {model.partNumber}
-            </span>
+            <span className="font-mono">{model.partNumber}</span>
           </p>
         </div>
       </div>
@@ -214,11 +189,7 @@ export function DFMPartViewer({
       className="flex flex-col items-center justify-center h-full gap-5 px-8 py-6"
     >
       {/* Process context badge */}
-      <span
-        className="text-[10px] px-2.5 py-0.5 rounded-full border font-semibold uppercase tracking-wider
-                   bg-blue-500/10 text-blue-400 border-blue-500/20"
-        style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-      >
+      <span className="text-[10px] px-2.5 py-0.5 rounded-full border font-semibold uppercase tracking-wider bg-[#EFF6FF] text-[#2563EB] border-[#BFDBFE]">
         {process}
       </span>
 
@@ -239,17 +210,11 @@ export function DFMPartViewer({
 
       {/* Part identity */}
       <div className="text-center">
-        <p
-          className="text-white font-semibold text-base leading-tight"
-          style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-        >
+        <p className="text-text-primary font-semibold text-base leading-tight">
           {model.name}
         </p>
         {feedback && (
-          <p
-            className="text-slate-400 text-xs mt-1"
-            style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-          >
+          <p className="text-text-subtle text-xs mt-1">
             {feedback.recommendedProcess}
           </p>
         )}
@@ -268,10 +233,7 @@ export function DFMPartViewer({
 
       {/* Lead-time profile line */}
       {feedback && (
-        <p
-          className="text-slate-500 text-xs max-w-xs text-center leading-relaxed"
-          style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-        >
+        <p className="text-text-muted text-xs max-w-xs text-center leading-relaxed">
           {feedback.leadTimeProfile}
         </p>
       )}
@@ -287,8 +249,7 @@ export function DFMPartViewer({
           {annotations.map((a, i) => (
             <span
               key={i}
-              className={`text-[10px] px-2 py-0.5 rounded border font-medium ${ANNOTATION_STYLE[a.severity]}`}
-              style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+              className={`text-[10px] px-2 py-0.5 rounded font-medium ${ANNOTATION_STYLE[a.severity]}`}
             >
               {a.label}
             </span>

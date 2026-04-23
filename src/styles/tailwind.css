@@ -2,3 +2,110 @@
 @source '../**/*.{js,ts,jsx,tsx}';
 
 @import 'tw-animate-css';
+
+/* ─── Design system tokens ──────────────────────────────────────────────────────
+ * All values here are the single source of truth for Tailwind utilities.
+ * Corresponding TypeScript constants live in src/app/design/tokens.ts.
+ * Rule: never use arbitrary Tailwind values for colors that exist in this theme.
+ * ─────────────────────────────────────────────────────────────────────────── */
+@theme {
+  /* ── Font families ─────────────────────────────────────────────────────── */
+  --font-sans: 'IBM Plex Sans', sans-serif;
+  --font-mono: 'IBM Plex Mono', monospace;
+
+  /* ── Brand / Navy scale ─────────────────────────────────────────────────── */
+  --color-brand-950: #050E1B;
+  --color-brand-900: #0F2035;
+  --color-brand-800: #1B3A5C;
+  --color-brand-700: #2B5472;
+  --color-brand-600: #2B6CB0;
+  --color-brand-500: #4A7FA5;
+  --color-brand-400: #4DB6E5;
+  --color-brand-200: #B3D9EF;
+  --color-brand-100: #DBEAFE;
+  --color-brand-50:  #EFF4FA;
+
+  /* ── Surface / UI backgrounds (light theme) ─────────────────────────────── */
+  --color-surface-page:        #F0F4F8;
+  --color-surface-card:        #FFFFFF;
+  --color-surface-raised:      #FAFBFD;
+  --color-surface-muted:       #F8FAFC;
+  --color-surface-subtle:      #F1F5F9;
+
+  /* ── Borders ────────────────────────────────────────────────────────────── */
+  --color-border:              #E2E8F0;
+  --color-border-strong:       #CBD5E1;
+
+  /* ── Text scale (light theme) ───────────────────────────────────────────── */
+  --color-text-primary:        #0F2035;
+  --color-text-body:           #1E293B;
+  --color-text-secondary:      #475569;
+  --color-text-muted:          #64748B;
+  --color-text-subtle:         #94A3B8;
+  --color-text-ghost:          #CBD5E1;
+
+  /* ── Dark surface (Sidebar + DFM page) ──────────────────────────────────── */
+  --color-dark-base:           #0A1929;
+  --color-dark-raised:         #0D1F33;
+  --color-dark-surface:        #0F2035;
+
+  /* ── Semantic: success ──────────────────────────────────────────────────── */
+  --color-success:             #16A34A;
+  --color-success-bg:          #F0FDF4;
+  --color-success-border:      #BBF7D0;
+  --color-success-strong:      #059669;
+
+  /* ── Semantic: warning ──────────────────────────────────────────────────── */
+  --color-warning:             #D97706;
+  --color-warning-bg:          #FFFBEB;
+  --color-warning-border:      #FDE68A;
+  --color-warning-strong:      #B45309;
+
+  /* ── Semantic: danger ───────────────────────────────────────────────────── */
+  --color-danger:              #E11D48;
+  --color-danger-bg:           #FFF1F2;
+  --color-danger-border:       #FECDD3;
+  --color-danger-strong:       #BE123C;
+
+  /* ── Semantic: info ─────────────────────────────────────────────────────── */
+  --color-info:                #1E40AF;
+  --color-info-bg:             #EFF6FF;
+  --color-info-border:         #93C5FD;
+  --color-info-strong:         #1D4ED8;
+
+  /* ── Custom type scale ──────────────────────────────────────────────────── */
+  /* text-2xs = 10px: micro labels, chip text, column header caps */
+  --text-2xs:                0.625rem;
+  --text-2xs--line-height:   1rem;
+  /* Note: text-xs/sm/base/md are overridden below to match the app's scale.
+     Default Tailwind: xs=12px sm=14px base=16px md=20px
+     App scale:        xs=11px sm=12px base=13px md=14px
+     Override so named utilities like `text-base` mean 13px throughout the app. */
+  --text-xs:                 0.6875rem; /* 11px */
+  --text-xs--line-height:    1.25rem;
+  --text-sm:                 0.75rem;   /* 12px */
+  --text-sm--line-height:    1.25rem;
+  --text-base:               0.8125rem; /* 13px */
+  --text-base--line-height:  1.375rem;
+  --text-md:                 0.875rem;  /* 14px — new custom size */
+  --text-md--line-height:    1.375rem;
+  /* text-lg/xl/2xl/3xl keep Tailwind defaults but are listed for clarity:
+     lg=18px xl=20px 2xl=24px 3xl=30px (not overridden — use display sizes below) */
+  --text-2xl:                1.375rem; /* 22px — hero numerics */
+  --text-2xl--line-height:   1.75rem;
+  --text-3xl:                1.625rem; /* 26px — dashboard display metrics */
+  --text-3xl--line-height:   2rem;
+
+  /* ── Border radius ──────────────────────────────────────────────────────── */
+  --radius-sm:  4px;
+  --radius-md:  6px;
+  --radius-lg:  8px;
+  --radius-xl:  12px;
+  --radius-2xl: 16px;
+
+  /* ── Shadows ────────────────────────────────────────────────────────────── */
+  --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+  --shadow-md: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-lg: 0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.06);
+  --shadow-xl: 0 10px 15px rgba(0,0,0,0.10), 0 4px 6px rgba(0,0,0,0.05);
+}

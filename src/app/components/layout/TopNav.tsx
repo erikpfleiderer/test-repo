@@ -18,23 +18,23 @@ export function TopNav() {
   ];
 
   return (
-    <header className="h-14 bg-white border-b border-[#E2E8F0] flex items-center px-4 gap-6 z-50 shrink-0">
+    <header className="h-14 bg-surface-card border-b border-border flex items-center px-4 gap-6 z-50 shrink-0">
       {/* Brand */}
       <div
-        className="flex items-center gap-2.5 cursor-pointer select-none mr-2"
+        className="flex items-center gap-2 cursor-pointer select-none mr-2"
         onClick={() => navigate("/bom-analysis")}
       >
-        <div className="w-7 h-7 rounded-md bg-[#1B3A5C] flex items-center justify-center">
+        <div className="w-7 h-7 rounded-md bg-brand-800 flex items-center justify-center">
           <Cpu size={14} className="text-white" />
         </div>
         <div className="flex flex-col leading-none">
-          <span className="text-[11px] tracking-widest uppercase text-[#64748B]" style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}>FICTIV</span>
-          <span className="text-[13px] text-[#0F2035]" style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontWeight: 600 }}>Compass</span>
+          <span className="text-2xs tracking-widest uppercase text-text-muted">FICTIV</span>
+          <span className="text-base font-semibold text-brand-900">Compass</span>
         </div>
       </div>
 
       {/* Divider */}
-      <div className="h-6 w-px bg-[#E2E8F0]" />
+      <div className="h-6 w-px bg-border" />
 
       {/* Nav Items */}
       <nav className="flex items-center gap-1">
@@ -48,12 +48,11 @@ export function TopNav() {
             <button
               key={item.label}
               onClick={() => navigate(item.path)}
-              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-[13px] transition-colors ${
+              className={`flex items-center gap-2 px-3 py-2 rounded-md text-base transition-colors ${
                 isActive
-                  ? "bg-[#EFF4FA] text-[#1B3A5C]"
-                  : "text-[#64748B] hover:bg-[#F8FAFC] hover:text-[#1B3A5C]"
+                  ? "bg-brand-50 text-brand-800 font-medium"
+                  : "text-text-muted hover:bg-surface-subtle hover:text-brand-800 font-normal"
               }`}
-              style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontWeight: isActive ? 500 : 400 }}
             >
               <Icon size={14} />
               {item.label}
@@ -65,16 +64,13 @@ export function TopNav() {
       {/* Spacer */}
       <div className="flex-1" />
 
-      {/* Mode selector — full labels ≥900px, icon-only pills below */}
-      <div
-        className="flex items-center rounded-md p-0.5 gap-0.5"
-        style={{ background: "#F1F5F9", border: "1px solid #E2E8F0" }}
-      >
+      {/* Mode selector */}
+      <div className="flex items-center rounded-md p-1 gap-1 bg-surface-subtle border border-border">
         {modes.map(({ value, label }) => {
           const isActive = mode === value;
-          const Icon = value === "production"
-            ? () => <span className="text-[10px] font-bold" style={{ color: isActive ? "#059669" : "#94A3B8" }}>P</span>
-            : () => <span className="text-[10px] font-bold" style={{ color: isActive ? "#1B3A5C" : "#94A3B8" }}>β</span>;
+          const glyph = value === "production"
+            ? <span className="text-2xs font-bold" style={{ color: isActive ? "#059669" : undefined }}>P</span>
+            : <span className="text-2xs font-bold" style={{ color: isActive ? undefined : "#94A3B8" }}>β</span>;
           return (
             <button
               key={value}
@@ -82,53 +78,49 @@ export function TopNav() {
               title={label}
               aria-label={`Switch to ${label} mode`}
               aria-pressed={isActive}
-              className="px-3 py-1 rounded text-[12px] transition-all duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-blue-400"
-              style={{
-                fontFamily: "'IBM Plex Sans', sans-serif",
-                fontWeight: isActive ? 600 : 400,
-                background: isActive ? "#fff" : "transparent",
-                color: isActive
-                  ? value === "production" ? "#059669" : "#1B3A5C"
-                  : "#94A3B8",
-                boxShadow: isActive ? "0 1px 3px rgba(0,0,0,0.08)" : "none",
-                border: isActive
-                  ? `1px solid ${value === "production" ? "#D1FAE5" : "#DBEAFE"}`
-                  : "1px solid transparent",
-              }}
+              className={`px-3 py-1 rounded text-base transition-all duration-150 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-brand-400 ${
+                isActive
+                  ? "bg-surface-card shadow-sm font-semibold"
+                  : "font-normal text-text-subtle hover:text-text-secondary"
+              }`}
+              style={
+                isActive
+                  ? {
+                      color: value === "production" ? "#059669" : undefined,
+                      borderWidth: 1,
+                      borderStyle: "solid",
+                      borderColor: value === "production" ? "#D1FAE5" : "#DBEAFE",
+                    }
+                  : undefined
+              }
             >
-              {/* Full label on wide screens, abbreviated on narrow */}
               <span className="hidden min-[900px]:inline">{label}</span>
-              <span className="inline min-[900px]:hidden">
-                <Icon />
-              </span>
+              <span className="inline min-[900px]:hidden">{glyph}</span>
             </button>
           );
         })}
       </div>
 
       {/* Right side */}
-      <div className="flex items-center gap-3">
-        {/* Search — hidden below 900px to save space */}
-        <button
-          className="hidden min-[900px]:flex items-center gap-2 px-3 py-1.5 rounded-md bg-[#F8FAFC] border border-[#E2E8F0] text-[#94A3B8] text-[13px] hover:border-[#CBD5E1] transition-colors"
-          style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
-        >
+      <div className="flex items-center gap-2">
+        {/* Search */}
+        <button className="hidden min-[900px]:flex items-center gap-2 px-3 py-2 rounded-md bg-surface-muted border border-border text-text-subtle text-base hover:border-border-strong transition-colors">
           <Search size={13} />
           <span>Search...</span>
-          <kbd className="ml-2 px-1.5 py-0.5 rounded text-[10px] bg-[#E2E8F0] text-[#64748B]">⌘K</kbd>
+          <kbd className="ml-2 px-1 py-0.5 rounded text-2xs bg-border text-text-muted">⌘K</kbd>
         </button>
 
         {/* Notifications */}
-        <button className="relative w-8 h-8 flex items-center justify-center rounded-md text-[#64748B] hover:bg-[#F1F5F9] transition-colors">
+        <button className="relative w-8 h-8 flex items-center justify-center rounded-md text-text-muted hover:bg-surface-subtle transition-colors">
           <Bell size={16} />
         </button>
 
         {/* User avatar */}
-        <button className="flex items-center gap-2 pl-1 pr-2 py-1 rounded-md hover:bg-[#F1F5F9] transition-colors">
-          <div className="w-7 h-7 rounded-full bg-[#1B3A5C] flex items-center justify-center text-white text-[11px]" style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontWeight: 600 }}>
+        <button className="flex items-center gap-2 pl-1 pr-2 py-1 rounded-md hover:bg-surface-subtle transition-colors">
+          <div className="w-7 h-7 rounded-full bg-brand-800 flex items-center justify-center text-white text-2xs font-semibold">
             ME
           </div>
-          <ChevronDown size={13} className="hidden min-[900px]:block text-[#94A3B8]" />
+          <ChevronDown size={13} className="hidden min-[900px]:block text-text-subtle" />
         </button>
       </div>
     </header>

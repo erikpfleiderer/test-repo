@@ -62,17 +62,15 @@ function Badge({
   value: string | null;
   styleMap: Record<string, { bg: string; text: string; border: string }>;
 }) {
-  if (!value) return <span className="text-[#CBD5E1]">—</span>;
+  if (!value) return <span className="text-text-ghost">—</span>;
   const s = styleMap[value] ?? { bg: "#F1F5F9", text: "#64748B", border: "#E2E8F0" };
   return (
     <span
-      className="inline-flex items-center px-2 py-0.5 rounded-md border text-[11px]"
+      className="inline-flex items-center px-2 py-0.5 rounded-md border text-xs font-medium"
       style={{
         background: s.bg,
         color: s.text,
         borderColor: s.border,
-        fontFamily: "'IBM Plex Sans', sans-serif",
-        fontWeight: 500,
       }}
     >
       {value}
@@ -92,23 +90,19 @@ function DetailRow({
   mono?: boolean;
 }) {
   return (
-    <div className="flex items-start justify-between py-1.5 border-b border-[#F8FAFC] gap-3">
-      <div className="flex items-center gap-2 text-[12px] text-[#94A3B8] shrink-0">
+    <div className="flex items-start justify-between py-1.5 border-b border-surface-muted gap-3">
+      <div className="flex items-center gap-2 text-sm text-text-subtle shrink-0">
         <Icon size={12} />
         {label}
       </div>
       {value ? (
         <span
-          className="text-[12px] text-[#1E293B] text-right leading-snug"
-          style={{
-            fontFamily: mono ? "'IBM Plex Mono', monospace" : "'IBM Plex Sans', sans-serif",
-            fontWeight: 500,
-          }}
+          className={`text-sm text-text-body text-right leading-snug font-medium${mono ? " font-mono" : ""}`}
         >
           {value}
         </span>
       ) : (
-        <span className="text-[12px] text-[#CBD5E1]">—</span>
+        <span className="text-sm text-text-ghost">—</span>
       )}
     </div>
   );
@@ -139,33 +133,30 @@ function InterventionDetailPanel({
 
   return (
     <div
-      className="w-full xl:w-[380px] xl:shrink-0 bg-white xl:border-l border-[#E2E8F0] flex flex-col xl:h-full overflow-hidden"
-      style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+      className="w-full xl:w-[380px] xl:shrink-0 bg-surface-card xl:border-l border-border flex flex-col xl:h-full overflow-hidden"
     >
       {/* Header */}
       <div
-        className="px-5 py-4 border-b border-[#E2E8F0] shrink-0 flex items-start justify-between"
-        style={{ background: "#FAFBFD" }}
+        className="px-5 py-4 border-b border-border shrink-0 flex items-start justify-between bg-surface-raised"
       >
         <div className="flex items-start gap-3 flex-1 min-w-0">
           <div
-            className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-[12px] shrink-0"
-            style={{ background: "#1B3A5C", fontWeight: 700 }}
+            className="w-8 h-8 rounded-lg flex items-center justify-center text-white text-sm font-bold bg-brand-800 shrink-0"
           >
             #{item.rank}
           </div>
           <div className="min-w-0">
-            <p className="text-[13px] text-[#0F2035] leading-snug" style={{ fontWeight: 600 }}>
+            <p className="text-base text-text-primary font-semibold leading-snug">
               {item.partName}
             </p>
-            <p className="text-[11px] text-[#94A3B8] mt-0.5" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>
+            <p className="text-xs text-text-subtle mt-0.5 font-mono">
               {item.partNumber}
             </p>
           </div>
         </div>
         <button
           onClick={onClose}
-          className="ml-2 w-7 h-7 flex items-center justify-center rounded-md text-[#94A3B8] hover:bg-[#F1F5F9] hover:text-[#475569] transition-colors shrink-0"
+          className="ml-2 w-7 h-7 flex items-center justify-center rounded-md text-text-subtle hover:bg-surface-subtle hover:text-text-secondary transition-colors shrink-0"
         >
           <X size={14} />
         </button>
@@ -173,12 +164,12 @@ function InterventionDetailPanel({
 
       {/* Scrollable body */}
       <div className="flex-1 overflow-y-auto">
-        <div className="p-5 flex flex-col gap-5">
+        <div className="p-5 flex flex-col gap-6">
 
           {/* Apply to model toggle */}
           <button
             onClick={() => toggleIntervention(item.partNumber)}
-            className="w-full flex items-center justify-between px-4 py-3 rounded-xl border-2 transition-all"
+            className="w-full flex items-center justify-between px-4 py-3 rounded-xl border-2 transition-all hover:shadow-sm active:scale-[0.99]"
             style={{
               borderColor: isApplied ? "#2563EB" : "#E2E8F0",
               background: isApplied ? "#EFF6FF" : "white",
@@ -191,11 +182,11 @@ function InterventionDetailPanel({
               >
                 {isApplied && <Check size={12} color="white" />}
               </div>
-              <span className="text-[13px]" style={{ fontWeight: 500, color: isApplied ? "#1D4ED8" : "#475569" }}>
+              <span className="text-base font-medium" style={{ color: isApplied ? "#1D4ED8" : "#475569" }}>
                 {isApplied ? "Applied to cost model" : "Apply to cost model"}
               </span>
             </div>
-            <span className="text-[11px]" style={{ color: isApplied ? "#3B82F6" : "#94A3B8" }}>
+            <span className="text-xs" style={{ color: isApplied ? "#3B82F6" : "#94A3B8" }}>
               {isApplied ? "✓ Active" : "Click to apply"}
             </span>
           </button>
@@ -204,16 +195,16 @@ function InterventionDetailPanel({
           <div className="rounded-xl p-4 border" style={{ background: "#F0FDF4", borderColor: "#BBF7D0" }}>
             <div className="flex items-center gap-2 mb-2">
               <TrendingDown size={13} color="#16A34A" />
-              <span className="text-[11px] uppercase tracking-wider" style={{ color: "#16A34A", fontWeight: 600 }}>
+              <span className="text-xs uppercase tracking-wider font-semibold text-success-strong">
                 Savings Potential
               </span>
             </div>
             {hasCostData ? (
               <>
-                <p className="text-[26px] leading-none" style={{ color: "#059669", fontWeight: 700 }}>
+                <p className="text-[26px] leading-none text-success font-bold">
                   {fmtSavingsDelta(model.unitCostEffective!, model.unitCostProjected!)}
                 </p>
-                <p className="text-[11px] mt-1" style={{ color: "#6EE7B7" }}>
+                <p className="text-xs mt-1" style={{ color: "#6EE7B7" }}>
                   {fmtCurrency(model.unitCostEffective!)} → {fmtCurrency(model.unitCostProjected!)} per unit
                 </p>
                 <div className="mt-3 h-2 rounded-full bg-[#D1FAE5] overflow-hidden">
@@ -225,11 +216,11 @@ function InterventionDetailPanel({
                     transition={{ duration: 0.55, ease: "easeOut", delay: 0.1 }}
                   />
                 </div>
-                <p className="text-[11px] mt-1.5" style={{ color: "#6EE7B7" }}>{pct}% unit cost reduction</p>
+                <p className="text-xs mt-1.5" style={{ color: "#6EE7B7" }}>{pct}% unit cost reduction</p>
                 {model.annualSavingPotential != null && (
                   <div className="mt-3 pt-3 border-t border-[#86EFAC] flex items-center gap-2">
                     <DollarSign size={12} color="#16A34A" />
-                    <span className="text-[12px] text-[#16A34A]" style={{ fontWeight: 600 }}>
+                    <span className="text-sm text-success-strong font-semibold">
                       {fmtCurrency(model.annualSavingPotential)} / yr at {expectedAnnualVolume.toLocaleString()} units
                     </span>
                   </div>
@@ -237,57 +228,57 @@ function InterventionDetailPanel({
               </>
             ) : (
               <>
-                <p className="text-[26px] leading-none" style={{ color: "#059669", fontWeight: 700 }}>
+                <p className="text-[26px] leading-none text-success font-bold">
                   {item.estimatedSavings}
                 </p>
-                <p className="text-[11px] mt-1" style={{ color: "#6EE7B7" }}>estimated unit cost reduction</p>
+                <p className="text-xs mt-1" style={{ color: "#6EE7B7" }}>estimated unit cost reduction</p>
               </>
             )}
           </div>
 
           {/* Recommended intervention */}
           <div>
-            <p className="text-[11px] uppercase tracking-wider text-[#94A3B8] mb-2" style={{ fontWeight: 600 }}>
+            <p className="text-xs uppercase tracking-wider text-text-subtle font-semibold mb-2">
               Recommended Intervention
             </p>
             <div className="flex items-start gap-3 p-3 rounded-lg border border-[#BFDBFE]" style={{ background: "#EFF6FF" }}>
               <Zap size={13} color="#3B82F6" className="mt-0.5 shrink-0" />
-              <p className="text-[13px] text-[#1E3A8A]" style={{ fontWeight: 500 }}>{item.recommendedIntervention}</p>
+              <p className="text-base text-[#1E3A8A] font-medium">{item.recommendedIntervention}</p>
             </div>
           </div>
 
           {/* Rationale */}
           {implNote && (
             <div>
-              <p className="text-[11px] uppercase tracking-wider text-[#94A3B8] mb-2" style={{ fontWeight: 600 }}>
+              <p className="text-xs uppercase tracking-wider text-text-subtle font-semibold mb-2">
                 Rationale
               </p>
-              <p className="text-[12px] text-[#475569] leading-relaxed">{implNote.rationale}</p>
+              <p className="text-sm text-text-secondary leading-relaxed">{implNote.rationale}</p>
             </div>
           )}
 
           {/* Implementation considerations */}
           {implNote && (
             <div>
-              <p className="text-[11px] uppercase tracking-wider text-[#94A3B8] mb-2" style={{ fontWeight: 600 }}>
+              <p className="text-xs uppercase tracking-wider text-text-subtle font-semibold mb-2">
                 Implementation Considerations
               </p>
               <div className="flex flex-col gap-2">
                 {implNote.considerations.map((c, i) => (
                   <div key={i} className="flex items-start gap-2">
                     <div className="w-1 h-1 rounded-full bg-[#93C5FD] mt-2 shrink-0" />
-                    <p className="text-[12px] text-[#475569] leading-snug">{c}</p>
+                    <p className="text-sm text-text-secondary leading-snug">{c}</p>
                   </div>
                 ))}
               </div>
               <div className="mt-3 grid grid-cols-2 gap-2">
-                <div className="p-2.5 rounded-lg border border-[#E2E8F0] bg-[#F8FAFC]">
-                  <p className="text-[10px] uppercase tracking-wider text-[#94A3B8] mb-0.5" style={{ fontWeight: 600 }}>Tooling Est.</p>
-                  <p className="text-[12px] text-[#1E293B]" style={{ fontWeight: 600 }}>{implNote.toolingEst}</p>
+                <div className="p-2.5 rounded-lg border border-border bg-surface-muted">
+                  <p className="text-2xs uppercase tracking-wider text-text-subtle font-semibold mb-0.5">Tooling Est.</p>
+                  <p className="text-sm text-text-body font-semibold">{implNote.toolingEst}</p>
                 </div>
-                <div className="p-2.5 rounded-lg border border-[#E2E8F0] bg-[#F8FAFC]">
-                  <p className="text-[10px] uppercase tracking-wider text-[#94A3B8] mb-0.5" style={{ fontWeight: 600 }}>Lead Time</p>
-                  <p className="text-[12px] text-[#1E293B]" style={{ fontWeight: 600 }}>{implNote.leadTimeNote}</p>
+                <div className="p-2.5 rounded-lg border border-border bg-surface-muted">
+                  <p className="text-2xs uppercase tracking-wider text-text-subtle font-semibold mb-0.5">Lead Time</p>
+                  <p className="text-sm text-text-body font-semibold">{implNote.leadTimeNote}</p>
                 </div>
               </div>
             </div>
@@ -296,14 +287,14 @@ function InterventionDetailPanel({
           {/* Validation required */}
           {implNote && implNote.validationNeeded.length > 0 && (
             <div>
-              <p className="text-[11px] uppercase tracking-wider text-[#94A3B8] mb-2" style={{ fontWeight: 600 }}>
+              <p className="text-xs uppercase tracking-wider text-text-subtle font-semibold mb-2">
                 Validation Required
               </p>
               <div className="flex flex-col gap-1.5">
                 {implNote.validationNeeded.map((v, i) => (
-                  <div key={i} className="flex items-center gap-2 px-3 py-2 rounded-lg border border-[#E2E8F0]">
-                    <ShieldCheck size={12} className="text-[#94A3B8] shrink-0" />
-                    <span className="text-[12px] text-[#475569]">{v}</span>
+                  <div key={i} className="flex items-center gap-2 px-3 py-2 rounded-lg border border-border">
+                    <ShieldCheck size={12} className="text-text-subtle shrink-0" />
+                    <span className="text-sm text-text-secondary">{v}</span>
                   </div>
                 ))}
               </div>
@@ -312,18 +303,18 @@ function InterventionDetailPanel({
 
           {/* Assessment */}
           <div>
-            <p className="text-[11px] uppercase tracking-wider text-[#94A3B8] mb-3" style={{ fontWeight: 600 }}>Assessment</p>
+            <p className="text-xs uppercase tracking-wider text-text-subtle font-semibold mb-3">Assessment</p>
             <div className="flex flex-col gap-2.5">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-[12px] text-[#64748B]"><Wrench size={12} />Effort</div>
+                <div className="flex items-center gap-2 text-sm text-text-muted"><Wrench size={12} />Effort</div>
                 <Badge value={item.engineeringDifficulty} styleMap={DIFFICULTY_STYLE} />
               </div>
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-[12px] text-[#64748B]"><AlertTriangle size={12} />Risk</div>
+                <div className="flex items-center gap-2 text-sm text-text-muted"><AlertTriangle size={12} />Risk</div>
                 <Badge value={item.riskLevel} styleMap={RISK_STYLE} />
               </div>
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2 text-[12px] text-[#64748B]"><BarChart2 size={12} />Confidence</div>
+                <div className="flex items-center gap-2 text-sm text-text-muted"><BarChart2 size={12} />Confidence</div>
                 <Badge value={item.confidenceLevel} styleMap={CONFIDENCE_STYLE} />
               </div>
             </div>
@@ -331,7 +322,7 @@ function InterventionDetailPanel({
 
           {/* Part details */}
           <div>
-            <p className="text-[11px] uppercase tracking-wider text-[#94A3B8] mb-3" style={{ fontWeight: 600 }}>Part Details</p>
+            <p className="text-xs uppercase tracking-wider text-text-subtle font-semibold mb-3">Part Details</p>
             <div className="flex flex-col">
               <DetailRow icon={Package} label="Part Number" value={item.partNumber} mono />
               <DetailRow icon={Layers} label="Subsystem" value={item.subsystem} />
@@ -350,11 +341,10 @@ function InterventionDetailPanel({
       </div>
 
       {/* Sticky footer CTA */}
-      <div className="px-5 py-4 border-t border-[#E2E8F0] shrink-0" style={{ background: "#FAFBFD" }}>
+      <div className="px-5 py-4 border-t border-border shrink-0 bg-surface-raised">
         <button
           onClick={() => navigate(`/part/${item.partNumber}`)}
-          className="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-[#1B3A5C] text-white text-[13px] hover:bg-[#162F4A] transition-colors"
-          style={{ fontWeight: 500 }}
+          className="w-full flex items-center justify-between px-4 py-3 rounded-xl bg-brand-800 text-white text-base font-medium hover:bg-brand-900 active:scale-[0.98] transition-all"
         >
           <span>Open Part Analysis</span>
           <ArrowUpRight size={14} />
@@ -438,33 +428,33 @@ export function CostInterventions() {
   if (mode === "prototype") return null;
 
   return (
-    <div className="flex h-full overflow-hidden" style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}>
+    <div className="flex h-full overflow-hidden">
 
       {/* ── Main area ── */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
 
         {/* Page header */}
-        <div className="px-6 pt-5 pb-4 shrink-0 border-b border-[#E2E8F0]">
+        <div className="px-6 pt-6 pb-5 shrink-0 border-b border-[#E2E8F0]">
           <div className="flex items-center gap-2 mb-1.5">
             <button
               onClick={() => navigate("/bom-analysis")}
-              className="text-[11px] text-[#94A3B8] hover:text-[#64748B] transition-colors uppercase tracking-wider"
+              className="text-xs text-text-subtle hover:text-text-muted active:opacity-70 transition-all uppercase tracking-wider"
             >
               BOM Analysis
             </button>
-            <ChevronRight size={11} className="text-[#CBD5E1]" />
-            <span className="text-[11px] text-[#64748B] uppercase tracking-wider">Cost Interventions</span>
+            <ChevronRight size={11} className="text-text-ghost" />
+            <span className="text-xs text-text-muted uppercase tracking-wider">Cost Interventions</span>
           </div>
           <div className="flex items-start justify-between">
             <div>
-              <h1 className="text-[#0F2035]" style={{ fontWeight: 700 }}>Cost Interventions</h1>
-              <p className="text-[12px] text-[#94A3B8] mt-0.5">
-                {filtered.length} interventions · Assembly 845-000112 · Production mode · Click a row to review
+              <h1 className="text-xl text-text-primary font-bold tracking-tight">Cost Interventions</h1>
+              <p className="text-sm text-text-subtle mt-0.5">
+                {filtered.length} interventions · Assembly 845-000112
               </p>
             </div>
             <button
               onClick={() => setFiltersOpen((v) => !v)}
-              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-[12px] transition-colors shrink-0"
+              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border text-sm transition-all active:scale-[0.97] shrink-0"
               style={{
                 borderColor: filtersOpen || activeFilters > 0 ? "#2563EB" : "#E2E8F0",
                 background: filtersOpen || activeFilters > 0 ? "#EFF6FF" : "white",
@@ -475,8 +465,8 @@ export function CostInterventions() {
               Filters
               {activeFilters > 0 && (
                 <span
-                  className="ml-0.5 w-4 h-4 rounded-full text-white text-[10px] flex items-center justify-center"
-                  style={{ background: "#2563EB", fontWeight: 700 }}
+                  className="ml-0.5 w-4 h-4 rounded-full text-white text-2xs font-bold flex items-center justify-center"
+                  style={{ background: "#2563EB" }}
                 >
                   {activeFilters}
                 </span>
@@ -486,64 +476,67 @@ export function CostInterventions() {
         </div>
 
         {/* Hero summary cards */}
-        <div className="px-6 pt-5 pb-4 shrink-0">
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+        <div className="px-6 pt-6 pb-5 shrink-0">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
 
-            {/* 1. Annual savings opportunity */}
-            <div className="bg-white rounded-xl border border-[#E2E8F0] p-4 flex flex-col">
+            {/* 1. Annual savings opportunity — most important, given slightly elevated treatment */}
+            <div
+              className="rounded-xl border p-4 flex flex-col"
+              style={{ background: fullAnnualSavingsPotential > 0 ? "#F0FDF4" : "white", borderColor: fullAnnualSavingsPotential > 0 ? "#BBF7D0" : "#E2E8F0" }}
+            >
               <div className="flex items-center justify-between mb-3">
-                <p className="text-[10px] uppercase tracking-wider text-[#94A3B8]" style={{ fontWeight: 600 }}>
+                <p className="text-2xs uppercase tracking-widest font-semibold" style={{ color: fullAnnualSavingsPotential > 0 ? "#16A34A" : "#94A3B8" }}>
                   Annual Savings Opp.
                 </p>
-                <TrendingDown size={13} className="text-[#CBD5E1]" />
+                <TrendingDown size={13} style={{ color: fullAnnualSavingsPotential > 0 ? "#16A34A" : "#CBD5E1" }} />
               </div>
-              <p className="text-[26px] leading-none text-[#059669]" style={{ fontWeight: 700, fontFamily: "'IBM Plex Mono', monospace" }}>
+              <p className="text-[30px] leading-none font-bold font-mono" style={{ color: fullAnnualSavingsPotential > 0 ? "#059669" : "#94A3B8" }}>
                 {fmtCurrency(fullAnnualSavingsPotential)}
               </p>
-              <p className="text-[11px] text-[#94A3B8] mt-1">at {expectedAnnualVolume.toLocaleString()} units/yr (all interventions)</p>
-              <div className="mt-3 pt-3 border-t border-[#F1F5F9]">
-                <p className="text-[11px] text-[#64748B]">
+              <p className="text-xs mt-1" style={{ color: fullAnnualSavingsPotential > 0 ? "#6EE7B7" : "#CBD5E1" }}>at {expectedAnnualVolume.toLocaleString()} units/yr (all interventions)</p>
+              <div className="mt-3 pt-3" style={{ borderTop: `1px solid ${fullAnnualSavingsPotential > 0 ? "#BBF7D0" : "#F1F5F9"}` }}>
+                <p className="text-xs text-text-muted">
                   BOM unit:{" "}
-                  <span style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 600 }}>{fmtCurrency(currentBomCost)}</span>
+                  <span className="font-mono font-semibold">{fmtCurrency(currentBomCost)}</span>
                   {" → "}
-                  <span className="text-[#059669]" style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 600 }}>{fmtCurrency(projectedBomCost)}</span>
+                  <span className="font-mono font-semibold text-success">{fmtCurrency(projectedBomCost)}</span>
                 </p>
               </div>
             </div>
 
             {/* 2. Addressable spend */}
-            <div className="bg-white rounded-xl border border-[#E2E8F0] p-4 flex flex-col">
+            <div className="bg-surface-card rounded-xl border border-border p-5 flex flex-col">
               <div className="flex items-center justify-between mb-3">
-                <p className="text-[10px] uppercase tracking-wider text-[#94A3B8]" style={{ fontWeight: 600 }}>
+                <p className="text-2xs uppercase tracking-widest text-text-subtle font-semibold">
                   Addressable Spend
                 </p>
-                <DollarSign size={13} className="text-[#CBD5E1]" />
+                <DollarSign size={13} className="text-text-ghost" />
               </div>
-              <p className="text-[26px] leading-none text-[#1B3A5C]" style={{ fontWeight: 700, fontFamily: "'IBM Plex Mono', monospace" }}>
+              <p className="text-[26px] leading-none text-brand-800 font-bold font-mono">
                 {fmtCurrency(addressableSpend)}
               </p>
-              <p className="text-[11px] text-[#94A3B8] mt-1">annual spend in parts with active interventions</p>
-              <div className="mt-3 pt-3 border-t border-[#F1F5F9]">
-                <p className="text-[11px] text-[#64748B]">
+              <p className="text-xs text-text-subtle mt-1">annual spend in parts with active interventions</p>
+              <div className="mt-3 pt-3 border-t border-surface-subtle">
+                <p className="text-xs text-text-muted">
                   {PRODUCTION_INTERVENTIONS.length} parts · {new Set(PRODUCTION_INTERVENTIONS.map((i) => i.subsystem)).size} subsystems
                 </p>
               </div>
             </div>
 
             {/* 3. High-confidence count */}
-            <div className="bg-white rounded-xl border border-[#E2E8F0] p-4 flex flex-col">
+            <div className="bg-surface-card rounded-xl border border-border p-5 flex flex-col">
               <div className="flex items-center justify-between mb-3">
-                <p className="text-[10px] uppercase tracking-wider text-[#94A3B8]" style={{ fontWeight: 600 }}>
+                <p className="text-2xs uppercase tracking-widest text-text-subtle font-semibold">
                   High-Confidence
                 </p>
-                <ShieldCheck size={13} className="text-[#CBD5E1]" />
+                <ShieldCheck size={13} className="text-text-ghost" />
               </div>
-              <p className="text-[30px] leading-none text-[#1B3A5C]" style={{ fontWeight: 700, fontFamily: "'IBM Plex Mono', monospace" }}>
+              <p className="text-[30px] leading-none text-brand-800 font-bold font-mono">
                 {highConfCount}
               </p>
-              <p className="text-[11px] text-[#94A3B8] mt-1">of {PRODUCTION_INTERVENTIONS.length} interventions are high-confidence</p>
-              <div className="mt-3 pt-3 border-t border-[#F1F5F9]">
-                <div className="h-1.5 rounded-full bg-[#F1F5F9] overflow-hidden">
+              <p className="text-xs text-text-subtle mt-1">of {PRODUCTION_INTERVENTIONS.length} interventions are high-confidence</p>
+              <div className="mt-3 pt-3 border-t border-surface-subtle">
+                <div className="h-1.5 rounded-full bg-surface-subtle overflow-hidden">
                   <div
                     className="h-full rounded-full bg-[#10B981]"
                     style={{ width: `${Math.round((highConfCount / PRODUCTION_INTERVENTIONS.length) * 100)}%` }}
@@ -553,22 +546,22 @@ export function CostInterventions() {
             </div>
 
             {/* 4. Applied to model */}
-            <div className="bg-white rounded-xl border border-[#E2E8F0] p-4 flex flex-col">
+            <div className="bg-surface-card rounded-xl border border-border p-5 flex flex-col">
               <div className="flex items-center justify-between mb-3">
-                <p className="text-[10px] uppercase tracking-wider text-[#94A3B8]" style={{ fontWeight: 600 }}>
+                <p className="text-2xs uppercase tracking-widest text-text-subtle font-semibold">
                   Applied to Model
                 </p>
-                <BarChart2 size={13} className="text-[#CBD5E1]" />
+                <BarChart2 size={13} className="text-text-ghost" />
               </div>
-              <p className="text-[30px] leading-none text-[#1B3A5C]" style={{ fontWeight: 700, fontFamily: "'IBM Plex Mono', monospace" }}>
+              <p className="text-[30px] leading-none text-brand-800 font-bold font-mono">
                 {appliedCount}
               </p>
-              <p className="text-[11px] text-[#94A3B8] mt-1">of {PRODUCTION_INTERVENTIONS.length} interventions active in cost model</p>
-              <div className="mt-3 pt-3 border-t border-[#F1F5F9]">
+              <p className="text-xs text-text-subtle mt-1">of {PRODUCTION_INTERVENTIONS.length} interventions active in cost model</p>
+              <div className="mt-3 pt-3 border-t border-surface-subtle">
                 {appliedCount === 0 ? (
-                  <p className="text-[11px] text-[#94A3B8]">Toggle rows below to model savings</p>
+                  <p className="text-xs text-text-subtle">Toggle rows below to model savings</p>
                 ) : (
-                  <p className="text-[11px] text-[#059669]" style={{ fontWeight: 500 }}>
+                  <p className="text-xs text-success font-medium">
                     {fmtCurrency((currentBomCost - projectedBomCost) * expectedAnnualVolume)} annual saving active
                   </p>
                 )}
@@ -588,17 +581,17 @@ export function CostInterventions() {
               className="overflow-hidden shrink-0"
             >
               <div className="px-6 pb-4">
-                <div className="flex flex-wrap items-center gap-3 p-4 rounded-xl border border-[#E2E8F0] bg-[#F8FAFC]">
+                <div className="flex flex-wrap items-center gap-3 p-5 rounded-xl border border-border bg-surface-muted">
 
                   {/* Subsystem */}
                   <div className="flex items-center gap-1.5">
-                    <span className="text-[11px] text-[#94A3B8] uppercase tracking-wider shrink-0" style={{ fontWeight: 600 }}>Subsystem</span>
-                    <div className="flex items-center gap-1 p-0.5 rounded-lg bg-white border border-[#E2E8F0]">
+                    <span className="text-xs text-text-subtle uppercase tracking-wider font-semibold shrink-0">Subsystem</span>
+                    <div className="flex items-center gap-1 p-0.5 rounded-lg bg-white border border-border">
                       {SUBSYSTEM_OPTIONS.map((s) => (
                         <button
                           key={s}
                           onClick={() => setSubsystemFilter(s)}
-                          className="px-2.5 py-1 rounded-md text-[11px] transition-all"
+                          className="px-2.5 py-1 rounded-md text-xs transition-all hover:bg-black/[0.04] active:scale-[0.95]"
                           style={{
                             fontWeight: subsystemFilter === s ? 600 : 400,
                             background: subsystemFilter === s ? "#1B3A5C" : "transparent",
@@ -613,12 +606,12 @@ export function CostInterventions() {
 
                   {/* Lever */}
                   <div className="flex items-center gap-1.5">
-                    <span className="text-[11px] text-[#94A3B8] uppercase tracking-wider shrink-0" style={{ fontWeight: 600 }}>Lever</span>
+                    <span className="text-xs text-text-subtle uppercase tracking-wider font-semibold shrink-0">Lever</span>
                     <select
                       value={leverFilter}
                       onChange={(e) => setLeverFilter(e.target.value)}
-                      className="h-7 px-2 rounded-lg border border-[#E2E8F0] bg-white text-[11px] text-[#1E293B] focus:outline-none focus:border-[#93C5FD]"
-                      style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+                      className="h-7 px-2 rounded-lg border border-border bg-white text-xs text-text-body focus:outline-none focus:border-[#93C5FD]"
+                      
                     >
                       {LEVER_OPTIONS.map((l) => (
                         <option key={l} value={l}>{l === "All" ? "All Levers" : l}</option>
@@ -628,12 +621,12 @@ export function CostInterventions() {
 
                   {/* Confidence */}
                   <div className="flex items-center gap-1.5">
-                    <span className="text-[11px] text-[#94A3B8] uppercase tracking-wider shrink-0" style={{ fontWeight: 600 }}>Confidence</span>
+                    <span className="text-xs text-text-subtle uppercase tracking-wider font-semibold shrink-0">Confidence</span>
                     <select
                       value={confidenceFilter}
                       onChange={(e) => setConfidenceFilter(e.target.value)}
-                      className="h-7 px-2 rounded-lg border border-[#E2E8F0] bg-white text-[11px] text-[#1E293B] focus:outline-none focus:border-[#93C5FD]"
-                      style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+                      className="h-7 px-2 rounded-lg border border-border bg-white text-xs text-text-body focus:outline-none focus:border-[#93C5FD]"
+                      
                     >
                       {["All", "High", "Medium", "Low"].map((v) => (
                         <option key={v} value={v}>{v === "All" ? "All Confidence" : v}</option>
@@ -643,12 +636,12 @@ export function CostInterventions() {
 
                   {/* Effort */}
                   <div className="flex items-center gap-1.5">
-                    <span className="text-[11px] text-[#94A3B8] uppercase tracking-wider shrink-0" style={{ fontWeight: 600 }}>Effort</span>
+                    <span className="text-xs text-text-subtle uppercase tracking-wider font-semibold shrink-0">Effort</span>
                     <select
                       value={effortFilter}
                       onChange={(e) => setEffortFilter(e.target.value)}
-                      className="h-7 px-2 rounded-lg border border-[#E2E8F0] bg-white text-[11px] text-[#1E293B] focus:outline-none focus:border-[#93C5FD]"
-                      style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+                      className="h-7 px-2 rounded-lg border border-border bg-white text-xs text-text-body focus:outline-none focus:border-[#93C5FD]"
+                      
                     >
                       {["All", "Low", "Medium", "High"].map((v) => (
                         <option key={v} value={v}>{v === "All" ? "All Effort" : v}</option>
@@ -658,12 +651,12 @@ export function CostInterventions() {
 
                   {/* Min savings */}
                   <div className="flex items-center gap-1.5">
-                    <span className="text-[11px] text-[#94A3B8] uppercase tracking-wider shrink-0" style={{ fontWeight: 600 }}>Min Savings</span>
+                    <span className="text-xs text-text-subtle uppercase tracking-wider font-semibold shrink-0">Min Savings</span>
                     <select
                       value={minSavingsPct}
                       onChange={(e) => setMinSavingsPct(Number(e.target.value))}
-                      className="h-7 px-2 rounded-lg border border-[#E2E8F0] bg-white text-[11px] text-[#1E293B] focus:outline-none focus:border-[#93C5FD]"
-                      style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+                      className="h-7 px-2 rounded-lg border border-border bg-white text-xs text-text-body focus:outline-none focus:border-[#93C5FD]"
+                      
                     >
                       {[0, 25, 50, 75].map((v) => (
                         <option key={v} value={v}>{v === 0 ? "Any" : `${v}%+`}</option>
@@ -675,7 +668,7 @@ export function CostInterventions() {
                   {activeFilters > 0 && (
                     <button
                       onClick={clearFilters}
-                      className="text-[11px] text-[#94A3B8] hover:text-[#475569] underline transition-colors"
+                      className="text-xs text-text-subtle hover:text-text-secondary underline transition-colors"
                     >
                       Clear all
                     </button>
@@ -688,11 +681,11 @@ export function CostInterventions() {
 
         {/* Table */}
         <div className="flex-1 px-6 pb-6 overflow-auto min-h-0">
-          <div className="bg-white rounded-xl border border-[#E2E8F0] overflow-hidden">
+          <div className="bg-surface-card rounded-xl border border-border overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full min-w-[820px]" style={{ borderCollapse: "collapse" }}>
                 <thead>
-                  <tr style={{ background: "#F8FAFC", borderBottom: "1px solid #E2E8F0" }}>
+                  <tr className="bg-surface-muted" style={{ borderBottom: "1px solid #E2E8F0" }}>
                     {[
                       { label: "Rank",           width: 64  },
                       { label: "Part",            width: 180 },
@@ -706,17 +699,10 @@ export function CostInterventions() {
                     ].map((col) => (
                       <th
                         key={col.label}
-                        className="px-4 py-3 text-left"
+                        className="px-4 py-3 text-left text-xs font-semibold text-text-muted uppercase tracking-wider whitespace-nowrap"
                         style={{
                           width: col.width,
                           minWidth: col.width,
-                          fontFamily: "'IBM Plex Sans', sans-serif",
-                          fontSize: 11,
-                          fontWeight: 600,
-                          color: "#64748B",
-                          textTransform: "uppercase",
-                          letterSpacing: "0.06em",
-                          whiteSpace: "nowrap",
                         }}
                       >
                         {col.label}
@@ -728,14 +714,19 @@ export function CostInterventions() {
                 <tbody>
                   {filtered.length === 0 ? (
                     <tr>
-                      <td colSpan={10} className="px-6 py-12 text-center">
-                        <p className="text-[13px] text-[#94A3B8]">No interventions match the active filters.</p>
-                        <button
-                          onClick={clearFilters}
-                          className="mt-2 text-[12px] text-[#2563EB] hover:underline"
-                        >
-                          Clear filters
-                        </button>
+                      <td colSpan={10} className="px-6 py-14 text-center">
+                        <div className="flex flex-col items-center gap-3">
+                          <Filter size={22} className="text-text-ghost" />
+                          <p className="text-base text-text-subtle font-medium">No interventions match the active filters</p>
+                          <p className="text-sm text-text-ghost">Try adjusting subsystem, lever, or savings threshold.</p>
+                          <button
+                            onClick={clearFilters}
+                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm text-text-muted border border-border hover:bg-surface-muted hover:border-border-strong active:scale-[0.97] transition-all"
+                          >
+                            <X size={11} />
+                            Clear all filters
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ) : (
@@ -755,7 +746,7 @@ export function CostInterventions() {
                         <tr
                           key={item.rank}
                           onClick={() => setSelectedRank((prev) => (prev === item.rank ? null : item.rank))}
-                          className="cursor-pointer transition-colors group"
+                          className={`cursor-pointer transition-colors group ci-row${isSelected ? " ci-row--selected" : ""}${isApplied && !isSelected ? " ci-row--applied" : ""}`}
                           style={{
                             background: isSelected
                               ? "#EFF6FF"
@@ -773,13 +764,12 @@ export function CostInterventions() {
                           }}
                         >
                           {/* Rank */}
-                          <td className="px-4 py-3.5">
+                          <td className="px-4 py-4">
                             <div
-                              className="w-7 h-7 rounded-lg flex items-center justify-center text-[12px]"
+                              className="w-8 h-8 rounded-lg flex items-center justify-center text-base font-bold"
                               style={{
                                 background: isSelected ? "#DBEAFE" : "#F1F5F9",
                                 color: isSelected ? "#1D4ED8" : "#475569",
-                                fontWeight: 700,
                               }}
                             >
                               {item.rank}
@@ -787,25 +777,25 @@ export function CostInterventions() {
                           </td>
 
                           {/* Part */}
-                          <td className="px-4 py-3.5">
-                            <p className="text-[13px] text-[#1E293B]" style={{ fontWeight: 500 }}>{item.partName}</p>
-                            <p className="text-[10px] text-[#CBD5E1] mt-0.5" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>
+                          <td className="px-4 py-4">
+                            <p className="text-base text-text-body font-medium">{item.partName}</p>
+                            <p className="text-2xs text-text-ghost mt-0.5 font-mono">
                               {item.partNumber}
                             </p>
                           </td>
 
                           {/* Intervention */}
-                          <td className="px-4 py-3.5">
+                          <td className="px-4 py-4">
                             <div className="flex items-center gap-1.5">
                               <div className="w-1.5 h-1.5 rounded-full bg-[#3B82F6] shrink-0 mt-px" />
-                              <span className="text-[12px] text-[#475569] leading-snug">{item.recommendedIntervention}</span>
+                              <span className="text-sm text-text-secondary leading-snug">{item.recommendedIntervention}</span>
                             </div>
                           </td>
 
                           {/* Unit savings */}
-                          <td className="px-4 py-3.5">
+                          <td className="px-4 py-4">
                             <div className="flex flex-col gap-1.5">
-                              <span className="text-[12px] text-[#059669]" style={{ fontWeight: 700 }}>{unitSaving}</span>
+                              <span className="text-sm text-success font-bold">{unitSaving}</span>
                               <div className="h-1 rounded-full bg-[#E2E8F0] overflow-hidden w-16">
                                 <div
                                   className="h-full rounded-full"
@@ -816,35 +806,32 @@ export function CostInterventions() {
                           </td>
 
                           {/* Annual @ volume */}
-                          <td className="px-4 py-3.5">
-                            <span
-                              className="text-[12px] text-[#1E293B]"
-                              style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 600 }}
-                            >
+                          <td className="px-4 py-4">
+                            <span className="text-sm text-text-body font-mono font-semibold">
                               {annualAmt}
                             </span>
                           </td>
 
                           {/* Effort */}
-                          <td className="px-4 py-3.5">
+                          <td className="px-4 py-4">
                             <Badge value={item.engineeringDifficulty} styleMap={DIFFICULTY_STYLE} />
                           </td>
 
                           {/* Risk */}
-                          <td className="px-4 py-3.5">
+                          <td className="px-4 py-4">
                             <Badge value={item.riskLevel} styleMap={RISK_STYLE} />
                           </td>
 
                           {/* Confidence */}
-                          <td className="px-4 py-3.5">
+                          <td className="px-4 py-4">
                             <Badge value={item.confidenceLevel} styleMap={CONFIDENCE_STYLE} />
                           </td>
 
                           {/* Status toggle */}
-                          <td className="px-4 py-3.5" onClick={(e) => e.stopPropagation()}>
+                          <td className="px-4 py-4" onClick={(e) => e.stopPropagation()}>
                             <button
                               onClick={() => toggleIntervention(item.partNumber)}
-                              className="flex items-center gap-1.5 px-2.5 py-1 rounded-md border text-[11px] transition-all"
+                              className="flex items-center gap-1.5 px-2.5 py-1 rounded-md border text-xs transition-all hover:shadow-sm active:scale-[0.95]"
                               style={{
                                 borderColor: isApplied ? "#2563EB" : "#E2E8F0",
                                 background: isApplied ? "#EFF6FF" : "white",
@@ -861,7 +848,7 @@ export function CostInterventions() {
                           </td>
 
                           {/* Expand arrow */}
-                          <td className="px-3 py-3.5">
+                          <td className="px-3 py-4">
                             <ChevronRight
                               size={13}
                               className="text-[#CBD5E1] group-hover:text-[#3B82F6] transition-colors"
@@ -878,15 +865,14 @@ export function CostInterventions() {
 
             {/* Table footer */}
             <div
-              className="px-5 py-3 border-t border-[#F1F5F9] flex items-center justify-between"
-              style={{ background: "#FAFBFD" }}
+              className="px-5 py-3 border-t border-border flex items-center justify-between bg-surface-raised"
             >
-              <p className="text-[11px] text-[#94A3B8]">
+              <p className="text-xs text-text-subtle">
                 Showing {filtered.length} of {PRODUCTION_INTERVENTIONS.length} interventions · Assembly 845-000112
               </p>
               <button
                 onClick={() => navigate("/bom-analysis")}
-                className="flex items-center gap-1 text-[11px] text-[#64748B] hover:text-[#1B3A5C] transition-colors"
+                className="flex items-center gap-1 text-xs text-text-muted hover:text-brand-800 transition-colors"
               >
                 <ArrowUpRight size={11} />
                 View full BOM
@@ -922,7 +908,7 @@ export function CostInterventions() {
               style={{ maxHeight: "85vh" }}
             >
               <div className="shrink-0 flex justify-center pt-2.5 pb-1 bg-white rounded-t-2xl">
-                <div className="w-10 h-1 rounded-full bg-[#E2E8F0]" />
+                <div className="w-10 h-1 rounded-full bg-border" />
               </div>
               <InterventionDetailPanel part={selectedItem} onClose={() => setSelectedRank(null)} />
             </motion.div>

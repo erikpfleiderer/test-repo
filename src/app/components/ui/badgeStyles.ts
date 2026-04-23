@@ -3,10 +3,15 @@
 // Single source of truth for the color tokens used by badge components,
 // detail panels, and table rows across both production and prototype modes.
 //
+// Values reference src/app/design/tokens.ts — do not introduce new hex strings
+// here. If a color isn't in tokens.ts, add it there first.
+//
 // Usage:
 //   import { DIFFICULTY_STYLE, RISK_STYLE, CONFIDENCE_STYLE } from "./badgeStyles";
 //
 // ─────────────────────────────────────────────────────────────────────────────
+
+import { color } from "../../design/tokens";
 
 export interface BadgeStyle {
   bg: string;
@@ -16,23 +21,23 @@ export interface BadgeStyle {
 
 // Low → green · Medium → amber · High → red
 export const DIFFICULTY_STYLE: Record<string, BadgeStyle> = {
-  Low:    { bg: "#F0FDF4", text: "#16A34A", border: "#BBF7D0" },
-  Medium: { bg: "#FFFBEB", text: "#D97706", border: "#FDE68A" },
-  High:   { bg: "#FFF1F2", text: "#E11D48", border: "#FECDD3" },
+  Low:    { bg: color.success.bg,  text: color.success.text,  border: color.success.border  },
+  Medium: { bg: color.warning.bg,  text: color.warning.text,  border: color.warning.border  },
+  High:   { bg: color.danger.bg,   text: color.danger.text,   border: color.danger.border   },
 };
 
 // Same mapping as difficulty — Low risk = green, High risk = red
 export const RISK_STYLE: Record<string, BadgeStyle> = {
-  Low:    { bg: "#F0FDF4", text: "#16A34A", border: "#BBF7D0" },
-  Medium: { bg: "#FFFBEB", text: "#D97706", border: "#FDE68A" },
-  High:   { bg: "#FFF1F2", text: "#E11D48", border: "#FECDD3" },
+  Low:    { bg: color.success.bg,  text: color.success.text,  border: color.success.border  },
+  Medium: { bg: color.warning.bg,  text: color.warning.text,  border: color.warning.border  },
+  High:   { bg: color.danger.bg,   text: color.danger.text,   border: color.danger.border   },
 };
 
 // Inverted: Low confidence = red, High confidence = green
 export const CONFIDENCE_STYLE: Record<string, BadgeStyle> = {
-  Low:    { bg: "#FFF1F2", text: "#E11D48", border: "#FECDD3" },
-  Medium: { bg: "#FFFBEB", text: "#D97706", border: "#FDE68A" },
-  High:   { bg: "#F0FDF4", text: "#16A34A", border: "#BBF7D0" },
+  Low:    { bg: color.danger.bg,   text: color.danger.text,   border: color.danger.border   },
+  Medium: { bg: color.warning.bg,  text: color.warning.text,  border: color.warning.border  },
+  High:   { bg: color.success.bg,  text: color.success.text,  border: color.success.border  },
 };
 
 // Manufacturing risk signal severity (Block / Flag / Watch).
@@ -42,9 +47,9 @@ export interface SeverityStyle extends BadgeStyle {
 }
 
 export const SEVERITY_SIGNAL_STYLE: Record<"Block" | "Flag" | "Watch", SeverityStyle> = {
-  Block: { bg: "#FFF1F2", text: "#BE123C", border: "#FECDD3", dot: "#E11D48" },
-  Flag:  { bg: "#FFF7ED", text: "#9A3412", border: "#FDBA74", dot: "#F97316" },
-  Watch: { bg: "#FFFBEB", text: "#92400E", border: "#FDE68A", dot: "#D97706" },
+  Block: { ...color.severity.Block },
+  Flag:  { ...color.severity.Flag  },
+  Watch: { ...color.severity.Watch },
 };
 
 // ─── Build readiness ──────────────────────────────────────────────────────────
@@ -54,10 +59,11 @@ export const SEVERITY_SIGNAL_STYLE: Record<"Block" | "Flag" | "Watch", SeverityS
  * for a build-readiness status value of "Ready", "Conditional", or "Not Ready".
  */
 export function buildReadinessStyle(status: string): { bg: string; color: string } {
-  if (status === "Ready")       return { bg: "#DCFCE7", color: "#059669" };
-  if (status === "Conditional") return { bg: "#FEF3C7", color: "#D97706" };
-  return                               { bg: "#FFF1F2", color: "#E11D48" };
+  if (status === "Ready")       return { bg: color.success.bg,  color: color.success.strong  };
+  if (status === "Conditional") return { bg: color.warning.bg,  color: color.warning.strong  };
+  return                               { bg: color.danger.bg,   color: color.danger.strong   };
 }
+
 
 // ─── Iteration risk ───────────────────────────────────────────────────────────
 

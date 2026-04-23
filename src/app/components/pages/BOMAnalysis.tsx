@@ -84,8 +84,8 @@ function ConfidenceBadge({ level }: { level: CostConfidence }) {
   const s = CONFIDENCE_STYLE[level];
   return (
     <span
-      className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded border text-[10px]"
-      style={{ background: s.bg, color: s.text, borderColor: s.border, fontFamily: "'IBM Plex Sans', sans-serif", fontWeight: 600 }}
+      className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded border text-2xs font-semibold"
+      style={{ background: s.bg, color: s.text, borderColor: s.border }}
     >
       <span className="w-1.5 h-1.5 rounded-full" style={{ background: s.dot }} />
       {level}
@@ -97,8 +97,8 @@ function SubsystemBadge({ value }: { value: string }) {
   const s = SUBSYSTEM_COLORS[value] ?? { dot: "#64748B", bg: "#F8FAFC", text: "#475569", border: "#E2E8F0" };
   return (
     <span
-      className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md border text-[11px]"
-      style={{ background: s.bg, color: s.text, borderColor: s.border, fontFamily: "'IBM Plex Sans', sans-serif", fontWeight: 500, whiteSpace: "nowrap" }}
+      className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md border text-xs font-medium"
+      style={{ background: s.bg, color: s.text, borderColor: s.border, whiteSpace: "nowrap" }}
     >
       <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ background: s.dot }} />
       {value}
@@ -110,12 +110,11 @@ function MakeBuyBadge({ value }: { value: "Make" | "Buy" }) {
   const isMake = value === "Make";
   return (
     <span
-      className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md border text-[11px]"
+      className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md border text-xs font-medium"
       style={{
         background: isMake ? "#EFF4FA" : "#F0FDF4",
         color:      isMake ? "#1B3A5C" : "#065F46",
         borderColor:isMake ? "#BFDBFE" : "#BBF7D0",
-        fontFamily: "'IBM Plex Sans', sans-serif", fontWeight: 500,
       }}
     >
       {isMake ? <Hammer size={10} /> : <ShoppingCart size={10} />}
@@ -166,20 +165,20 @@ function GroupHeader({ label, count, extCost, protoMode = false }: { label: stri
           <div className="flex items-center gap-2.5">
             <span className="w-2 h-2 rounded-full" style={{ background: s.dot }} />
             <span
-              className="text-[11px] uppercase tracking-wider"
-              style={{ color: s.text, fontFamily: "'IBM Plex Sans', sans-serif", fontWeight: 600, letterSpacing: "0.06em" }}
+              className="text-xs uppercase tracking-wider font-semibold"
+              style={{ color: s.text, letterSpacing: "0.06em" }}
             >
               {label}
             </span>
             <span
-              className="text-[10px] px-1.5 py-0.5 rounded"
-              style={{ background: `${s.dot}1A`, color: s.dot, fontFamily: "'IBM Plex Sans', sans-serif", fontWeight: 600 }}
+              className="text-2xs px-1.5 py-0.5 rounded font-semibold"
+              style={{ background: `${s.dot}1A`, color: s.dot }}
             >
               {count} parts
             </span>
           </div>
           {extCost != null && extCost > 0 && (
-            <span className="text-[11px]" style={{ color: s.text, fontFamily: "'IBM Plex Mono', monospace", fontWeight: 600, opacity: 0.7 }}>
+            <span className="text-xs font-mono font-semibold" style={{ color: s.text, opacity: 0.7 }}>
               {fmtCurrency(extCost)}
             </span>
           )}
@@ -227,17 +226,17 @@ function InlineCostEditor({
   return (
     <div>
       <div className="flex items-center justify-between mb-2">
-        <p className="text-[11px] uppercase tracking-wider text-[#94A3B8]" style={{ fontWeight: 500 }}>
+        <p className="text-xs uppercase tracking-wider text-text-subtle font-medium">
           Unit Cost
           {isOverridden && (
-            <span className="ml-2 text-[10px] text-[#D97706]" style={{ fontWeight: 600 }}>OVERRIDDEN</span>
+            <span className="ml-2 text-2xs font-semibold text-warning">OVERRIDDEN</span>
           )}
         </p>
         <div className="flex items-center gap-1.5">
           {isOverridden && (
             <button
               onClick={onClear}
-              className="flex items-center gap-1 px-2 py-0.5 rounded text-[10px] text-[#94A3B8] hover:text-[#F43F5E] transition-colors border border-[#E2E8F0] hover:border-[#FECDD3]"
+              className="flex items-center gap-1 px-2 py-0.5 rounded text-2xs text-text-subtle hover:text-danger transition-colors border border-border hover:border-danger-border"
               title="Restore original"
             >
               <RotateCcw size={9} />
@@ -247,7 +246,7 @@ function InlineCostEditor({
           {!editing && (
             <button
               onClick={startEdit}
-              className="flex items-center gap-1 px-2 py-0.5 rounded text-[10px] text-[#64748B] hover:text-[#1B3A5C] transition-colors border border-[#E2E8F0] hover:border-[#BFDBFE]"
+              className="flex items-center gap-1 px-2 py-0.5 rounded text-2xs text-text-muted hover:text-[#1B3A5C] transition-colors border border-border hover:border-[#BFDBFE]"
             >
               <Edit3 size={9} />
               Edit
@@ -259,7 +258,7 @@ function InlineCostEditor({
       {editing ? (
         <div className="flex items-center gap-2 mb-2">
           <div className="relative flex-1">
-            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#94A3B8] text-[13px]">$</span>
+            <span className="absolute left-3 top-1/2 -translate-y-1/2 text-text-subtle text-base">$</span>
             <input
               ref={inputRef}
               type="number"
@@ -268,19 +267,18 @@ function InlineCostEditor({
               value={draft}
               onChange={(e) => setDraft(e.target.value)}
               onKeyDown={(e) => { if (e.key === "Enter") commit(); if (e.key === "Escape") setEditing(false); }}
-              className="w-full h-8 pl-6 pr-3 rounded-lg border border-[#93C5FD] text-[13px] text-[#1E293B] focus:outline-none focus:ring-2 focus:ring-[#3B82F6]/20"
-              style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 600 }}
+              className="w-full h-8 pl-6 pr-3 rounded-lg border border-[#93C5FD] text-base text-text-body font-mono font-semibold focus:outline-none focus:ring-2 focus:ring-[#3B82F6]/20"
             />
           </div>
           <button
             onClick={commit}
-            className="w-8 h-8 flex items-center justify-center rounded-lg bg-[#1B3A5C] hover:bg-[#162F4A] transition-colors"
+            className="w-8 h-8 flex items-center justify-center rounded-lg bg-brand-800 hover:bg-brand-900 transition-colors"
           >
-            <CheckCircle2 size={14} color="white" />
+            <CheckCircle2 size={13} className="text-white" />
           </button>
           <button
             onClick={() => setEditing(false)}
-            className="w-8 h-8 flex items-center justify-center rounded-lg border border-[#E2E8F0] hover:bg-[#F1F5F9] transition-colors text-[#94A3B8]"
+            className="w-8 h-8 flex items-center justify-center rounded-lg border border-border hover:bg-surface-subtle transition-colors text-text-subtle"
           >
             <X size={13} />
           </button>
@@ -292,14 +290,14 @@ function InlineCostEditor({
             style={{ borderColor: isOverridden ? "#93C5FD" : "#E2E8F0", background: isOverridden ? "#EFF6FF" : "white" }}
             onClick={startEdit}
           >
-            <p className="text-[10px] text-[#94A3B8] mb-1" style={{ fontWeight: 500 }}>Per Unit</p>
-            <p className="text-[20px] leading-none" style={{ color: isOverridden ? "#1D4ED8" : "#1B3A5C", fontWeight: 700, fontFamily: "'IBM Plex Mono', monospace" }}>
+            <p className="text-2xs text-text-subtle font-medium mb-1">Per Unit</p>
+            <p className="text-[20px] leading-none font-mono font-bold" style={{ color: isOverridden ? "#1D4ED8" : "#1B3A5C" }}>
               {displayVal != null ? fmtCurrency(displayVal) : "—"}
             </p>
           </div>
           <div className="rounded-lg border border-[#E2E8F0] p-3">
-            <p className="text-[10px] text-[#94A3B8] mb-1" style={{ fontWeight: 500 }}>Extended ({qty}×)</p>
-            <p className="text-[20px] leading-none text-[#1B3A5C]" style={{ fontWeight: 700, fontFamily: "'IBM Plex Mono', monospace" }}>
+            <p className="text-2xs text-text-subtle font-medium mb-1">Extended ({qty}×)</p>
+            <p className="text-[20px] leading-none text-brand-800 font-mono font-bold">
               {displayVal != null ? fmtCurrency(qty * displayVal) : "—"}
             </p>
           </div>
@@ -314,8 +312,7 @@ function InlineCostEditor({
 function DrawerSectionLabel({ children }: { children: React.ReactNode }) {
   return (
     <p
-      className="text-[10px] uppercase tracking-wider text-[#94A3B8] mb-2"
-      style={{ fontWeight: 600, letterSpacing: "0.08em" }}
+      className="text-2xs uppercase tracking-widest text-text-subtle font-semibold mb-2"
     >
       {children}
     </p>
@@ -376,22 +373,19 @@ function DetailPanel({
 
   return (
     <div
-      className="w-full xl:w-[340px] xl:shrink-0 bg-white xl:border-l border-[#E2E8F0] flex flex-col xl:h-full overflow-hidden"
-      style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+      className="w-full xl:w-[340px] xl:shrink-0 bg-surface-card xl:border-l border-border flex flex-col xl:h-full overflow-hidden"
     >
 
       {/* ── Header ── */}
       <div
-        className="px-5 py-4 border-b border-[#E2E8F0] shrink-0 flex items-start justify-between"
-        style={{ background: "#FAFBFD" }}
+        className="px-5 py-4 border-b border-border shrink-0 flex items-start justify-between bg-surface-raised"
       >
         <div className="flex-1 min-w-0">
-          <p className="text-[13px] text-[#0F2035] leading-snug" style={{ fontWeight: 600 }}>
+          <p className="text-md text-text-primary font-semibold leading-snug">
             {part.name}
           </p>
           <p
-            className="text-[11px] text-[#94A3B8] mt-0.5"
-            style={{ fontFamily: "'IBM Plex Mono', monospace" }}
+            className="text-xs text-text-subtle mt-0.5 font-mono"
           >
             {part.partNumber}
           </p>
@@ -403,7 +397,7 @@ function DetailPanel({
         </div>
         <button
           onClick={onClose}
-          className="ml-3 w-7 h-7 flex items-center justify-center rounded-md text-[#94A3B8] hover:bg-[#F1F5F9] hover:text-[#475569] transition-colors shrink-0"
+          className="ml-3 w-7 h-7 flex items-center justify-center rounded-md text-text-subtle hover:bg-surface-subtle hover:text-text-secondary active:scale-[0.9] transition-all shrink-0"
         >
           <X size={14} />
         </button>
@@ -419,18 +413,18 @@ function DetailPanel({
               { label: "Qty",      value: String(part.qty) },
               { label: "Category", value: part.itemCategory.replace("COTS, Standard Hardware", "COTS/OTS") },
             ].map((item) => (
-              <div key={item.label} className="rounded-lg border border-[#E2E8F0] p-2.5">
-                <p className="text-[10px] uppercase tracking-wider text-[#94A3B8] mb-0.5" style={{ fontWeight: 500 }}>{item.label}</p>
-                <p className="text-[11px] text-[#1E293B] leading-snug" style={{ fontWeight: 600 }}>{item.value}</p>
+              <div key={item.label} className="rounded-lg border border-border p-2.5">
+                <p className="text-2xs uppercase tracking-wider text-text-subtle font-medium mb-0.5">{item.label}</p>
+                <p className="text-xs text-text-body font-semibold leading-snug">{item.value}</p>
               </div>
             ))}
           </div>
 
           {/* Excluded notice */}
           {isExcluded && (
-            <div className="flex items-start gap-2.5 px-3 py-2.5 rounded-lg border border-[#FDE68A]" style={{ background: "#FFFBEB" }}>
+            <div className="flex items-start gap-2.5 px-3 py-2.5 rounded-lg border border-[#FDE68A] bg-warning-bg">
               <Info size={13} color="#D97706" className="shrink-0 mt-0.5" />
-              <p className="text-[12px] text-[#92400E]">Documentation only — excluded from cost rollups.</p>
+              <p className="text-sm text-[#92400E]">Documentation only — excluded from cost rollups.</p>
             </div>
           )}
 
@@ -440,7 +434,7 @@ function DetailPanel({
               <DrawerSectionLabel>Design Intent</DrawerSectionLabel>
               <div className="flex items-start gap-2.5">
                 <div className="w-0.5 self-stretch rounded-full shrink-0 mt-0.5" style={{ background: subsystemColor.dot }} />
-                <p className="text-[12px] text-[#1E293B] leading-relaxed">{model.engineeringNote.designIntent}</p>
+                <p className="text-sm text-text-body leading-relaxed">{model.engineeringNote.designIntent}</p>
               </div>
             </div>
           )}
@@ -450,19 +444,19 @@ function DetailPanel({
             <div>
               <DrawerSectionLabel>Manufacturing</DrawerSectionLabel>
               <div className="grid grid-cols-2 gap-2">
-                <div className="rounded-lg border border-[#E2E8F0] p-2.5">
+                <div className="rounded-lg border border-border p-2.5">
                   <div className="flex items-center gap-1 mb-1">
                     <Gem size={10} color="#94A3B8" />
-                    <span className="text-[10px] text-[#94A3B8] uppercase tracking-wider" style={{ fontWeight: 500 }}>Material</span>
+                    <span className="text-2xs text-text-subtle uppercase tracking-wider font-medium">Material</span>
                   </div>
-                  <p className="text-[11px] text-[#1E293B]" style={{ fontWeight: 600, fontFamily: "'IBM Plex Mono', monospace" }}>{model.engineeringNote.material}</p>
+                  <p className="text-xs text-text-body font-semibold font-mono">{model.engineeringNote.material}</p>
                 </div>
-                <div className="rounded-lg border border-[#E2E8F0] p-2.5">
+                <div className="rounded-lg border border-border p-2.5">
                   <div className="flex items-center gap-1 mb-1">
                     <Wrench size={10} color="#94A3B8" />
-                    <span className="text-[10px] text-[#94A3B8] uppercase tracking-wider" style={{ fontWeight: 500 }}>Process</span>
+                    <span className="text-2xs text-text-subtle uppercase tracking-wider font-medium">Process</span>
                   </div>
-                  <p className="text-[11px] text-[#1E293B] leading-snug" style={{ fontWeight: 500 }}>{model.engineeringNote.manufacturingProcess}</p>
+                  <p className="text-xs text-text-body font-medium leading-snug">{model.engineeringNote.manufacturingProcess}</p>
                 </div>
               </div>
             </div>
@@ -481,21 +475,21 @@ function DetailPanel({
                 onClear={() => clearCostOverride(part.partNumber)}
               />
               {hasProjectedSaving && (
-                <div className="rounded-lg border border-[#BBF7D0] px-3 py-2.5 mt-2" style={{ background: "#F0FDF4" }}>
+                <div className="rounded-lg border border-success-border bg-success-bg px-3 py-2.5 mt-2">
                   <div className="flex items-center gap-1.5 mb-1">
                     <TrendingDown size={11} color="#10B981" />
-                    <p className="text-[10px] uppercase tracking-wider text-[#16A34A]" style={{ fontWeight: 500 }}>Projected w/ interventions</p>
+                    <p className="text-2xs uppercase tracking-wider text-success font-medium">Projected w/ interventions</p>
                   </div>
-                  <p className="text-[16px] text-[#059669] leading-none" style={{ fontWeight: 700, fontFamily: "'IBM Plex Mono', monospace" }}>
+                  <p className="text-[16px] text-success-strong font-bold font-mono leading-none">
                     {fmtCurrency(model.unitCostProjected!)}
-                    <span className="ml-2 text-[11px]" style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontWeight: 500 }}>
+                    <span className="ml-2 text-xs font-medium">
                       saves {fmtSavingsDelta(model.unitCostEffective!, model.unitCostProjected!)}
                     </span>
                   </p>
                 </div>
               )}
               {model.costNotes && (
-                <p className="text-[11px] text-[#94A3B8] leading-relaxed mt-2">{model.costNotes}</p>
+                <p className="text-xs text-text-subtle leading-relaxed mt-2">{model.costNotes}</p>
               )}
             </div>
           )}
@@ -508,11 +502,10 @@ function DetailPanel({
                 {model.engineeringNote.costDrivers.map((d) => (
                   <div
                     key={d}
-                    className="flex items-center gap-2 px-2.5 py-2 rounded-lg border border-[#FDE68A]"
-                    style={{ background: "#FFFBEB" }}
+                    className="flex items-center gap-2 px-2.5 py-2 rounded-lg border border-warning-border bg-warning-bg"
                   >
                     <AlertTriangle size={11} color="#D97706" className="shrink-0" />
-                    <span className="text-[11px] text-[#92400E]" style={{ fontWeight: 500 }}>{d}</span>
+                    <span className="text-xs text-[#92400E] font-medium">{d}</span>
                   </div>
                 ))}
               </div>
@@ -556,36 +549,34 @@ function DetailPanel({
               {dfmFeedback && (
                 <div>
                   <DrawerSectionLabel>DFM Opportunities</DrawerSectionLabel>
-                  <div className="rounded-lg border border-[#E2E8F0] p-3 flex flex-col gap-2.5">
+                  <div className="rounded-lg border border-border p-3 flex flex-col gap-2.5">
                     <div>
-                      <p className="text-[10px] text-[#94A3B8] mb-0.5" style={{ fontWeight: 500 }}>Signal</p>
-                      <p className="text-[12px] text-[#1E293B]" style={{ fontWeight: 500 }}>{dfmFeedback.geometrySignal ?? dfmFeedback.geometryIssues[0] ?? "See Part Analysis for details"}</p>
+                      <p className="text-2xs text-text-subtle font-medium mb-0.5">Signal</p>
+                      <p className="text-sm text-text-body font-medium">{dfmFeedback.geometrySignal ?? dfmFeedback.geometryIssues[0] ?? "See Part Analysis for details"}</p>
                     </div>
                     <div>
-                      <p className="text-[10px] text-[#94A3B8] mb-0.5" style={{ fontWeight: 500 }}>Recommendation</p>
-                      <p className="text-[12px] text-[#1E293B]" style={{ fontWeight: 500 }}>{dfmFeedback.primaryRecommendation ?? dfmFeedback.recommendations[0] ?? "—"}</p>
+                      <p className="text-2xs text-text-subtle font-medium mb-0.5">Recommendation</p>
+                      <p className="text-sm text-text-body font-medium">{dfmFeedback.primaryRecommendation ?? dfmFeedback.recommendations[0] ?? "—"}</p>
                     </div>
                     <div className="flex items-center gap-2 pt-1.5 border-t border-[#F1F5F9]">
                       <span
-                        className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded border text-[10px]"
+                        className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded border text-2xs font-semibold"
                         style={{
                           background:   dfmFeedback.riskLevel === "High" ? "#FFF1F2" : dfmFeedback.riskLevel === "Medium" ? "#FFFBEB" : "#F0FDF4",
                           color:        dfmFeedback.riskLevel === "High" ? "#E11D48" : dfmFeedback.riskLevel === "Medium" ? "#D97706" : "#059669",
                           borderColor:  dfmFeedback.riskLevel === "High" ? "#FECDD3" : dfmFeedback.riskLevel === "Medium" ? "#FDE68A" : "#BBF7D0",
-                          fontWeight: 600,
                         }}
                       >
                         {dfmFeedback.riskLevel} risk
                       </span>
                       {dfmFeedback.iterationGain && (
-                        <span className="text-[11px] text-[#64748B]">{dfmFeedback.iterationGain}</span>
+                        <span className="text-xs text-text-muted">{dfmFeedback.iterationGain}</span>
                       )}
                     </div>
                     {/* CTA: open this part in the DFM workspace */}
                     <button
                       onClick={() => navigate(`/dfm-opportunities?part=${part.partNumber}&process=${encodeURIComponent(dfmFeedback.process)}`)}
-                      className="w-full flex items-center justify-between px-3 py-2 rounded-lg border border-indigo-200 bg-indigo-50 text-indigo-700 text-[11px] hover:bg-indigo-100 hover:border-indigo-300 transition-colors group"
-                      style={{ fontWeight: 500 }}
+                      className="w-full flex items-center justify-between px-3 py-2 rounded-lg border border-indigo-200 bg-indigo-50 text-indigo-700 text-xs font-medium hover:bg-indigo-100 hover:border-indigo-300 transition-colors group"
                     >
                       <div className="flex items-center gap-1.5">
                         <Microscope size={11} className="shrink-0" />
@@ -601,18 +592,18 @@ function DetailPanel({
               {simplification && (
                 <div>
                   <DrawerSectionLabel>Iteration Simplification</DrawerSectionLabel>
-                  <div className="rounded-lg border border-[#E2E8F0] p-3 flex flex-col gap-2.5">
+                  <div className="rounded-lg border border-border p-3 flex flex-col gap-2.5">
                     <div>
-                      <p className="text-[10px] text-[#94A3B8] mb-0.5" style={{ fontWeight: 500 }}>Friction</p>
-                      <p className="text-[12px] text-[#1E293B]" style={{ fontWeight: 500 }}>{simplification.primaryIterationFriction}</p>
+                      <p className="text-2xs text-text-subtle font-medium mb-0.5">Friction</p>
+                      <p className="text-sm text-text-body font-medium">{simplification.primaryIterationFriction}</p>
                     </div>
                     <div>
-                      <p className="text-[10px] text-[#94A3B8] mb-0.5" style={{ fontWeight: 500 }}>Simplification path</p>
-                      <p className="text-[12px] text-[#1E293B]" style={{ fontWeight: 500 }}>{simplification.simplificationPath}</p>
+                      <p className="text-2xs text-text-subtle font-medium mb-0.5">Simplification path</p>
+                      <p className="text-sm text-text-body font-medium">{simplification.simplificationPath}</p>
                     </div>
-                    <div className="flex items-center gap-1.5 pt-1.5 border-t border-[#F1F5F9]">
+                    <div className="flex items-center gap-1.5 pt-1.5 border-t border-surface-subtle">
                       <Clock size={11} color="#059669" />
-                      <span className="text-[11px] text-[#059669]" style={{ fontWeight: 600 }}>
+                      <span className="text-xs text-success-strong font-semibold">
                         saves ~{simplification.leadTimeSavingsDays}d lead time
                       </span>
                     </div>
@@ -640,17 +631,17 @@ function DetailPanel({
                         >
                           <div className="flex items-center gap-1.5 mb-1.5">
                             <span
-                              className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded border text-[10px]"
-                              style={{ background: "white", color: sc.text, borderColor: sc.border, fontWeight: 600 }}
+                              className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded border text-2xs font-semibold"
+                              style={{ background: "white", color: sc.text, borderColor: sc.border }}
                             >
                               <span className="w-1.5 h-1.5 rounded-full" style={{ background: sc.dot }} />
                               {sig.severity}
                             </span>
-                            <span className="text-[10px] text-[#94A3B8]" style={{ fontWeight: 500 }}>{sig.category}</span>
+                            <span className="text-2xs text-text-subtle font-medium">{sig.category}</span>
                           </div>
-                          <p className="text-[11px] text-[#1E293B] leading-snug mb-1.5" style={{ fontWeight: 500 }}>{sig.signal}</p>
-                          <p className="text-[10px] text-[#64748B] leading-snug">
-                            <span style={{ fontWeight: 600 }}>Mitigation: </span>{sig.mitigation}
+                          <p className="text-xs text-text-body font-medium leading-snug mb-1.5">{sig.signal}</p>
+                          <p className="text-2xs text-text-muted leading-snug">
+                            <span className="font-semibold">Mitigation: </span>{sig.mitigation}
                           </p>
                         </div>
                       );
@@ -665,7 +656,7 @@ function DetailPanel({
       </div>
 
       {/* ── CTA footer ── */}
-      <div className="shrink-0 px-5 py-4 border-t border-[#E2E8F0] flex flex-col gap-2" style={{ background: "#FAFBFD" }}>
+      <div className="shrink-0 px-5 py-4 border-t border-border flex flex-col gap-2 bg-surface-raised">
         {/* Intervention opportunity — production mode only */}
         {(() => {
           const intervention = !protoMode
@@ -681,10 +672,10 @@ function DetailPanel({
               <div className="flex items-center gap-2 min-w-0">
                 <TrendingDown size={12} color="#16A34A" className="shrink-0" />
                 <div className="text-left min-w-0">
-                  <p className="text-[11px] text-[#065F46] leading-none" style={{ fontWeight: 600 }}>
+                  <p className="text-xs text-[#065F46] font-semibold leading-none">
                     {intervention.recommendedIntervention}
                   </p>
-                  <p className="text-[10px] text-[#16A34A] mt-0.5">
+                  <p className="text-2xs text-success mt-0.5">
                     {intervention.estimatedSavings} savings · Rank #{intervention.rank}
                   </p>
                 </div>
@@ -697,20 +688,20 @@ function DetailPanel({
         {hasAnalysisPage ? (
           <button
             onClick={() => navigate(`/part/${part.partNumber}`)}
-            className="w-full flex items-start justify-between px-4 py-3 rounded-xl bg-[#1B3A5C] text-white hover:bg-[#162F4A] transition-colors group"
+            className="w-full flex items-start justify-between px-4 py-3 rounded-xl bg-brand-800 text-white hover:bg-brand-900 transition-colors group"
           >
             <div className="text-left">
-              <p className="text-[13px] text-white" style={{ fontWeight: 600 }}>Open full part analysis</p>
-              <p className="text-[11px] mt-0.5" style={{ color: "rgba(255,255,255,0.5)" }}>Design intent · manufacturing · cost drivers</p>
+              <p className="text-base text-white font-semibold">Open full part analysis</p>
+              <p className="text-xs mt-0.5" style={{ color: "rgba(255,255,255,0.5)" }}>Design intent · manufacturing · cost drivers</p>
             </div>
             <ArrowUpRight size={14} className="shrink-0 mt-0.5 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform" />
           </button>
         ) : (
-          <div className="w-full flex items-start gap-2.5 px-3 py-2.5 rounded-xl border border-[#E2E8F0]" style={{ background: "white" }}>
-            <Info size={12} className="text-[#CBD5E1] shrink-0 mt-0.5" />
+          <div className="w-full flex items-start gap-2.5 px-3 py-2.5 rounded-xl border border-border bg-surface-card">
+            <Info size={12} className="text-text-ghost shrink-0 mt-0.5" />
             <div>
-              <p className="text-[11px] text-[#64748B]" style={{ fontWeight: 500 }}>Deep dive not yet available</p>
-              <p className="text-[10px] text-[#94A3B8] mt-0.5">Full analysis available for custom-manufactured parts only.</p>
+              <p className="text-xs text-text-muted font-medium">Deep dive not yet available</p>
+              <p className="text-2xs text-text-subtle mt-0.5">Full analysis available for custom-manufactured parts only.</p>
             </div>
           </div>
         )}
@@ -788,7 +779,7 @@ function GroupRows({
             animate={{ opacity: 1 }}
             transition={{ duration: 0.15, delay: idx * 0.01 }}
             onClick={() => onSelect(isSelected ? null : part.bomLineId)}
-            className="cursor-pointer transition-colors group"
+            className={`cursor-pointer transition-colors group bom-row${isSelected ? " bom-row--selected" : ""}${isCriticalPath ? " bom-row--critical" : ""}${isOverdue && !isCriticalPath ? " bom-row--overdue" : ""}`}
             style={{
               background: isSelected ? "#EFF6FF" : isCriticalPath ? "#FFF8F8" : isOverdue ? "#FFF8F8" : isEven ? "#FFFFFF" : "#FAFBFD",
               borderBottom: "1px solid #F1F5F9",
@@ -802,7 +793,7 @@ function GroupRows({
             }}
           >
             {/* Select checkbox */}
-            <td className="px-2 py-2.5" onClick={(e) => e.stopPropagation()}>
+            <td className="px-2 py-3" onClick={(e) => e.stopPropagation()}>
               <button
                 onClick={() => onTogglePartSelect(part.partNumber)}
                 className="flex items-center justify-center w-full"
@@ -814,54 +805,51 @@ function GroupRows({
               </button>
             </td>
             {/* # */}
-            <td className="px-3 py-2.5">
-              <span className="text-[10px] text-[#CBD5E1]" style={{ fontFamily: "'IBM Plex Mono', monospace" }}>{part.bomLineId}</span>
+            <td className="px-3 py-3">
+              <span className="text-2xs text-text-ghost font-mono">{part.bomLineId}</span>
             </td>
             {/* Part — combined name + part number */}
-            <td className="px-3 py-2.5">
+            <td className="px-3 py-3">
               <span
-                className="text-[13px] text-[#1E293B] leading-snug"
-                style={{ fontWeight: 500, display: "block" }}
+                className="text-base text-text-body font-medium leading-snug block"
               >
                 {part.name}
               </span>
               <span
-                className="text-[11px] text-[#94A3B8] mt-0.5"
-                style={{ fontFamily: "'IBM Plex Mono', monospace", display: "block" }}
+                className="font-mono text-xs text-text-subtle mt-0.5 block"
               >
                 {part.partNumber}
               </span>
             </td>
             {/* Category */}
-            <td className="px-3 py-2.5">
-              <span className="text-[10px] text-[#64748B] leading-snug" style={{ display: "block" }}>
+            <td className="px-3 py-3">
+              <span className="text-2xs text-text-muted leading-snug block">
                 {part.itemCategory.replace("COTS, Standard Hardware", "COTS/OTS")}
               </span>
             </td>
             {/* Material */}
-            <td className="px-3 py-2.5">
+            <td className="px-3 py-3">
               {PRODUCTION_ENGINEERING_NOTES[part.partNumber]?.material ? (
                 <span
-                  className="text-[10px] text-[#475569] leading-snug"
-                  style={{ fontFamily: "'IBM Plex Mono', monospace", display: "block" }}
+                  className="font-mono text-2xs text-text-secondary leading-snug block"
                 >
                   {PRODUCTION_ENGINEERING_NOTES[part.partNumber]!.material}
                 </span>
               ) : (
-                <span className="text-[11px] text-[#CBD5E1]">—</span>
+                <span className="text-xs text-text-ghost">—</span>
               )}
             </td>
             {/* Qty */}
-            <td className="px-3 py-2.5">
-              <span className="text-[12px] text-[#1E293B]" style={{ fontWeight: 600, fontFamily: "'IBM Plex Mono', monospace" }}>{part.qty}</span>
+            <td className="px-3 py-3">
+              <span className="font-mono font-semibold text-sm text-text-body">{part.qty}</span>
             </td>
             {/* Make/Buy */}
-            <td className="px-3 py-2.5">
+            <td className="px-3 py-3">
               <MakeBuyBadge value={part.makeBuy} />
             </td>
             {/* Lead Time — prototype mode only */}
             {protoMode && (
-              <td className="px-3 py-2.5">
+              <td className="px-3 py-3">
                 {leadTimeDays != null ? (
                   <div className="flex items-center gap-1">
                     <Clock
@@ -871,24 +859,22 @@ function GroupRows({
                       }}
                     />
                     <span
-                      className="text-[12px]"
+                      className="font-mono font-semibold text-sm"
                       style={{
-                        fontFamily: "'IBM Plex Mono', monospace",
-                        fontWeight: 600,
                         color: leadTimeDays >= 21 ? "#E11D48" : leadTimeDays >= 14 ? "#D97706" : "#059669",
                       }}
                     >
                       {leadTimeDays}d
                     </span>
                   </div>
-                ) : (
-                  <span className="text-[12px] text-[#CBD5E1]">—</span>
+                  ) : (
+                  <span className="text-sm text-text-ghost">—</span>
                 )}
               </td>
             )}
             {/* Order By — prototype mode only */}
             {protoMode && (
-              <td className="px-3 py-2.5">
+              <td className="px-3 py-3">
                 {orderBy ? (
                   <div className="flex flex-col gap-0.5">
                     <div className="flex items-center gap-1">
@@ -897,10 +883,8 @@ function GroupRows({
                         style={{ color: isOverdue ? "#E11D48" : orderBy.daysUntilDeadline <= 3 ? "#D97706" : "#94A3B8" }}
                       />
                       <span
-                        className="text-[11px]"
+                        className="font-mono font-semibold text-xs"
                         style={{
-                          fontFamily: "'IBM Plex Mono', monospace",
-                          fontWeight: 600,
                           color: isOverdue ? "#E11D48" : orderBy.daysUntilDeadline <= 3 ? "#D97706" : "#475569",
                         }}
                       >
@@ -908,11 +892,10 @@ function GroupRows({
                       </span>
                     </div>
                     <span
-                      className="text-[10px]"
+                      className="text-2xs"
                       style={{
                         color: isOverdue ? "#E11D48" : orderBy.daysUntilDeadline <= 3 ? "#D97706" : "#94A3B8",
                         fontWeight: isOverdue || orderBy.daysUntilDeadline <= 3 ? 600 : 400,
-                        fontFamily: "'IBM Plex Sans', sans-serif",
                       }}
                     >
                       {isOverdue
@@ -923,7 +906,7 @@ function GroupRows({
                     </span>
                   </div>
                 ) : (
-                  <span className="text-[12px] text-[#CBD5E1]">—</span>
+                  <span className="text-sm text-text-ghost">—</span>
                 )}
               </td>
             )}
@@ -932,10 +915,10 @@ function GroupRows({
               const level = getDFMLevelFromFeedback(buildPartAnalysisModel(part.partNumber).dfmFeedback);
               const s     = DFM_INDICATOR[level];
               return (
-                <td className="px-2 py-2.5" title={s.title}>
+                <td className="px-2 py-3" title={s.title}>
                   <div className="flex items-center justify-center">
                     {level === "none" ? (
-                      <span className="text-[10px] text-[#CBD5E1]">—</span>
+                      <span className="text-2xs text-text-ghost">—</span>
                     ) : (
                       <div
                         className="w-5 h-5 rounded-full flex items-center justify-center"
@@ -957,10 +940,10 @@ function GroupRows({
               const level = getProdReadinessLevel(part.partNumber);
               const s     = PROD_READINESS_INDICATOR[level];
               return (
-                <td className="px-2 py-2.5" title={s.title}>
+                <td className="px-2 py-3" title={s.title}>
                   <div className="flex items-center justify-center">
                     {level === "none" ? (
-                      <span className="text-[10px] text-[#CBD5E1]">—</span>
+                      <span className="text-2xs text-text-ghost">—</span>
                     ) : (
                       <div
                         className="w-5 h-5 rounded-full flex items-center justify-center"
@@ -978,36 +961,36 @@ function GroupRows({
               );
             })()}
             {/* Unit Cost */}
-            <td className="px-3 py-2.5">
+            <td className="px-3 py-3">
               {isExcluded ? (
-                <span className="text-[11px] text-[#CBD5E1] italic">—</span>
+                <span className="text-xs text-text-ghost italic">—</span>
               ) : unitCost != null ? (
                 <span
-                  className="text-[12px]"
-                  style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 500, color: isOverridden ? "#1D4ED8" : "#1E293B" }}
+                  className="font-mono font-medium text-sm"
+                  style={{ color: isOverridden ? "#1D4ED8" : "#1E293B" }}
                 >
                   {fmtCurrency(unitCost)}
                   {isOverridden && <span className="ml-1 text-[9px] text-[#3B82F6]">✎</span>}
                 </span>
               ) : (
-                <span className="text-[12px] text-[#CBD5E1]">—</span>
+                <span className="text-sm text-text-ghost">—</span>
               )}
             </td>
             {/* Ext. Cost */}
-            <td className="px-3 py-2.5">
+            <td className="px-3 py-3">
               {extCost != null ? (
-                <span className="text-[12px] text-[#059669]" style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 600 }}>
+                <span className="font-mono font-semibold text-sm text-success">
                   {fmtCurrency(extCost)}
                 </span>
               ) : (
-                <span className="text-[12px] text-[#CBD5E1]">—</span>
+                <span className="text-sm text-text-ghost">—</span>
               )}
             </td>
             {/* Expand chevron */}
-            <td className="px-2 py-2.5">
+            <td className="px-2 py-3">
               <ChevronRight
                 size={13}
-                className="text-[#CBD5E1] group-hover:text-[#94A3B8] transition-colors"
+                className="text-text-ghost group-hover:text-text-subtle transition-colors"
                 style={isSelected ? { color: "#2563EB" } : {}}
               />
             </td>
@@ -1153,26 +1136,25 @@ export function BOMAnalysis() {
   const topHardBlocker    = PROTOTYPE_ASSEMBLY.blockers.find((b) => b.isHardBlocker) ?? null;
 
   return (
-    <div className="flex h-full overflow-hidden" style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}>
+    <div className="flex h-full overflow-hidden">
 
       {/* ── Main area ── */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
 
         {/* Header */}
-        <div className="px-6 pt-5 pb-4 shrink-0 border-b border-[#E2E8F0]">
+        <div className="px-6 pt-6 pb-5 shrink-0 border-b border-[#E2E8F0]">
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-[#0F2035]" style={{ fontWeight: 700 }}>BOM Analysis</h1>
-              <p className="text-[12px] text-[#94A3B8] mt-0.5">
-                {TOTAL_BOM_PARTS} parts · Assembly 845-000112 · Click a row to inspect · open the panel CTA to deep dive
+              <h1 className="text-xl text-text-primary font-bold tracking-tight">BOM Analysis</h1>
+              <p className="text-sm text-text-subtle mt-0.5">
+                {TOTAL_BOM_PARTS} parts · Assembly 845-000112
               </p>
             </div>
             <div className="flex items-center gap-2 shrink-0">
               {!protoMode && (
                 <button
                   onClick={() => navigate("/cost-interventions")}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#E2E8F0] text-[12px] text-[#64748B] hover:border-[#1B3A5C]/30 hover:bg-[#EFF4FA] hover:text-[#1B3A5C] transition-colors"
-                  style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontWeight: 500 }}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border text-sm text-text-muted hover:border-[#1B3A5C]/30 hover:bg-[#EFF4FA] hover:text-[#1B3A5C] transition-colors font-medium"
                 >
                   <TrendingDown size={12} />
                   Cost Interventions
@@ -1181,62 +1163,54 @@ export function BOMAnalysis() {
               {protoMode && (
                 <button
                   onClick={() => navigate("/dfm-opportunities")}
-                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-[#E2E8F0] text-[12px] text-[#64748B] hover:border-indigo-300 hover:bg-indigo-50 hover:text-indigo-700 transition-colors"
-                  style={{ fontFamily: "'IBM Plex Sans', sans-serif", fontWeight: 500 }}
+                  className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border text-sm text-text-muted hover:border-indigo-300 hover:bg-indigo-50 hover:text-indigo-700 transition-colors font-medium"
                 >
                   <Microscope size={12} />
                   DFM Workspace
                 </button>
               )}
-              <div
-                className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-[#E2E8F0]"
-                style={{ background: "#F8FAFC" }}
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-[#10B981]" />
-                <span className="text-[11px] text-[#64748B]" style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 500 }}>845-000112</span>
-              </div>
             </div>
           </div>
         </div>
 
         {/* Missing costs banner */}
         {hasMissingCosts && (
-          <div className="mx-6 mt-4 shrink-0 flex items-center gap-2.5 px-4 py-3 rounded-lg border border-[#FDE68A]" style={{ background: "#FFFBEB" }}>
+          <div className="mx-6 mt-4 shrink-0 flex items-center gap-2.5 px-4 py-3 rounded-lg border border-[#FDE68A] bg-warning-bg">
             <AlertTriangle size={14} color="#D97706" className="shrink-0" />
-            <p className="text-[12px] text-[#92400E]">Some unit costs are missing — click any row and edit inline to add estimates.</p>
+            <p className="text-sm text-[#92400E]">Some unit costs are missing — click any row and edit inline to add estimates.</p>
           </div>
         )}
 
         {/* ── Hero summary ── */}
-        <div className="px-6 pt-5 pb-4 shrink-0">
-          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-4">
+        <div className="px-6 pt-6 pb-5 shrink-0">
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-5">
 
             {/* 1. Parts Overview — shared composite card */}
-            <div className="bg-white rounded-xl border border-[#E2E8F0] p-4 flex flex-col">
+            <div className="bg-surface-card rounded-xl border border-border p-5 flex flex-col">
               <div className="flex items-center justify-between mb-3">
-                <p className="text-[10px] uppercase tracking-wider text-[#94A3B8]" style={{ fontWeight: 600, letterSpacing: "0.08em" }}>Assembly Parts</p>
-                <Package size={13} className="text-[#CBD5E1]" />
+                <p className="text-2xs uppercase tracking-widest text-text-subtle font-semibold">Assembly Parts</p>
+                <Package size={13} className="text-text-ghost" />
               </div>
               <div className="flex-1">
-                <p className="text-[30px] leading-none text-[#0F2035]" style={{ fontWeight: 700, fontFamily: "'IBM Plex Mono', monospace" }}>
+                <p className="text-[30px] leading-none text-text-primary font-mono font-bold">
                   {TOTAL_BOM_PARTS}
                 </p>
-                <p className="text-[11px] text-[#94A3B8] mt-1">line items · 845-000112</p>
+                <p className="text-xs text-text-subtle mt-1">line items · 845-000112</p>
               </div>
-              <div className="mt-3 pt-3 border-t border-[#F1F5F9] flex flex-col gap-2">
+              <div className="mt-3 pt-3 border-t border-surface-subtle flex flex-col gap-2">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-1.5">
                     <Hammer size={11} color="#2B6CB0" />
-                    <span className="text-[12px] text-[#64748B]" style={{ fontWeight: 500 }}>Make</span>
+                    <span className="text-sm text-text-muted font-medium">Make</span>
                   </div>
-                  <span className="text-[12px] text-[#1B3A5C]" style={{ fontWeight: 700, fontFamily: "'IBM Plex Mono', monospace" }}>{makeParts}</span>
+                  <span className="text-sm text-brand-800 font-mono font-bold">{makeParts}</span>
                 </div>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-1.5">
                     <ShoppingCart size={11} color="#059669" />
-                    <span className="text-[12px] text-[#64748B]" style={{ fontWeight: 500 }}>Buy / OTS</span>
+                    <span className="text-sm text-text-muted font-medium">Buy / OTS</span>
                   </div>
-                  <span className="text-[12px] text-[#059669]" style={{ fontWeight: 700, fontFamily: "'IBM Plex Mono', monospace" }}>{buyParts}</span>
+                  <span className="text-sm text-success-strong font-mono font-bold">{buyParts}</span>
                 </div>
               </div>
             </div>
@@ -1245,100 +1219,98 @@ export function BOMAnalysis() {
             {protoMode ? (
               <>
                 {/* Next Build Target */}
-                <div className="bg-white rounded-xl border border-[#E2E8F0] p-4 flex flex-col">
+                <div className="bg-surface-card rounded-xl border border-border p-5 flex flex-col">
                   <div className="flex items-center justify-between mb-3">
-                    <p className="text-[10px] uppercase tracking-wider text-[#94A3B8]" style={{ fontWeight: 600, letterSpacing: "0.08em" }}>Next Build Target</p>
-                    <Calendar size={13} className="text-[#CBD5E1]" />
+                    <p className="text-2xs uppercase tracking-widest text-text-subtle font-semibold">Next Build Target</p>
+                    <Calendar size={13} className="text-text-ghost" />
                   </div>
                   <div className="flex-1">
                     {effectiveBuildTarget ? (
                       <>
-                        <p className="text-[26px] leading-none text-[#0F2035]" style={{ fontWeight: 700, fontFamily: "'IBM Plex Mono', monospace" }}>
+                        <p className="text-[26px] leading-none text-text-primary font-mono font-bold">
                           {new Date(effectiveBuildTarget + "T00:00:00").toLocaleDateString("en-US", { month: "short", day: "numeric" })}
                         </p>
-                        <p className="text-[11px] text-[#94A3B8] mt-1">
+                        <p className="text-xs text-text-subtle mt-1">
                           {new Date(effectiveBuildTarget + "T00:00:00").getFullYear()}
                         </p>
                       </>
                     ) : (
                       <>
-                        <p className="text-[26px] leading-none text-[#CBD5E1]" style={{ fontWeight: 700, fontFamily: "'IBM Plex Mono', monospace" }}>—</p>
-                        <p className="text-[11px] text-[#94A3B8] mt-1">not set</p>
+                        <p className="text-[26px] leading-none text-text-ghost font-mono font-bold">—</p>
+                        <p className="text-xs text-text-subtle mt-1">not set</p>
                       </>
                     )}
                   </div>
-                  <div className="mt-3 pt-3 border-t border-[#F1F5F9]">
+                  <div className="mt-3 pt-3 border-t border-surface-subtle">
                     {daysToTarget != null ? (
                       <span
-                        className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[11px] border"
+                        className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-xs font-semibold border"
                         style={{
                           background:  daysToTarget < 0 ? "#FFF1F2" : daysToTarget <= 7 ? "#FFFBEB" : "#F0FDF4",
                           color:       daysToTarget < 0 ? "#E11D48" : daysToTarget <= 7 ? "#92400E" : "#065F46",
                           borderColor: daysToTarget < 0 ? "#FECDD3" : daysToTarget <= 7 ? "#FDE68A" : "#BBF7D0",
-                          fontWeight: 600,
-                          fontFamily: "'IBM Plex Sans', sans-serif",
                         }}
                       >
                         <Clock size={10} />
                         {daysToTarget < 0 ? `${Math.abs(daysToTarget)}d past` : daysToTarget === 0 ? "today" : `${daysToTarget}d away`}
                       </span>
                     ) : (
-                      <span className="text-[11px] text-[#94A3B8]">No target date set</span>
+                      <span className="text-xs text-text-subtle">No target date set</span>
                     )}
                   </div>
                 </div>
 
                 {/* Build Cost */}
-                <div className="bg-white rounded-xl border border-[#E2E8F0] p-4 flex flex-col">
+                <div className="bg-surface-card rounded-xl border border-border p-5 flex flex-col">
                   <div className="flex items-center justify-between mb-3">
-                    <p className="text-[10px] uppercase tracking-wider text-[#94A3B8]" style={{ fontWeight: 600, letterSpacing: "0.08em" }}>Build Cost</p>
-                    <DollarSign size={13} className="text-[#CBD5E1]" />
+                    <p className="text-2xs uppercase tracking-widest text-text-subtle font-semibold">Build Cost</p>
+                    <DollarSign size={13} className="text-text-ghost" />
                   </div>
                   <div className="flex-1">
-                    <p className="text-[26px] leading-none text-[#0F2035]" style={{ fontWeight: 700, fontFamily: "'IBM Plex Mono', monospace" }}>
+                    <p className="text-[26px] leading-none text-text-primary font-mono font-bold">
                       {fmtCurrency(currentBomCost * buildQuantity)}
                     </p>
-                    <p className="text-[11px] text-[#94A3B8] mt-1">
+                    <p className="text-xs text-text-subtle mt-1">
                       {buildQuantity} unit{buildQuantity !== 1 ? "s" : ""} · prototype build
                     </p>
                   </div>
-                  <div className="mt-3 pt-3 border-t border-[#F1F5F9] flex flex-col gap-1.5">
+                  <div className="mt-3 pt-3 border-t border-surface-subtle flex flex-col gap-1.5">
                     <div className="flex items-center justify-between">
-                      <span className="text-[11px] text-[#94A3B8]">Unit cost</span>
-                      <span className="text-[11px] text-[#1E293B]" style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 600 }}>{fmtCurrency(currentBomCost)}</span>
+                      <span className="text-xs text-text-subtle">Unit cost</span>
+                      <span className="text-xs text-text-body font-mono font-semibold">{fmtCurrency(currentBomCost)}</span>
                     </div>
                     <div className="flex items-center justify-between">
-                      <span className="text-[11px] text-[#94A3B8]">Qty</span>
-                      <span className="text-[11px] text-[#1E293B]" style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 600 }}>× {buildQuantity}</span>
+                      <span className="text-xs text-text-subtle">Qty</span>
+                      <span className="text-xs text-text-body font-mono font-semibold">× {buildQuantity}</span>
                     </div>
                   </div>
                 </div>
 
                 {/* Order Overdue */}
                 <div
-                  className="rounded-xl border p-4 flex flex-col"
+                  className="rounded-xl border p-5 flex flex-col"
                   style={{ background: overdueCount > 0 ? "#FFF8F8" : "white", borderColor: overdueCount > 0 ? "#FECDD3" : "#E2E8F0" }}
                 >
                   <div className="flex items-center justify-between mb-3">
-                    <p className="text-[10px] uppercase tracking-wider text-[#94A3B8]" style={{ fontWeight: 600, letterSpacing: "0.08em" }}>Order Overdue</p>
+                    <p className="text-2xs uppercase tracking-widest text-text-subtle font-semibold">Order Overdue</p>
                     <Clock size={13} color={overdueCount > 0 ? "#E11D48" : "#CBD5E1"} />
                   </div>
                   <div className="flex-1">
                     <p
-                      className="text-[30px] leading-none"
-                      style={{ fontWeight: 700, fontFamily: "'IBM Plex Mono', monospace", color: overdueCount > 0 ? "#E11D48" : "#059669" }}
+                      className="text-[30px] leading-none font-mono font-bold"
+                      style={{ color: overdueCount > 0 ? "#E11D48" : "#059669" }}
                     >
                       {overdueCount}
                     </p>
-                    <p className="text-[11px] mt-1" style={{ color: overdueCount > 0 ? "#E11D48" : "#94A3B8" }}>
+                    <p className="text-xs mt-1" style={{ color: overdueCount > 0 ? "#E11D48" : "#94A3B8" }}>
                       {overdueCount > 0 ? "parts must be ordered now" : "all orders on schedule"}
                     </p>
                   </div>
                   <div className="mt-3 pt-3 border-t" style={{ borderColor: overdueCount > 0 ? "#FECDD3" : "#F1F5F9" }}>
                     <button
                       onClick={() => setFilterOverdue(true)}
-                      className="text-[11px] transition-colors hover:underline"
-                      style={{ color: overdueCount > 0 ? "#E11D48" : "#94A3B8", fontWeight: 500, fontFamily: "'IBM Plex Sans', sans-serif" }}
+                      className="text-xs font-medium transition-colors hover:underline"
+                      style={{ color: overdueCount > 0 ? "#E11D48" : "#94A3B8" }}
                     >
                       {overdueCount > 0 ? "View overdue parts →" : "No action needed"}
                     </button>
@@ -1348,22 +1320,22 @@ export function BOMAnalysis() {
             ) : (
               <>
                 {/* Current BOM Cost */}
-                <div className="bg-white rounded-xl border border-[#E2E8F0] p-4 flex flex-col">
+                <div className="bg-surface-card rounded-xl border border-border p-5 flex flex-col">
                   <div className="flex items-center justify-between mb-3">
-                    <p className="text-[10px] uppercase tracking-wider text-[#94A3B8]" style={{ fontWeight: 600, letterSpacing: "0.08em" }}>Current BOM Cost</p>
-                    <DollarSign size={13} className="text-[#CBD5E1]" />
+                    <p className="text-2xs uppercase tracking-widest text-text-subtle font-semibold">Current BOM Cost</p>
+                    <DollarSign size={13} className="text-text-ghost" />
                   </div>
                   <div className="flex-1">
-                    <p className="text-[28px] leading-none text-[#0F2035]" style={{ fontWeight: 700, fontFamily: "'IBM Plex Mono', monospace" }}>
+                    <p className="text-[28px] leading-none text-text-primary font-mono font-bold">
                       {fmtCurrency(currentBomCost)}
                     </p>
-                    <p className="text-[11px] text-[#94A3B8] mt-1">per assembly · real-time pricing</p>
+                    <p className="text-xs text-text-subtle mt-1">per assembly · real-time pricing</p>
                   </div>
                   {hasSavings && (
-                    <div className="mt-3 pt-3 border-t border-[#F1F5F9]">
+                    <div className="mt-3 pt-3 border-t border-surface-subtle">
                       <div className="flex items-center gap-1.5">
                         <TrendingDown size={11} color="#10B981" />
-                        <span className="text-[11px] text-[#64748B]" style={{ fontWeight: 500 }}>
+                        <span className="text-xs text-text-muted font-medium">
                           {fmtSavingsDelta(currentBomCost, projectedBomCost)} reducible
                         </span>
                       </div>
@@ -1373,29 +1345,29 @@ export function BOMAnalysis() {
 
                 {/* Projected BOM Cost */}
                 <div
-                  className="rounded-xl border p-4 flex flex-col"
+                  className="rounded-xl border p-5 flex flex-col"
                   style={{ background: hasSavings ? "#F0FDF4" : "white", borderColor: hasSavings ? "#BBF7D0" : "#E2E8F0" }}
                 >
                   <div className="flex items-center justify-between mb-3">
-                    <p className="text-[10px] uppercase tracking-wider text-[#94A3B8]" style={{ fontWeight: 600, letterSpacing: "0.08em" }}>Projected BOM Cost</p>
+                    <p className="text-2xs uppercase tracking-widest text-text-subtle font-semibold">Projected BOM Cost</p>
                     <TrendingDown size={13} color={hasSavings ? "#10B981" : "#CBD5E1"} />
                   </div>
                   <div className="flex-1">
                     <p
-                      className="text-[28px] leading-none"
-                      style={{ fontWeight: 700, fontFamily: "'IBM Plex Mono', monospace", color: hasSavings ? "#059669" : "#0F2035" }}
+                      className="text-[28px] leading-none font-mono font-bold"
+                      style={{ color: hasSavings ? "#059669" : "#0F2035" }}
                     >
                       {fmtCurrency(projectedBomCost)}
                     </p>
-                    <p className="text-[11px] mt-1" style={{ color: hasSavings ? "#16A34A" : "#94A3B8" }}>
+                    <p className="text-xs mt-1" style={{ color: hasSavings ? "#16A34A" : "#94A3B8" }}>
                       {hasSavings ? "if all interventions applied" : "no interventions selected"}
                     </p>
                   </div>
                   {hasSavings && (
                     <div className="mt-3 pt-3 border-t border-[#BBF7D0]">
                       <span
-                        className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-[11px] border border-[#BBF7D0]"
-                        style={{ background: "white", color: "#065F46", fontWeight: 600, fontFamily: "'IBM Plex Sans', sans-serif" }}
+                        className="inline-flex items-center gap-1.5 px-2 py-0.5 rounded-md text-xs font-semibold border border-[#BBF7D0] bg-white"
+                        style={{ color: "#065F46" }}
                       >
                         <span className="w-1.5 h-1.5 rounded-full bg-[#10B981]" />
                         saves {fmtSavingsDelta(currentBomCost, projectedBomCost)}
@@ -1405,34 +1377,33 @@ export function BOMAnalysis() {
                 </div>
 
                 {/* Annual Savings Potential */}
-                <div className="bg-white rounded-xl border border-[#E2E8F0] p-4 flex flex-col">
+                <div className="bg-surface-card rounded-xl border border-border p-5 flex flex-col">
                   <div className="flex items-center justify-between mb-3">
-                    <p className="text-[10px] uppercase tracking-wider text-[#94A3B8]" style={{ fontWeight: 600, letterSpacing: "0.08em" }}>Annual Savings Potential</p>
-                    <Gem size={13} className="text-[#CBD5E1]" />
+                    <p className="text-2xs uppercase tracking-widest text-text-subtle font-semibold">Annual Savings Potential</p>
+                    <Gem size={13} className="text-text-ghost" />
                   </div>
                   <div className="flex-1">
-                    <p className="text-[28px] leading-none text-[#059669]" style={{ fontWeight: 700, fontFamily: "'IBM Plex Mono', monospace" }}>
+                    <p className="text-[28px] leading-none text-success font-mono font-bold">
                       {fmtCurrency(fullAnnualSavingsPotential)}
                     </p>
-                    <p className="text-[11px] text-[#94A3B8] mt-1">
+                    <p className="text-xs text-text-subtle mt-1">
                       {fullAnnualSavingsPotential > 0
                         ? `${fmtCurrency(currentBomCost - fullProjectedBomCost)}/unit · ${expectedAnnualVolume.toLocaleString()} units/yr`
                         : `—/unit · ${expectedAnnualVolume.toLocaleString()} units/yr`}
                     </p>
                   </div>
                   {annualSavingsPotential > 0 && annualSavingsPotential < fullAnnualSavingsPotential && (
-                    <div className="mt-3 pt-3 border-t border-[#F1F5F9]">
-                      <p className="text-[10px] uppercase tracking-wider text-[#94A3B8] mb-1" style={{ fontWeight: 500 }}>Active selections</p>
-                      <p className="text-[13px] text-[#059669]" style={{ fontWeight: 600, fontFamily: "'IBM Plex Mono', monospace" }}>
+                    <div className="mt-3 pt-3 border-t border-surface-subtle">
+                      <p className="text-2xs uppercase tracking-wider text-text-subtle font-medium mb-1">Active selections</p>
+                      <p className="text-base text-success font-semibold font-mono">
                         {fmtCurrency(annualSavingsPotential)}
                       </p>
                     </div>
                   )}
-                  <div className="mt-3 pt-3 border-t border-[#F1F5F9]">
+                  <div className="mt-3 pt-3 border-t border-surface-subtle">
                     <button
                       onClick={() => navigate("/cost-interventions")}
-                      className="flex items-center gap-1 text-[11px] text-[#64748B] hover:text-[#1B3A5C] transition-colors"
-                      style={{ fontWeight: 500 }}
+                      className="flex items-center gap-1 text-xs text-text-muted hover:text-brand-800 font-medium transition-colors"
                     >
                       <TrendingDown size={11} />
                       {PRODUCTION_INTERVENTIONS.length} interventions available →
@@ -1446,7 +1417,7 @@ export function BOMAnalysis() {
         </div>
 
         {/* Filters */}
-        <div className="px-6 pb-4 shrink-0 flex items-center gap-3 flex-wrap">
+        <div className="px-6 pb-5 shrink-0 flex items-center gap-3 flex-wrap">
           <div className="relative flex-1 min-w-[200px] max-w-[280px]">
             <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#94A3B8]" />
             <input
@@ -1454,20 +1425,18 @@ export function BOMAnalysis() {
               placeholder="Search parts, categories…"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full h-8 pl-8 pr-3 rounded-lg border border-[#E2E8F0] bg-white text-[12px] text-[#1E293B] placeholder:text-[#CBD5E1] focus:outline-none focus:border-[#93C5FD]"
-              style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+              className="w-full h-8 pl-8 pr-3 rounded-lg border border-border bg-white text-sm text-text-body placeholder:text-text-ghost focus:outline-none focus:border-[#93C5FD] focus:ring-2 focus:ring-[#93C5FD]/20 transition-colors"
             />
           </div>
 
           {/* Subsystem filter — pill strip ≥900px, native select below */}
-          <div className="hidden min-[900px]:flex items-center gap-1 p-1 rounded-lg bg-[#F1F5F9] border border-[#E2E8F0] flex-wrap">
+          <div className="hidden min-[900px]:flex items-center gap-1 p-1 rounded-lg bg-surface-subtle border border-border flex-wrap">
             {SUBSYSTEM_OPTIONS.map((opt) => (
               <button
                 key={opt}
                 onClick={() => setSubsystemFilter(opt)}
-                className="px-2.5 py-1 rounded-md text-[11px] transition-all"
+                className="px-2.5 py-1 rounded-md text-xs font-medium transition-all hover:bg-black/[0.04] active:scale-[0.96]"
                 style={{
-                  fontFamily: "'IBM Plex Sans', sans-serif", fontWeight: 500,
                   background: subsystemFilter === opt ? "white" : "transparent",
                   color: subsystemFilter === opt ? "#0F2035" : "#64748B",
                   boxShadow: subsystemFilter === opt ? "0 1px 3px rgba(0,0,0,0.08)" : "none",
@@ -1480,8 +1449,7 @@ export function BOMAnalysis() {
           <select
             value={subsystemFilter}
             onChange={(e) => setSubsystemFilter(e.target.value)}
-            className="flex min-[900px]:hidden h-8 px-2.5 rounded-lg border border-[#E2E8F0] bg-white text-[12px] text-[#1E293B] focus:outline-none focus:border-[#93C5FD]"
-            style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+            className="flex min-[900px]:hidden h-8 px-2.5 rounded-lg border border-border bg-white text-sm text-text-body focus:outline-none focus:border-[#93C5FD]"
           >
             {SUBSYSTEM_OPTIONS.map((opt) => (
               <option key={opt} value={opt}>
@@ -1490,14 +1458,13 @@ export function BOMAnalysis() {
             ))}
           </select>
 
-          <div className="flex items-center gap-1 p-1 rounded-lg bg-[#F1F5F9] border border-[#E2E8F0]">
+          <div className="flex items-center gap-1 p-1 rounded-lg bg-surface-subtle border border-border">
             {MAKEBUY_OPTIONS.map((opt) => (
               <button
                 key={opt}
                 onClick={() => setMakeBuyFilter(opt)}
-                className="px-3 py-1 rounded-md text-[11px] transition-all"
+                className="px-3 py-1 rounded-md text-xs font-medium transition-all hover:bg-black/[0.04] active:scale-[0.96]"
                 style={{
-                  fontFamily: "'IBM Plex Sans', sans-serif", fontWeight: 500,
                   background: makeBuyFilter === opt ? "white" : "transparent",
                   color: makeBuyFilter === opt ? "#0F2035" : "#64748B",
                   boxShadow: makeBuyFilter === opt ? "0 1px 3px rgba(0,0,0,0.08)" : "none",
@@ -1517,7 +1484,7 @@ export function BOMAnalysis() {
                 setFilterCriticalPath(false);
                 setFilterOverdue(false);
               }}
-              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-[11px] text-[#94A3B8] border border-[#E2E8F0] hover:text-[#64748B] transition-colors"
+              className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs text-text-subtle border border-border hover:text-text-muted hover:border-border-strong hover:bg-surface-muted active:scale-[0.96] transition-all"
             >
               <X size={11} />
               Clear
@@ -1529,10 +1496,8 @@ export function BOMAnalysis() {
             <div className="flex items-center gap-2">
               <button
                 onClick={() => setFilterCriticalPath((v) => !v)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] border transition-all"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border transition-all active:scale-[0.96]"
                 style={{
-                  fontFamily: "'IBM Plex Sans', sans-serif",
-                  fontWeight: 500,
                   background: filterCriticalPath ? "#FFF1F2" : "white",
                   color: filterCriticalPath ? "#E11D48" : "#64748B",
                   borderColor: filterCriticalPath ? "#FECDD3" : "#E2E8F0",
@@ -1540,14 +1505,12 @@ export function BOMAnalysis() {
               >
                 <Flag size={11} />
                 Critical Path
-                {filterCriticalPath && <span className="ml-1 text-[10px] font-mono">{criticalPathCount}</span>}
+                {filterCriticalPath && <span className="ml-1 text-2xs font-mono">{criticalPathCount}</span>}
               </button>
               <button
                 onClick={() => setFilterOverdue((v) => !v)}
-                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[11px] border transition-all"
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-medium border transition-all active:scale-[0.96]"
                 style={{
-                  fontFamily: "'IBM Plex Sans', sans-serif",
-                  fontWeight: 500,
                   background: filterOverdue ? "#FFF1F2" : "white",
                   color: filterOverdue ? "#E11D48" : "#64748B",
                   borderColor: filterOverdue ? "#FECDD3" : "#E2E8F0",
@@ -1555,26 +1518,23 @@ export function BOMAnalysis() {
               >
                 <Calendar size={11} />
                 Overdue Only
-                {filterOverdue && <span className="ml-1 text-[10px] font-mono">{overdueCount}</span>}
+                {filterOverdue && <span className="ml-1 text-2xs font-mono">{overdueCount}</span>}
               </button>
             </div>
           )}
 
           {/* Prototype sort toggle */}
           {protoMode && (
-            <div className="flex items-center gap-1 p-1 rounded-lg bg-[#F1F5F9] border border-[#E2E8F0] ml-auto">
+            <div className="flex items-center gap-1 p-1 rounded-lg bg-surface-subtle border border-border ml-auto">
               {(["default", "leadTime"] as const).map((opt) => (
                 <button
                   key={opt}
                   onClick={() => setSortBy(opt)}
-                  className="flex items-center gap-1.5 px-2.5 py-1 rounded-md text-[11px] transition-all"
+                  className="flex items-center gap-1.5 px-2.5 py-1 rounded-md text-xs font-medium transition-all whitespace-nowrap hover:bg-black/[0.04] active:scale-[0.96]"
                   style={{
-                    fontFamily: "'IBM Plex Sans', sans-serif",
-                    fontWeight: 500,
                     background: sortBy === opt ? "white" : "transparent",
                     color: sortBy === opt ? "#0F2035" : "#64748B",
                     boxShadow: sortBy === opt ? "0 1px 3px rgba(0,0,0,0.08)" : "none",
-                    whiteSpace: "nowrap",
                   }}
                 >
                   {opt === "default" ? "Group by Subsystem" : "Sort: Lead Time ↓"}
@@ -1586,7 +1546,7 @@ export function BOMAnalysis() {
 
         {/* Table */}
         <div className="flex-1 px-6 pb-6 overflow-auto min-h-0">
-          <div className="bg-white rounded-xl border border-[#E2E8F0] overflow-hidden">
+          <div className="bg-surface-card rounded-xl border border-border overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full" style={{ borderCollapse: "collapse", tableLayout: "fixed" }}>
                 <colgroup>
@@ -1606,9 +1566,9 @@ export function BOMAnalysis() {
                   <col style={{ width: 32 }} />  {/* expand chevron */}
                 </colgroup>
                 <thead>
-                  <tr style={{ background: "#F8FAFC", borderBottom: "2px solid #E2E8F0" }}>
+                  <tr className="bg-surface-muted" style={{ borderBottom: "2px solid #E2E8F0" }}>
                     {/* Select-all checkbox */}
-                    <th className="px-2 py-3 w-8">
+                    <th className="px-2 py-3.5 w-8">
                       <button
                         onClick={toggleSelectAll}
                         className="flex items-center justify-center w-full"
@@ -1634,13 +1594,7 @@ export function BOMAnalysis() {
                     ].map((col) => (
                       <th
                         key={col.label}
-                        className="px-3 py-3 text-left"
-                        style={{
-                          fontFamily: "'IBM Plex Sans', sans-serif", fontSize: 10,
-                          fontWeight: 600, color: "#64748B",
-                          textTransform: "uppercase", letterSpacing: "0.06em", whiteSpace: "nowrap",
-                          overflow: "hidden",
-                        }}
+                        className="px-3 py-3.5 text-left text-2xs font-semibold text-text-muted uppercase tracking-wider whitespace-nowrap overflow-hidden"
                       >
                         {col.label}
                       </th>
@@ -1657,7 +1611,8 @@ export function BOMAnalysis() {
                         <td colSpan={protoMode ? 14 : 10} className="px-6 py-12 text-center">
                           <div className="flex flex-col items-center gap-3">
                             <Search size={22} color="#CBD5E1" />
-                            <p className="text-[13px] text-[#94A3B8]" style={{ fontWeight: 500 }}>No parts match your current filters</p>
+                            <p className="text-base text-text-subtle font-medium">No parts match your current filters</p>
+                            <p className="text-sm text-text-ghost mt-1">Try clearing a filter or broadening your search.</p>
                             <button
                               onClick={() => {
                                 setSearchQuery("");
@@ -1666,7 +1621,7 @@ export function BOMAnalysis() {
                                 setFilterCriticalPath(false);
                                 setFilterOverdue(false);
                               }}
-                              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[12px] text-[#64748B] border border-[#E2E8F0] hover:bg-[#F8FAFC] transition-colors"
+                              className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm text-text-muted border border-border hover:bg-surface-muted hover:border-border-strong active:scale-[0.97] transition-all"
                             >
                               <X size={11} />
                               Clear all filters
@@ -1697,7 +1652,8 @@ export function BOMAnalysis() {
                       <td colSpan={protoMode ? 14 : 10} className="px-6 py-12 text-center">
                         <div className="flex flex-col items-center gap-3">
                           <Search size={22} color="#CBD5E1" />
-                          <p className="text-[13px] text-[#94A3B8]" style={{ fontWeight: 500 }}>No parts match your current filters</p>
+                          <p className="text-base text-text-subtle font-medium">No parts match your current filters</p>
+                          <p className="text-sm text-text-ghost mt-1">Try clearing a filter or broadening your search.</p>
                           <button
                             onClick={() => {
                               setSearchQuery("");
@@ -1706,7 +1662,7 @@ export function BOMAnalysis() {
                               setFilterCriticalPath(false);
                               setFilterOverdue(false);
                             }}
-                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-[12px] text-[#64748B] border border-[#E2E8F0] hover:bg-[#F8FAFC] transition-colors"
+                            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm text-text-muted border border-border hover:bg-surface-muted hover:border-border-strong active:scale-[0.97] transition-all"
                           >
                             <X size={11} />
                             Clear all filters
@@ -1739,32 +1695,32 @@ export function BOMAnalysis() {
             </div>
 
             {/* Table footer — cost totals */}
-            <div className="border-t border-[#E2E8F0]" style={{ background: "#FAFBFD" }}>
+            <div className="border-t border-border bg-surface-raised">
               <div className="px-5 py-3">
                 <div className="flex items-center justify-between">
-                  <p className="text-[11px] text-[#94A3B8]">
-                    Showing {filtered.length} of {TOTAL_BOM_PARTS} parts · Assembly 845-000112 · excl. MFG resource pkg
+                  <p className="text-xs text-text-subtle">
+                    Showing {filtered.length} of {TOTAL_BOM_PARTS} parts
                   </p>
                   <div className="flex items-center gap-4">
                     <div className="flex items-center gap-2">
-                      <DollarSign size={11} className="text-[#94A3B8]" />
-                      <span className="text-[11px] text-[#64748B]" style={{ fontWeight: 500 }}>
+                      <DollarSign size={11} className="text-text-subtle" />
+                      <span className="text-xs text-text-muted font-medium">
                         Current BOM Total:
                       </span>
-                      <span className="text-[12px] text-[#0F2035]" style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 700 }}>
+                      <span className="text-sm text-text-primary font-mono font-bold">
                         {fmtCurrency(currentBomCost)}
                       </span>
                     </div>
                     {hasSavings && (
                       <>
-                        <span className="text-[#E2E8F0]">|</span>
+                        <span className="text-border">|</span>
                         <div className="flex items-center gap-2">
                           <TrendingDown size={11} className="text-[#10B981]" />
-                          <span className="text-[11px] text-[#64748B]" style={{ fontWeight: 500 }}>Projected:</span>
-                          <span className="text-[12px] text-[#059669]" style={{ fontFamily: "'IBM Plex Mono', monospace", fontWeight: 700 }}>
+                          <span className="text-xs text-text-muted font-medium">Projected:</span>
+                          <span className="text-sm text-success font-mono font-bold">
                             {fmtCurrency(projectedBomCost)}
                           </span>
-                          <span className="text-[11px] text-[#059669]" style={{ fontWeight: 500 }}>
+                          <span className="text-xs text-success font-medium">
                             ({fmtSavingsDelta(currentBomCost, projectedBomCost)} saved)
                           </span>
                         </div>
@@ -1785,48 +1741,36 @@ export function BOMAnalysis() {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 12 }}
               transition={{ duration: 0.18 }}
-              className="shrink-0 border-t border-[#E2E8F0]"
+              className="shrink-0 border-t border-border"
               style={{ background: fictivSent ? "#F0FDF4" : "#EFF6FF" }}
             >
               <div className="px-6 py-3 flex items-center gap-3">
                 {fictivSent ? (
                   <>
                     <CheckCircle2 size={15} color="#16A34A" />
-                    <span
-                      className="text-[13px] text-[#15803D]"
-                      style={{ fontWeight: 600, fontFamily: "'IBM Plex Sans', sans-serif" }}
-                    >
+                    <span className="text-base text-[#15803D] font-semibold">
                       {selectedParts.size} part{selectedParts.size !== 1 ? "s" : ""} submitted to Fictiv
                     </span>
-                    <span className="text-[12px] text-[#86EFAC]" style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}>
+                    <span className="text-sm text-[#86EFAC]">
                       Order request sent
                     </span>
                   </>
                 ) : (
                   <>
                     <CheckSquare2 size={15} color="#2563EB" />
-                    <span
-                      className="text-[13px] text-[#1D4ED8]"
-                      style={{ fontWeight: 600, fontFamily: "'IBM Plex Sans', sans-serif" }}
-                    >
+                    <span className="text-base text-[#1D4ED8] font-semibold">
                       {selectedParts.size} part{selectedParts.size !== 1 ? "s" : ""} selected
                     </span>
                     <button
                       onClick={() => setSelectedParts(new Set())}
-                      className="text-[12px] text-[#93C5FD] hover:text-[#1D4ED8] transition-colors"
-                      style={{ fontFamily: "'IBM Plex Sans', sans-serif" }}
+                      className="text-sm text-[#93C5FD] hover:text-[#1D4ED8] transition-colors"
                     >
                       Clear
                     </button>
                     <div className="ml-auto flex items-center gap-2">
                       <button
                         onClick={handleSendToFictiv}
-                        className="flex items-center gap-2 px-4 py-1.5 rounded-lg text-white text-[12px] transition-colors"
-                        style={{
-                          background: "#1D4ED8",
-                          fontFamily: "'IBM Plex Sans', sans-serif",
-                          fontWeight: 600,
-                        }}
+                        className="flex items-center gap-2 px-4 py-1.5 rounded-lg text-white text-sm font-semibold transition-all active:scale-[0.97] bg-[#1D4ED8] hover:bg-[#1E40AF]"
                       >
                         <Send size={12} />
                         Send to Fictiv
@@ -1866,7 +1810,7 @@ export function BOMAnalysis() {
             >
               {/* Drag handle */}
               <div className="shrink-0 flex justify-center pt-2.5 pb-1 bg-white rounded-t-2xl">
-                <div className="w-10 h-1 rounded-full bg-[#E2E8F0]" />
+                <div className="w-10 h-1 rounded-full bg-border" />
               </div>
               <DetailPanel
                 part={selectedPart}
