@@ -157,7 +157,7 @@ function GroupHeader({ label, count, extCost, protoMode = false }: { label: stri
   return (
     <tr>
       <td
-        colSpan={protoMode ? 14 : 10}
+        colSpan={protoMode ? 15 : 11}
         className="px-4 py-2"
         style={{ background: s.bg, borderBottom: `1px solid ${s.border}`, borderTop: "1px solid #E2E8F0" }}
       >
@@ -805,33 +805,39 @@ function GroupRows({
               </button>
             </td>
             {/* # */}
-            <td className="px-3 py-3">
+            <td className="px-4 py-3">
               <span className="text-2xs text-text-ghost font-mono">{part.bomLineId}</span>
             </td>
             {/* Part — combined name + part number */}
-            <td className="px-3 py-3">
-              <span
-                className="text-base text-text-body font-medium leading-snug block"
-              >
+            <td className="px-4 py-3">
+              <span className="text-base text-text-body font-medium leading-snug block truncate">
                 {part.name}
               </span>
-              <span
-                className="font-mono text-xs text-text-subtle mt-0.5 block"
-              >
+              <span className="font-mono text-xs text-text-subtle mt-0.5 block">
                 {part.partNumber}
               </span>
             </td>
+            {/* Design Intent */}
+            <td className="px-4 py-3">
+              {PRODUCTION_ENGINEERING_NOTES[part.partNumber]?.designIntent ? (
+                <span className="text-xs text-text-secondary leading-snug block line-clamp-2">
+                  {PRODUCTION_ENGINEERING_NOTES[part.partNumber]!.designIntent}
+                </span>
+              ) : (
+                <span className="text-xs text-text-ghost">—</span>
+              )}
+            </td>
             {/* Category */}
-            <td className="px-3 py-3">
-              <span className="text-2xs text-text-muted leading-snug block">
+            <td className="px-4 py-3">
+              <span className="text-xs text-text-muted leading-snug block">
                 {part.itemCategory.replace("COTS, Standard Hardware", "COTS/OTS")}
               </span>
             </td>
             {/* Material */}
-            <td className="px-3 py-3">
+            <td className="px-4 py-3">
               {PRODUCTION_ENGINEERING_NOTES[part.partNumber]?.material ? (
                 <span
-                  className="font-mono text-2xs text-text-secondary leading-snug block"
+                  className="font-mono text-xs text-text-secondary leading-snug block"
                 >
                   {PRODUCTION_ENGINEERING_NOTES[part.partNumber]!.material}
                 </span>
@@ -840,16 +846,16 @@ function GroupRows({
               )}
             </td>
             {/* Qty */}
-            <td className="px-3 py-3">
+            <td className="px-4 py-3">
               <span className="font-mono font-semibold text-sm text-text-body">{part.qty}</span>
             </td>
             {/* Make/Buy */}
-            <td className="px-3 py-3">
+            <td className="px-4 py-3">
               <MakeBuyBadge value={part.makeBuy} />
             </td>
             {/* Lead Time — prototype mode only */}
             {protoMode && (
-              <td className="px-3 py-3">
+              <td className="px-4 py-3">
                 {leadTimeDays != null ? (
                   <div className="flex items-center gap-1">
                     <Clock
@@ -874,7 +880,7 @@ function GroupRows({
             )}
             {/* Order By — prototype mode only */}
             {protoMode && (
-              <td className="px-3 py-3">
+              <td className="px-4 py-3">
                 {orderBy ? (
                   <div className="flex flex-col gap-0.5">
                     <div className="flex items-center gap-1">
@@ -961,7 +967,7 @@ function GroupRows({
               );
             })()}
             {/* Unit Cost */}
-            <td className="px-3 py-3">
+            <td className="px-4 py-3">
               {isExcluded ? (
                 <span className="text-xs text-text-ghost italic">—</span>
               ) : unitCost != null ? (
@@ -977,7 +983,7 @@ function GroupRows({
               )}
             </td>
             {/* Ext. Cost */}
-            <td className="px-3 py-3">
+            <td className="px-4 py-3">
               {extCost != null ? (
                 <span className="font-mono font-semibold text-sm text-success">
                   {fmtCurrency(extCost)}
@@ -1550,20 +1556,21 @@ export function BOMAnalysis() {
             <div className="overflow-x-auto">
               <table className="w-full" style={{ borderCollapse: "collapse", tableLayout: "fixed" }}>
                 <colgroup>
-                  <col style={{ width: 34 }} />  {/* checkbox */}
-                  <col style={{ width: 34 }} />  {/* # */}
-                  <col style={{ width: 190 }} /> {/* Part (name + number) */}
-                  <col style={{ width: 90 }} />  {/* Category */}
-                  <col style={{ width: 110 }} /> {/* Material */}
-                  <col style={{ width: 44 }} />  {/* Qty */}
+                  <col style={{ width: 30 }} />  {/* checkbox */}
+                  <col style={{ width: 30 }} />  {/* # */}
+                  <col style={{ width: 160 }} /> {/* Part (name + number) */}
+                  <col style={{ width: 210 }} /> {/* Design Intent */}
+                  <col style={{ width: 80 }} />  {/* Category */}
+                  <col style={{ width: 100 }} /> {/* Material */}
+                  <col style={{ width: 40 }} />  {/* Qty */}
                   <col style={{ width: 70 }} />  {/* Make/Buy */}
-                  {protoMode && <col style={{ width: 68 }} />}  {/* Lead Time */}
-                  {protoMode && <col style={{ width: 94 }} />}  {/* Order By */}
-                  {protoMode && <col style={{ width: 44 }} />}  {/* DFM */}
-                  {protoMode && <col style={{ width: 44 }} />}  {/* Prod Readiness */}
-                  <col style={{ width: 80 }} />  {/* Unit Cost */}
-                  <col style={{ width: 82 }} />  {/* Ext. Cost */}
-                  <col style={{ width: 32 }} />  {/* expand chevron */}
+                  {protoMode && <col style={{ width: 72 }} />}  {/* Lead Time */}
+                  {protoMode && <col style={{ width: 88 }} />}  {/* Order By */}
+                  {protoMode && <col style={{ width: 38 }} />}  {/* DFM */}
+                  {protoMode && <col style={{ width: 38 }} />}  {/* Prod Readiness */}
+                  <col style={{ width: 90 }} />  {/* Unit Cost */}
+                  <col style={{ width: 90 }} />  {/* Ext. Cost */}
+                  <col style={{ width: 28 }} />  {/* expand chevron */}
                 </colgroup>
                 <thead>
                   <tr className="bg-surface-muted" style={{ borderBottom: "2px solid #E2E8F0" }}>
@@ -1582,19 +1589,25 @@ export function BOMAnalysis() {
                       </button>
                     </th>
                     {[
-                      { label: "#"              },
-                      { label: "Part"           },
-                      { label: "Category"       },
-                      { label: "Material"       },
-                      { label: "Qty"            },
-                      { label: "Make/Buy"       },
-                      ...(protoMode ? [{ label: "Lead Time" }, { label: "Order By" }, { label: "DFM" }, { label: "Prod." }] : []),
-                      { label: "Unit Cost"      },
-                      { label: "Ext. Cost"      },
+                      { label: "#",             px: "px-4" },
+                      { label: "Part",          px: "px-4" },
+                      { label: "Design Intent", px: "px-4" },
+                      { label: "Category",      px: "px-4" },
+                      { label: "Material",      px: "px-4" },
+                      { label: "Qty",           px: "px-4" },
+                      { label: "Make/Buy",      px: "px-4" },
+                      ...(protoMode ? [
+                        { label: "Lead Time",   px: "px-4" },
+                        { label: "Order By",    px: "px-4" },
+                        { label: "DFM",         px: "px-2 text-center" },
+                        { label: "Prod.",       px: "px-2 text-center" },
+                      ] : []),
+                      { label: "Unit Cost",     px: "px-4" },
+                      { label: "Ext. Cost",     px: "px-4" },
                     ].map((col) => (
                       <th
                         key={col.label}
-                        className="px-3 py-3.5 text-left text-2xs font-semibold text-text-muted uppercase tracking-wider whitespace-nowrap overflow-hidden"
+                        className={`${col.px} py-3.5 text-left text-2xs font-semibold text-text-muted uppercase tracking-wider whitespace-nowrap overflow-hidden`}
                       >
                         {col.label}
                       </th>
@@ -1608,7 +1621,7 @@ export function BOMAnalysis() {
                     // Flat sorted view (prototype: lead time or urgency sort)
                     sortedFlat.length === 0 ? (
                       <tr>
-                        <td colSpan={protoMode ? 14 : 10} className="px-6 py-12 text-center">
+                        <td colSpan={protoMode ? 15 : 11} className="px-6 py-12 text-center">
                           <div className="flex flex-col items-center gap-3">
                             <Search size={22} color="#CBD5E1" />
                             <p className="text-base text-text-subtle font-medium">No parts match your current filters</p>
@@ -1649,7 +1662,7 @@ export function BOMAnalysis() {
                     )
                   ) : Object.keys(groupedRows).length === 0 ? (
                     <tr>
-                      <td colSpan={protoMode ? 14 : 10} className="px-6 py-12 text-center">
+                      <td colSpan={protoMode ? 15 : 11} className="px-6 py-12 text-center">
                         <div className="flex flex-col items-center gap-3">
                           <Search size={22} color="#CBD5E1" />
                           <p className="text-base text-text-subtle font-medium">No parts match your current filters</p>
